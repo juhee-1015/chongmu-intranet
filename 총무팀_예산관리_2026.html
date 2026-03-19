@@ -217,8 +217,18 @@
     </div>
     <div style="display:flex;gap:7px;align-items:center;">
       <button class="btn btn-home btn-sm" onclick="window.location.href='총무_인트라넷.html'" title="총무 대백과로 이동">← 총무 대백과</button>
-      <button class="btn btn-secondary btn-sm" onclick="exportCSV()">📤 CSV 내보내기</button>
-      <label class="btn btn-secondary btn-sm" style="cursor:pointer;margin:0;" title="이전에 내보낸 CSV 파일로 실적 복원">📥 CSV 불러오기<input type="file" accept=".csv" style="display:none;" onchange="importBudgetCSV(this)"></label>
+      <div style="position:relative;display:inline-block;" id="csvDropWrap">
+        <button class="btn btn-secondary btn-sm" onclick="toggleCsvDrop()" style="gap:3px;">📊 CSV <span style="font-size:9px;opacity:.7;">▼</span></button>
+        <div id="csvDropMenu" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:#fff;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:500;min-width:180px;padding:4px 0;">
+          <div style="padding:5px 12px 3px;font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:.5px;">내보내기</div>
+          <button onclick="exportCSV();closeCsvDrop()" style="display:block;width:100%;text-align:left;padding:7px 14px;font-size:12px;background:none;border:none;cursor:pointer;color:#334155;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='none'">📤 이번 달만</button>
+          <button onclick="exportAllCSV();closeCsvDrop()" style="display:block;width:100%;text-align:left;padding:7px 14px;font-size:12px;background:none;border:none;cursor:pointer;color:#334155;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='none'">📤 전체 (1~12월)</button>
+          <div style="border-top:1px solid #f1f5f9;margin:3px 0;padding:5px 12px 3px;font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:.5px;">불러오기</div>
+          <label style="display:block;width:100%;text-align:left;padding:7px 14px;font-size:12px;background:none;border:none;cursor:pointer;color:#334155;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='none'">
+            📥 CSV 불러오기<input type="file" accept=".csv" style="display:none;" onchange="importBudgetCSV(this);closeCsvDrop()">
+          </label>
+        </div>
+      </div>
       <button class="btn btn-success btn-sm" id="saveBtn" onclick="saveData()">💾 저장</button>
       <button class="btn btn-secondary btn-sm" onclick="showCloudModal()">☁️ 클라우드</button>
       <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ 인쇄</button>
@@ -2092,6 +2102,47 @@ function applyYear(){
   }
 }
 
+function toggleCsvDrop(){
+  const m=document.getElementById('csvDropMenu');
+  if(!m) return;
+  m.style.display=m.style.display==='none'?'block':'none';
+  if(m.style.display==='block'){
+    setTimeout(()=>document.addEventListener('click',_closeCsvOnOutside),0);
+  }
+}
+function _closeCsvOnOutside(e){
+  const w=document.getElementById('csvDropWrap');
+  if(w&&!w.contains(e.target)) closeCsvDrop();
+}
+function closeCsvDrop(){
+  const m=document.getElementById('csvDropMenu');
+  if(m) m.style.display='none';
+  document.removeEventListener('click',_closeCsvOnOutside);
+}
+
+// 전체 연도 내보내기 (1~12월 모두)
+function exportAllCSV(){
+  let header='계정명,카테고리,원예산,조정예산';
+  MONTHS.forEach(mn=>{ header+=`,${mn}_계획,${mn}_실적,${mn}_메모`; });
+  let csv='\uFEFF'+header+'\n';
+  ORIGINAL_BUDGET.forEach(acc=>{
+    const eff=getEffectiveBudget(acc.name);
+    let row=`${acc.name},${acc.category},${acc.annual},${eff.annual}`;
+    MONTHS.forEach((_,mi)=>{
+      const plan=eff.months[mi]||0;
+      const amt=actuals[acc.name]?(actuals[acc.name][mi].amount||0):0;
+      const note=(actuals[acc.name]?(actuals[acc.name][mi].note||''):'').replace(/"/g,'""');
+      row+=`,${plan},${amt},"${note}"`;
+    });
+    csv+=row+'\n';
+  });
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;
+  a.download=`총무팀_예산현황_${currentYear}_전체.csv`;a.click();
+  URL.revokeObjectURL(url);
+}
+
 function exportCSV(){
   const m=currentMonth<12?currentMonth:0;
   let csv='\uFEFF계정명,카테고리,원예산,조정예산,'+MONTHS[m]+' 계획,'+MONTHS[m]+' 실적,누적실적,잔여예산,소진율,메모\n';
@@ -2110,6 +2161,18 @@ function exportCSV(){
   URL.revokeObjectURL(url);
 }
 
+function _parseCSVLine(line){
+  const cols=[];let cur='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(c===','&&!inQ){cols.push(cur);cur='';}
+    else cur+=c;
+  }
+  cols.push(cur);
+  return cols;
+}
+
 function importBudgetCSV(input){
   const file=input.files[0];
   if(!file){return;}
@@ -2118,47 +2181,62 @@ function importBudgetCSV(input){
   reader.onload=function(e){
     try{
       let text=e.target.result;
-      // BOM 제거
       if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
       const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
       if(lines.length<2){alert('데이터가 없습니다.');return;}
-      // 헤더에서 월 감지: "3월 실적" → 2 (0-based index)
-      const header=lines[0].split(',');
-      let detectedMonth=-1;
-      const monthColIdx=5; // 6번째 컬럼 = 실적
-      const headerMonthStr=header[monthColIdx]||'';
-      const mm=headerMonthStr.match(/(\d+)월/);
-      if(mm) detectedMonth=parseInt(mm[1])-1;
-      if(detectedMonth<0||detectedMonth>11){
-        alert('CSV에서 월을 인식할 수 없습니다.\n내보내기한 CSV 파일인지 확인해주세요.');return;
+      const header=_parseCSVLine(lines[0]);
+      // 전체 포맷 감지: "1월_계획" 컬럼이 있으면 전체 연도 CSV
+      const isFullYear=header.some(h=>h.match(/^\d+월_계획$/));
+      if(isFullYear){
+        if(!confirm('전체(1~12월) 실적 데이터를 불러옵니다.\n기존 실적이 모두 덮어씌워집니다. 계속할까요?')) return;
+        let updated=0;
+        // 헤더에서 월별 컬럼 인덱스 매핑
+        const monthCols={}; // mi → {plan,amt,note} index
+        MONTHS.forEach((mn,mi)=>{
+          const pi=header.findIndex(h=>h===`${mn}_계획`);
+          const ai=header.findIndex(h=>h===`${mn}_실적`);
+          const ni=header.findIndex(h=>h===`${mn}_메모`);
+          if(ai>=0) monthCols[mi]={pi,ai,ni};
+        });
+        lines.slice(1).forEach(line=>{
+          const cols=_parseCSVLine(line);
+          const name=(cols[0]||'').trim();
+          if(!name) return;
+          if(!actuals[name]) actuals[name]=Array(12).fill(null).map(()=>({amount:0,note:''}));
+          Object.entries(monthCols).forEach(([mi,idx])=>{
+            const amt=parseFloat((cols[idx.ai]||'0').replace(/,/g,''))||0;
+            const note=(cols[idx.ni]||'').trim();
+            actuals[name][parseInt(mi)]={amount:amt,note};
+          });
+          updated++;
+        });
+        saveData(); renderMain(); updateSummary();
+        showToast(`✅ 전체 연도 실적 ${updated}개 계정 불러오기 완료`);
+      } else {
+        // 단일 월 포맷: 헤더 5번째 컬럼 = "X월 실적"
+        let detectedMonth=-1;
+        const headerMonthStr=header[5]||'';
+        const mm=headerMonthStr.match(/(\d+)월/);
+        if(mm) detectedMonth=parseInt(mm[1])-1;
+        if(detectedMonth<0||detectedMonth>11){
+          alert('CSV 형식을 인식할 수 없습니다.\n이 앱에서 내보낸 CSV 파일인지 확인해주세요.');return;
+        }
+        const monthName=MONTHS[detectedMonth];
+        if(!confirm(`${monthName} 실적 데이터를 불러옵니다.\n기존 ${monthName} 실적이 덮어씌워집니다. 계속할까요?`)) return;
+        let updated=0;
+        lines.slice(1).forEach(line=>{
+          const cols=_parseCSVLine(line);
+          const name=(cols[0]||'').trim();
+          if(!name) return;
+          const amt=parseFloat((cols[5]||'0').replace(/,/g,''))||0;
+          const note=(cols[9]||'').trim();
+          if(!actuals[name]) actuals[name]=Array(12).fill(null).map(()=>({amount:0,note:''}));
+          actuals[name][detectedMonth]={amount:amt,note};
+          updated++;
+        });
+        saveData(); renderMain(); updateSummary();
+        showToast(`✅ ${monthName} 실적 ${updated}건 불러오기 완료`);
       }
-      const monthName=MONTHS[detectedMonth];
-      if(!confirm(`${monthName} 실적 데이터를 CSV에서 불러옵니다.\n기존 ${monthName} 실적이 덮어씌워집니다. 계속할까요?`)) return;
-      let updated=0;
-      lines.slice(1).forEach(line=>{
-        // 따옴표 안 쉼표 처리
-        const cols=[];let cur='',inQ=false;
-        for(let i=0;i<line.length;i++){
-          const c=line[i];
-          if(c==='"'){inQ=!inQ;}
-          else if(c===','&&!inQ){cols.push(cur);cur='';}
-          else cur+=c;
-        }
-        cols.push(cur);
-        const name=(cols[0]||'').trim();
-        if(!name) return;
-        const amt=parseFloat((cols[5]||'0').replace(/,/g,''))||0;
-        const note=(cols[9]||'').replace(/^"|"$/g,'').trim();
-        if(!actuals[name]){
-          actuals[name]=Array(12).fill(null).map(()=>({amount:0,note:''}));
-        }
-        actuals[name][detectedMonth]={amount:amt,note};
-        updated++;
-      });
-      saveData();
-      renderMain();
-      updateSummary();
-      showToast(`✅ ${monthName} 실적 ${updated}건 불러오기 완료`);
     }catch(err){
       alert('CSV 불러오기 오류: '+err.message);
     }
