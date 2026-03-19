@@ -382,9 +382,16 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 .manual-new-btn:hover{border-color:var(--primary);color:var(--primary);background:#eef2ff;}
 .manual-list{flex:1;overflow-y:auto;padding:6px;}
 .manual-cat-header{padding:6px 10px 2px;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.5px;}
-.manual-item{padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;margin-bottom:2px;border:1px solid transparent;}
+.manual-item{padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;margin-bottom:2px;border:1px solid transparent;display:flex;align-items:flex-start;gap:4px;}
 .manual-item:hover{background:var(--bg);}
 .manual-item.active{background:#eef2ff;border-color:#c7d2fe;}
+.manual-item.drag-over{border-top:2px solid var(--primary);background:var(--bg);}
+.manual-item.dragging{opacity:.35;}
+.manual-item-body{flex:1;min-width:0;}
+/* 드래그 핸들 공통 */
+.drag-handle{cursor:grab;color:var(--text3);font-size:13px;line-height:1.5;flex-shrink:0;padding:1px 2px;border-radius:3px;user-select:none;}
+.drag-handle:hover{color:var(--text2);background:var(--border);}
+.drag-handle:active{cursor:grabbing;}
 .manual-item-title{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .manual-item-preview{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
 .manual-item-meta{font-size:10px;color:var(--text3);margin-top:2px;}
@@ -483,9 +490,12 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 .reg-new-btn{padding:7px 0;border-radius:var(--radius-sm);border:none;background:var(--primary);color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s;}
 .reg-new-btn:hover{background:var(--primary-dark);}
 .reg-list{flex:1;overflow-y:auto;padding:4px 0;}
-.reg-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .12s;}
+.reg-item{padding:10px 10px 10px 12px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .12s;display:flex;align-items:flex-start;gap:4px;}
 .reg-item:hover{background:var(--bg);}
-.reg-item.active{background:#eef2ff;border-left:3px solid var(--primary);padding-left:11px;}
+.reg-item.active{background:#eef2ff;border-left:3px solid var(--primary);padding-left:9px;}
+.reg-item.drag-over{border-top:2px solid var(--primary);background:var(--bg);}
+.reg-item.dragging{opacity:.35;}
+.reg-item-body{flex:1;min-width:0;}
 .reg-item-name{font-size:13px;font-weight:600;color:var(--text);}
 .reg-item-meta{font-size:10px;color:var(--text3);margin-top:2px;}
 .reg-editor-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
@@ -1025,6 +1035,25 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
       <button class="btn btn-ghost" onclick="closeModal('revModal')">취소</button>
       <button class="btn btn-primary" onclick="saveRevision()">💾 추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- 모달: 버전 정보 수정 -->
+<div class="modal-overlay" id="regVerModal">
+  <div class="modal" style="max-width:440px;">
+    <h3>✏ 버전 정보 수정</h3>
+    <input type="hidden" id="regVerRegId">
+    <input type="hidden" id="regVerVid">
+    <div class="form-row">
+      <div class="form-group"><label>구분</label><select id="regVerType"><option value="제정">제정</option><option value="개정">개정</option></select></div>
+      <div class="form-group"><label>날짜</label><input type="date" id="regVerDate"></div>
+    </div>
+    <div class="form-group"><label>비고</label><input type="text" id="regVerNote" placeholder="예: 2025년 복지 기준 반영"></div>
+    <div style="font-size:11px;color:var(--text3);padding:6px 0;">※ PDF 파일을 변경하려면 삭제 후 새 버전으로 등록하세요.</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;">
+      <button class="btn btn-ghost" onclick="closeModal('regVerModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveRegVerEdit()">💾 저장</button>
     </div>
   </div>
 </div>
@@ -2862,7 +2891,7 @@ function renderManualList(){
     grouped[cat].sort((a,b)=>b.updatedAt-a.updatedAt).forEach(m=>{
       const isActive=m.id===_currentManualId;
       const dateStr=m.updatedAt?new Date(m.updatedAt).toLocaleDateString('ko-KR',{month:'short',day:'numeric'}):'';
-      html+=`<div class="manual-item${isActive?' active':''}" onclick="openManual('${m.id}')"><div class="manual-item-title">${escHtml(m.title||'(제목 없음)')}</div><div class="manual-item-meta"><span>${dateStr}</span></div></div>`;
+      html+=`<div class="manual-item${isActive?' active':''}" draggable="true" ondragstart="manDragStart(event,'${m.id}')" ondragend="manDragEnd(event)" ondragover="manDragOver(event,'${m.id}')" ondragleave="manDragLeave(event)" ondrop="manDrop(event,'${m.id}')" onclick="openManual('${m.id}')"><span class="drag-handle" onclick="event.stopPropagation()" ondragstart="event.stopPropagation()">⠿</span><div class="manual-item-body"><div class="manual-item-title">${escHtml(m.title||'(제목 없음)')}</div><div class="manual-item-meta"><span>${dateStr}</span></div></div></div>`;
     });
   });
   listEl.innerHTML=html;
@@ -3591,7 +3620,7 @@ function renderRegulationList(){
       const last=r.history?.[r.history.length-1];
       const isActive=r.id===_currentRegId;
       const vLabel=last?`v${r.history.length} · ${last.type} · ${last.date||''}`:'등록 없음';
-      html+=`<div class="reg-item${isActive?' active':''}" onclick="openRegulation('${r.id}')"><div class="reg-item-name">${escHtml(r.name)}</div><div class="reg-item-meta">${vLabel}</div></div>`;
+      html+=`<div class="reg-item${isActive?' active':''}" draggable="true" ondragstart="regDragStart(event,'${r.id}')" ondragend="regDragEnd(event)" ondragover="regDragOver(event,'${r.id}')" ondragleave="regDragLeave(event)" ondrop="regDrop(event,'${r.id}')" onclick="openRegulation('${r.id}')"><span class="drag-handle" onclick="event.stopPropagation()" ondragstart="event.stopPropagation()">⠿</span><div class="reg-item-body"><div class="reg-item-name">${escHtml(r.name)}</div><div class="reg-item-meta">${vLabel}</div></div></div>`;
     });
   });
   listEl.innerHTML=html;
@@ -3634,6 +3663,7 @@ function switchRegTab(idx){
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
         ${hasPdf?`<button class="btn btn-primary" onclick="openRegViewer('${r.id}','${last.vid}','${escHtml(r.name)} v${vNum}')">👁 PDF 보기</button>`:'<span style="font-size:11px;color:var(--danger);font-weight:700;">⚠ PDF 없음</span>'}
+        <button class="btn btn-ghost btn-sm" onclick="openRegVerEdit('${r.id}','${last.vid}')">✏ 정보 수정</button>
       </div>
     </div>
     <div style="font-size:12px;color:var(--text3);">총 ${vNum}개 버전 · <a href="#" onclick="switchRegTab(1);return false;" style="color:var(--primary);font-weight:600;">개정이력 보기 →</a></div>`;
@@ -3650,6 +3680,7 @@ function switchRegTab(idx){
         <td style="font-size:11px;color:var(--text3);">${escHtml(h.fileName||'')}${h.size?'<br>'+formatFileSize(h.size):''}</td>
         <td style="white-space:nowrap;">
           ${hasPdf?`<button class="btn btn-ghost btn-sm" style="font-size:11px;padding:3px 8px;" onclick="openRegViewer('${r.id}','${h.vid}','${escHtml(r.name)} v${vNum}')">👁</button>`:''}
+          <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:3px 8px;margin-left:3px;" onclick="openRegVerEdit('${r.id}','${h.vid}')">✏</button>
           ${r.history.length>1?`<button class="btn btn-danger btn-sm" style="font-size:11px;padding:3px 8px;margin-left:3px;" onclick="deleteRevision('${r.id}','${h.vid}')">🗑</button>`:''}
         </td>
       </tr>`;
@@ -3767,6 +3798,69 @@ function deleteRevision(regId,vid){
   r.history=r.history.filter(h=>h.vid!==vid);
   localStorage.removeItem(regPdfKey(regId,vid));
   saveRegulations(regs);openRegulation(regId);showToast('버전이 삭제되었습니다');
+}
+
+// ─── 버전 정보 수정 ───
+function openRegVerEdit(regId,vid){
+  const r=loadRegulations().find(x=>x.id===regId);
+  if(!r) return;
+  const h=r.history.find(x=>x.vid===vid);
+  if(!h) return;
+  document.getElementById('regVerRegId').value=regId;
+  document.getElementById('regVerVid').value=vid;
+  document.getElementById('regVerType').value=h.type||'개정';
+  document.getElementById('regVerDate').value=h.date||'';
+  document.getElementById('regVerNote').value=h.note||'';
+  openModal('regVerModal');
+}
+function saveRegVerEdit(){
+  const regId=document.getElementById('regVerRegId').value;
+  const vid=document.getElementById('regVerVid').value;
+  const regs=loadRegulations();
+  const r=regs.find(x=>x.id===regId);
+  if(!r) return;
+  const h=r.history.find(x=>x.vid===vid);
+  if(!h) return;
+  h.type=document.getElementById('regVerType').value;
+  h.date=document.getElementById('regVerDate').value;
+  h.note=document.getElementById('regVerNote').value.trim();
+  saveRegulations(regs);
+  closeModal('regVerModal');
+  renderRegulationList();
+  openRegulation(regId);
+  showToast('✅ 수정되었습니다');
+}
+
+// ─── 규정 드래그 정렬 ───
+let _regDragId=null;
+function regDragStart(e,id){_regDragId=id;e.dataTransfer.effectAllowed='move';e.currentTarget.classList.add('dragging');}
+function regDragEnd(e){e.currentTarget.classList.remove('dragging');}
+function regDragOver(e,id){e.preventDefault();if(_regDragId!==id)e.currentTarget.classList.add('drag-over');}
+function regDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function regDrop(e,id){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(!_regDragId||_regDragId===id) return;
+  const regs=loadRegulations();
+  const si=regs.findIndex(r=>r.id===_regDragId), di=regs.findIndex(r=>r.id===id);
+  if(si<0||di<0) return;
+  const [item]=regs.splice(si,1); regs.splice(di,0,item);
+  saveRegulations(regs); renderRegulationList();
+}
+
+// ─── 매뉴얼 드래그 정렬 ───
+let _manDragId=null;
+function manDragStart(e,id){_manDragId=id;e.dataTransfer.effectAllowed='move';e.currentTarget.classList.add('dragging');}
+function manDragEnd(e){e.currentTarget.classList.remove('dragging');}
+function manDragOver(e,id){e.preventDefault();if(_manDragId!==id)e.currentTarget.classList.add('drag-over');}
+function manDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function manDrop(e,id){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(!_manDragId||_manDragId===id) return;
+  const manuals=loadManuals();
+  const si=manuals.findIndex(m=>m.id===_manDragId), di=manuals.findIndex(m=>m.id===id);
+  if(si<0||di<0) return;
+  const [item]=manuals.splice(si,1); manuals.splice(di,0,item);
+  saveManuals(manuals); renderManualList();
 }
 
 // ─── PDF 뷰어 ───
