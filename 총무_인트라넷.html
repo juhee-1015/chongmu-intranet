@@ -18,7 +18,8 @@
   --shadow-lg:0 10px 30px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
+body{font-family:'Apple SD Gothic Neo','Pretendard','Malgun Gothic',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;}
+input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:normal;}
 
 /* ─────── 헤더 ─────── */
 .site-header{
@@ -149,7 +150,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 .parking-lot-card:hover .plc-actions{opacity:1;}
 .parking-table{width:100%;border-collapse:collapse;font-size:13px;}
 .parking-table th{background:var(--bg);padding:10px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--text3);border-bottom:2px solid var(--border);white-space:nowrap;}
-.parking-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.parking-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;line-height:1.4;}
 .parking-table tr:hover td{background:var(--bg);}
 .park-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
 .park-badge.free{background:#dcfce7;color:#166534;}
@@ -226,9 +227,9 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 .link-card:hover .link-card-actions{opacity:1;}
 
 /* ─────── 테이블 공통 ─────── */
-.tbl{width:100%;border-collapse:collapse;font-size:11px;}
-.tbl th{background:#f1f5f9;color:var(--text2);padding:8px 10px;text-align:left;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.3px;border-bottom:2px solid var(--border2);white-space:nowrap;}
-.tbl td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:700px;}
+.tbl th{background:#f1f5f9;color:var(--text2);padding:10px 12px;text-align:left;font-weight:700;font-size:11px;border-bottom:2px solid var(--border2);white-space:nowrap;}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;line-height:1.5;}
 .tbl tbody tr:hover td{background:#f8faff;}
 .tbl .cat-row td{background:linear-gradient(90deg,#eef2ff,var(--bg2));font-weight:700;color:var(--primary);font-size:11px;padding:7px 12px;cursor:pointer;user-select:none;}
 .tbl .cat-row:hover td{background:linear-gradient(90deg,#e0e7ff,var(--bg2));}
@@ -397,6 +398,14 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 .nav-btn.cloud-btn{background:rgba(99,179,237,.2);color:#bfdbfe;border:1px solid rgba(99,179,237,.35);border-radius:20px;}
 .nav-btn.cloud-btn:hover{background:rgba(99,179,237,.32);}
 .nav-btn.cloud-btn.connected{background:rgba(74,222,128,.22);color:#86efac;border-color:rgba(74,222,128,.4);}
+/* 드롭다운 네비 그룹 */
+.nav-group{position:relative;display:inline-block;}
+.nav-group-panel{display:none;position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);background:rgba(15,23,42,.97);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:6px;min-width:150px;z-index:300;box-shadow:0 8px 28px rgba(0,0,0,.45);}
+.nav-group.open .nav-group-panel{display:block;}
+.nav-group-item{display:flex;align-items:center;gap:7px;width:100%;text-align:left;background:none;border:none;padding:8px 12px;color:rgba(255,255,255,.8);font-size:13px;cursor:pointer;border-radius:7px;white-space:nowrap;line-height:1.3;}
+.nav-group-item:hover{background:rgba(255,255,255,.1);color:#fff;}
+.nav-group-item.active{background:rgba(255,255,255,.18);color:#fff;font-weight:600;}
+.nav-group-trigger.active{background:rgba(255,255,255,.22);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);}
 
 /* ─────── 업무 매뉴얼 (블록 에디터) ─────── */
 .manual-layout{display:grid;grid-template-columns:260px 1fr;gap:16px;min-height:calc(100vh - 130px);}
@@ -561,16 +570,30 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
     </div>
   </div>
   <nav class="header-nav">
-    <button class="nav-btn active" id="navHome"     onclick="showPage('home')">🏠 홈</button>
-    <button class="nav-btn"        id="navCalendar" onclick="showPage('calendar')">📅 캘린더</button>
-    <button class="nav-btn"        id="navVoucher"  onclick="showPage('voucher')">🎁 상품권</button>
-    <button class="nav-btn"        id="navVendor"   onclick="showPage('vendor')">🤝 거래처</button>
-    <button class="nav-btn"        id="navLinks"    onclick="showPage('links')">🔗 바로가기</button>
-    <button class="nav-btn"        id="navNotice"   onclick="showPage('notice')">📌 공지/메모</button>
+    <button class="nav-btn active" id="navHome"      onclick="showPage('home')">🏠 홈</button>
+    <button class="nav-btn"        id="navCalendar"  onclick="showPage('calendar')">📅 캘린더</button>
+    <button class="nav-btn"        id="navLinks"     onclick="showPage('links')">🔗 바로가기</button>
+    <button class="nav-btn"        id="navNotice"    onclick="showPage('notice')">📌 공지/메모</button>
     <button class="nav-btn"        id="navChecklist" onclick="showPage('checklist')">✅ 업무체크</button>
-    <button class="nav-btn"        id="navParking"     onclick="showPage('parking')">🚗 주차관리</button>
-    <button class="nav-btn"        id="navManual"      onclick="showPage('manual')">📖 업무매뉴얼</button>
-    <button class="nav-btn"        id="navRegulation"  onclick="showPage('regulation')">📋 규정</button>
+    <!-- 업무시스템 드롭다운 -->
+    <div class="nav-group" id="navGroupSystem">
+      <button class="nav-btn nav-group-trigger" id="navGroupSystemBtn" onclick="toggleNavGroup('navGroupSystem',event)">🏢 업무시스템 ▾</button>
+      <div class="nav-group-panel">
+        <button class="nav-group-item" id="navSateak"  onclick="showPage('sateak');closeNavGroups()">🏠 사택관리</button>
+        <button class="nav-group-item" id="navParking" onclick="showPage('parking');closeNavGroups()">🚗 주차관리</button>
+        <button class="nav-group-item" id="navHealth"  onclick="showPage('health');closeNavGroups()">🏥 건강검진</button>
+        <button class="nav-group-item" id="navVoucher" onclick="showPage('voucher');closeNavGroups()">🎁 상품권</button>
+      </div>
+    </div>
+    <!-- 업무문서 드롭다운 -->
+    <div class="nav-group" id="navGroupDoc">
+      <button class="nav-btn nav-group-trigger" id="navGroupDocBtn" onclick="toggleNavGroup('navGroupDoc',event)">📂 업무문서 ▾</button>
+      <div class="nav-group-panel">
+        <button class="nav-group-item" id="navManual"     onclick="showPage('manual');closeNavGroups()">📖 업무매뉴얼</button>
+        <button class="nav-group-item" id="navRegulation" onclick="showPage('regulation');closeNavGroups()">📋 규정</button>
+        <button class="nav-group-item" id="navVendor"     onclick="showPage('vendor');closeNavGroups()">🤝 거래처</button>
+      </div>
+    </div>
     <div class="nav-sep"></div>
     <button class="nav-btn budget" onclick="window.location.href='총무팀_예산관리_2026.html'">💰 예산관리 →</button>
     <button class="nav-btn cloud-btn" id="cloudNavBtn" onclick="openCloudModal()">☁️ 클라우드</button>
@@ -599,18 +622,18 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 
   <!-- 스탯 카드 -->
   <div class="stat-grid">
-    <div class="stat-card" onclick="showPage('vendor')" title="거래처 관리 바로가기">
-      <div class="stat-icon" style="background:#ede9fe;">🤝</div>
+    <div class="stat-card" onclick="showPage('sateak')" title="사택 현황 바로가기">
+      <div class="stat-icon" style="background:#ede9fe;">🏠</div>
       <div class="stat-info">
-        <div class="stat-label">등록 거래처</div>
-        <div class="stat-value-row"><span class="stat-value" id="statVendors">-</span><span class="stat-unit">개 업체</span></div>
+        <div class="stat-label">사택 현황</div>
+        <div class="stat-value-row"><span class="stat-value" id="statSateak">-</span><span class="stat-unit">개 운영중</span></div>
       </div>
     </div>
-    <div class="stat-card" onclick="showPage('voucher')" title="상품권 대장 바로가기">
-      <div class="stat-icon" style="background:#fce7f3;">🎁</div>
+    <div class="stat-card" onclick="showPage('health')" title="건강검진 현황 바로가기">
+      <div class="stat-icon" style="background:#dcfce7;">🏥</div>
       <div class="stat-info">
-        <div class="stat-label" id="statVoucherLabel">상품권 잔액 (지급 0건)</div>
-        <div class="stat-value-row"><span class="stat-value" id="statVoucherAmt" style="font-size:20px;">0원</span></div>
+        <div class="stat-label">건강검진 현황</div>
+        <div class="stat-value-row"><span class="stat-value" id="statHealth">-</span><span class="stat-unit">명 대상</span></div>
       </div>
     </div>
     <div class="stat-card" onclick="window.open('https://www.sonohotelsresorts.com/','_blank')" title="소노 호텔&리조트 바로가기">
@@ -635,24 +658,27 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
       <div class="card-title"><span class="icon icon-blue">⚡</span> 빠른 바로가기</div>
     </div>
     <div class="card-body">
-      <div class="quick-grid">
+      <div class="quick-grid" style="grid-template-columns:repeat(7,1fr);">
         <a class="quick-btn" href="총무팀_예산관리_2026.html">
           <div class="qicon" style="background:#ede9fe;">💰</div><div class="qlabel">예산관리 시스템</div>
         </a>
         <a class="quick-btn" href="#" onclick="showPage('calendar');return false;">
           <div class="qicon" style="background:#dbeafe;">📅</div><div class="qlabel">업무 캘린더</div>
         </a>
-        <a class="quick-btn" href="#" onclick="showPage('voucher');return false;">
-          <div class="qicon" style="background:#fce7f3;">🎁</div><div class="qlabel">상품권 대장</div>
+        <a class="quick-btn" href="#" onclick="showPage('sateak');return false;">
+          <div class="qicon" style="background:#ede9fe;">🏠</div><div class="qlabel">사택 현황</div>
         </a>
-        <a class="quick-btn" href="#" onclick="showPage('vendor');return false;">
-          <div class="qicon" style="background:#ccfbf1;">🤝</div><div class="qlabel">거래처 관리</div>
+        <a class="quick-btn" href="#" onclick="showPage('health');return false;">
+          <div class="qicon" style="background:#dcfce7;">🏥</div><div class="qlabel">건강검진</div>
+        </a>
+        <a class="quick-btn" href="#" onclick="showPage('voucher');return false;">
+          <div class="qicon" style="background:#fef9c3;">🎁</div><div class="qlabel">상품권 관리</div>
         </a>
         <a class="quick-btn" href="#" onclick="window.open('https://gw.smilegate.net/Front/Main','_blank');return false;">
           <div class="qicon" style="background:#e0f2fe;">💻</div><div class="qlabel">재무포탈</div>
         </a>
-        <a class="quick-btn" href="#" onclick="showPage('parking');return false;">
-          <div class="qicon" style="background:#e0f2fe;">🚗</div><div class="qlabel">주차 관리</div>
+        <a class="quick-btn" href="#" onclick="showPage('manual');return false;">
+          <div class="qicon" style="background:#fef3c7;">📖</div><div class="qlabel">업무 매뉴얼</div>
         </a>
       </div>
     </div>
@@ -674,13 +700,31 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
         <div class="card-title"><span class="icon icon-yellow">📌</span> 최근 공지 / 메모</div>
         <button class="btn btn-ghost btn-sm" onclick="showPage('notice')">전체보기</button>
       </div>
-      <div class="card-body" id="noticePreview" style="max-height:120px;overflow-y:auto;"></div>
-      <div class="card-header" style="border-top:1px solid var(--border);border-bottom:none;margin-top:0;">
-        <div class="card-title"><span class="icon icon-pink">🎁</span> 최근 상품권 지급</div>
+      <div class="card-body" id="noticePreview" style="max-height:200px;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- ───────────── 하단 섹션 ───────────── -->
+  <div class="grid-2" style="margin-top:16px;">
+
+    <!-- 최근 상품권 지급 내역 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon icon-yellow">🎁</span> 최근 상품권 지급</div>
         <button class="btn btn-ghost btn-sm" onclick="showPage('voucher')">전체보기</button>
       </div>
-      <div class="card-body" id="voucherPreview" style="max-height:100px;overflow-y:auto;font-size:11px;"></div>
+      <div class="card-body" id="voucherPreview" style="min-height:80px;"></div>
     </div>
+
+    <!-- 다가오는 D-day 일정 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon icon-blue">📆</span> 다가오는 일정 (30일 이내)</div>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('calendar')">캘린더</button>
+      </div>
+      <div class="card-body" id="upcomingEvents" style="min-height:80px;"></div>
+    </div>
+
   </div>
 
 </div>
@@ -714,136 +758,205 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 </div>
 </div>
 
-<!-- ===== 상품권 대장 ===== -->
-<div class="page" id="pageVoucher">
+
+<!-- ===== 사택 현황 ===== -->
+<div class="page" id="pageSateak">
 <div class="container">
+
+  <!-- 계약 만료 알림 -->
+  <div id="sateakExpiryAlert" style="display:none;margin-bottom:16px;"></div>
+
+  <!-- 요약 카드 -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px;" id="sateakSummaryCards"></div>
+
+  <!-- 테이블 -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title"><span class="icon icon-pink">🎁</span> 상품권 출납 관리대장</div>
+      <div class="card-title"><span class="icon" style="background:#ede9fe;">🏠</span> 사택 현황</div>
       <div style="display:flex;gap:6px;align-items:center;">
-        <select id="vFilterYear" onchange="renderVoucher()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);">
-          <option value="all">전체 연도</option>
-          <option value="2025">2025년</option>
-          <option value="2026">2026년</option>
-          <option value="2027">2027년</option>
+        <select id="sateakStatusFilter" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer;" onchange="renderSateakTable()">
+          <option value="입주중">입주중</option>
+          <option value="">전체</option>
+          <option value="퇴거">퇴거</option>
         </select>
-        <button class="btn btn-ghost btn-sm" onclick="exportVoucherCSV()">📊 CSV 내보내기</button>
-        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importVoucherFile').click()">📂 CSV 가져오기</button>
-        <input type="file" id="importVoucherFile" accept=".csv" style="display:none" onchange="importVoucherCSV(this)">
+        <button class="btn btn-primary btn-sm" onclick="openAddSateakModal()">＋ 추가</button>
       </div>
     </div>
-    <div class="card-body">
-      <!-- 잔여 요약 -->
-      <div class="summary-chips" id="voucherSummary"></div>
-      <!-- 탭 -->
-      <div class="voucher-tab-row">
-        <button class="vtab active" id="vtab_out" onclick="switchVTab('out')">📤 지급·출고</button>
-        <button class="vtab" id="vtab_in" onclick="switchVTab('in')">📥 구매·입고</button>
-        <button class="vtab" id="vtab_balance" onclick="switchVTab('balance')">📊 종류별 잔여현황</button>
-      </div>
-      <!-- 출고(지급) 폼 -->
-      <div id="vFormOut" class="form-panel">
-        <div class="form-panel-title" id="voucherFormTitle">📤 지급·출고 등록</div>
-        <input type="hidden" id="vEditIdx" value="-1">
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:8px;">
-          <div class="form-group"><label>지급일</label><input type="date" id="vDate"></div>
-          <div class="form-group"><label>연도</label><input type="number" id="vYear" min="2020" max="2040" style="text-align:center;"></div>
-          <div class="form-group"><label>목적</label>
-            <select id="vPurpose"><option>설날</option><option>추석</option><option>창립기념일</option><option>생일</option><option>경조사</option><option>기타</option></select>
-          </div>
-          <div class="form-group"><label>수령인/대상</label><input type="text" id="vRecipient" placeholder="예: 전임직원"></div>
-          <div class="form-group"><label>상품권 종류</label>
-            <select id="vType"><option>백화점상품권</option><option>문화상품권</option><option>신세계상품권</option><option>현대상품권</option><option>롯데상품권</option><option>카카오선물</option><option>기타</option></select>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:flex-end;">
-          <div class="form-group"><label>단가(원)</label><input type="text" id="vUnit" placeholder="50,000" oninput="fmtInput(this);calcVTotal();"></div>
-          <div class="form-group"><label>수량</label><input type="number" id="vQty" min="1" oninput="calcVTotal();" value="1"></div>
-          <div class="form-group"><label>합계(자동)</label><input type="text" id="vTotal" readonly style="background:var(--bg);"></div>
-          <div class="form-group"><label>재원 계정</label><input type="text" id="vPaidFrom" placeholder="예: 복리후생비"></div>
-          <div style="display:flex;gap:5px;margin-bottom:8px;">
-            <button class="btn btn-primary" onclick="saveVoucher('out')">💾 저장</button>
-            <button class="btn btn-ghost" id="vCancelBtn" onclick="cancelVEdit()" style="display:none;">취소</button>
-          </div>
-        </div>
-        <div class="form-group"><label>비고</label><input type="text" id="vNote" placeholder="메모 (선택)"></div>
-      </div>
-      <!-- 입고(구매) 폼 -->
-      <div id="vFormIn" class="form-panel" style="display:none;">
-        <div class="form-panel-title">📥 구매·입고 등록</div>
-        <input type="hidden" id="viEditIdx" value="-1">
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;">
-          <div class="form-group"><label>구매일</label><input type="date" id="viDate"></div>
-          <div class="form-group"><label>연도</label><input type="number" id="viYear" min="2020" max="2040" style="text-align:center;"></div>
-          <div class="form-group"><label>상품권 종류</label>
-            <select id="viType"><option>백화점상품권</option><option>문화상품권</option><option>신세계상품권</option><option>현대상품권</option><option>롯데상품권</option><option>카카오선물</option><option>기타</option></select>
-          </div>
-          <div class="form-group"><label>구매처</label><input type="text" id="viSupplier" placeholder="예: 신세계백화점"></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:flex-end;">
-          <div class="form-group"><label>단가(원)</label><input type="text" id="viUnit" placeholder="50,000" oninput="fmtInput(this);calcVITotal();"></div>
-          <div class="form-group"><label>수량</label><input type="number" id="viQty" min="1" oninput="calcVITotal();" value="1"></div>
-          <div class="form-group"><label>합계(자동)</label><input type="text" id="viTotal" readonly style="background:var(--bg);"></div>
-          <div style="display:flex;gap:5px;margin-bottom:8px;">
-            <button class="btn btn-primary" onclick="saveVoucher('in')">💾 저장</button>
-            <button class="btn btn-ghost" id="viCancelBtn" onclick="cancelVIEdit()" style="display:none;">취소</button>
-          </div>
-        </div>
-        <div class="form-group"><label>비고</label><input type="text" id="viNote" placeholder="메모 (선택)"></div>
-      </div>
-      <!-- 잔여현황 뷰 -->
-      <div id="vBalanceArea" style="display:none;padding-bottom:8px;"></div>
-      <!-- 테이블 -->
-      <div id="vTableArea" style="overflow-x:auto;">
-        <table class="tbl" id="voucherTable">
-          <thead><tr>
-            <th>#</th><th>연도</th><th>날짜</th><th style="text-align:center;">구분</th><th>목적/구매처</th><th>수령인/대상</th>
-            <th>종류</th><th class="num">단가</th><th class="num">수량</th>
-            <th class="num">합계</th><th>재원/비고</th><th>관리</th>
-          </tr></thead>
-          <tbody id="voucherTbody"></tbody>
-        </table>
-      </div>
-      <div id="voucherFooter" style="text-align:right;margin-top:8px;font-size:11px;color:var(--text3);"></div>
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table class="parking-table" style="min-width:900px;" id="sateakTable">
+        <thead><tr>
+          <th style="width:40px;">#</th>
+          <th>사택명</th>
+          <th style="min-width:200px;">계약기간</th>
+          <th>입주자</th>
+          <th>소속</th>
+          <th style="text-align:right;">보증금</th>
+          <th style="text-align:right;">입주예치금</th>
+          <th style="width:70px;">상태</th>
+          <th style="width:80px;">관리</th>
+        </tr></thead>
+        <tbody id="sateakTbody"></tbody>
+      </table>
     </div>
   </div>
 </div>
 </div>
 
-<!-- ===== 거래처 관리 ===== -->
-<div class="page" id="pageVendor">
+<!-- ===== 건강검진 현황 ===== -->
+<div class="page" id="pageHealth">
 <div class="container">
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title"><span class="icon icon-teal">🤝</span> 거래처 관리</div>
-      <div style="display:flex;gap:6px;align-items:center;">
-        <input type="text" id="vendorSearch" placeholder="🔍 거래처·담당자 검색..." oninput="renderVendors()"
-          style="padding:6px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;width:200px;background:var(--surface);">
-        <select id="vendorCatFilter" onchange="renderVendors()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);">
-          <option value="all">전체 분류</option>
+
+  <!-- 요약 카드 -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px;" id="healthSummaryCards"></div>
+
+  <!-- 필터/검색 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-body" style="padding:12px 16px;">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border2);">
+        <span style="font-size:11px;color:var(--text3);font-weight:600;white-space:nowrap;">📅 연도 관리</span>
+        <div id="healthYearMgmt" style="display:inline-flex;gap:4px;flex-wrap:wrap;align-items:center;"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <input id="healthSearch" style="flex:1;min-width:160px;max-width:260px;padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);outline:none;" placeholder="🔍 이름·부서·팀 검색" oninput="renderHealthTable()">
+        <select id="healthProjectFilter" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer;" onchange="renderHealthTable()">
+          <option value="">전체 프로젝트</option>
+          <option value="E7">E7</option>
+          <option value="SSR">SSR</option>
+          <option value="공통">공통</option>
         </select>
-        <button class="btn btn-primary btn-sm" onclick="openVendorModal()">＋ 추가</button>
-        <button class="btn btn-ghost btn-sm" onclick="exportVendorCSV()">📊 CSV 내보내기</button>
-        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importVendorFile').click()">📂 CSV 가져오기</button>
-        <input type="file" id="importVendorFile" accept=".csv" style="display:none" onchange="importVendorCSV(this)">
+        <select id="healthPlanFilter" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer;" onchange="renderHealthTable()">
+          <option value="">전체 (올해)</option>
+          <option value="25만원">25만원 완료</option>
+          <option value="50만원">50만원 완료</option>
+          <option value="미수검">미수검</option>
+          <option value="미대상">미대상</option>
+          <option value="수습중">수습중</option>
+        </select>
+        <span id="healthCount" style="font-size:12px;color:var(--text3);margin-left:4px;"></span>
+        <div style="margin-left:auto;display:flex;gap:6px;">
+          <button class="btn btn-primary btn-sm" onclick="openAddHealthEmpModal()">＋ 임직원 추가</button>
+          <button class="btn btn-ghost btn-sm" onclick="applyHealthPredictions()" title="패턴 기반 올해 예정 일괄 적용">📊 예측 일괄 적용</button>
+          <button class="btn btn-ghost btn-sm" onclick="exportHealthCSV()">⬇ CSV</button>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importHealthFile').click()">⬆ CSV</button>
+          <input type="file" id="importHealthFile" accept=".csv" style="display:none" onchange="importHealthCSV(this)">
+        </div>
       </div>
     </div>
-    <div style="overflow-x:auto;">
-      <table class="tbl" id="vendorTable">
-        <thead><tr>
-          <th style="width:110px;">분류</th><th style="width:110px;">거래처</th>
-          <th style="width:75px;">담당자</th><th style="width:65px;">직급</th>
-          <th style="min-width:130px;">이메일</th><th style="width:115px;">연락처</th>
-          <th style="width:80px;text-align:right;">단가</th>
-          <th style="width:85px;">입금방법</th><th style="width:65px;">발행일</th>
-          <th style="width:65px;">입금일</th><th>비고</th>
-          <th style="width:80px;">총무팀담당자</th><th style="width:64px;">관리</th>
-        </tr></thead>
-        <tbody id="vendorTbody"></tbody>
+  </div>
+
+  <!-- 테이블 -->
+  <div class="card">
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table class="parking-table" style="min-width:860px;" id="healthTable">
+        <thead id="healthThead"></thead>
+        <tbody id="healthTbody"></tbody>
       </table>
     </div>
   </div>
 </div>
+</div>
+
+<!-- ===== 건강검진 편집 모달 ===== -->
+<div class="modal-overlay" id="editHealthModal" onclick="if(event.target===this)closeModal('editHealthModal')">
+  <div class="modal" style="max-width:500px;">
+    <h3 id="editHealthModalTitle">🏥 건강검진 정보 수정</h3>
+    <input type="hidden" id="editHealthId">
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;" id="editHealthName"></div>
+    <!-- 신규 추가 시에만 표시되는 기본 정보 -->
+    <div id="editHealthBaseInfo" style="display:none;">
+      <div class="form-row">
+        <div class="form-group"><label>사번 *</label><input type="text" id="editHealthEmpId" placeholder="101500"></div>
+        <div class="form-group"><label>성명 *</label><input type="text" id="editHealthEmpName" placeholder="홍길동"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>프로젝트</label>
+          <select id="editHealthProject"><option value="E7">E7</option><option value="SSR">SSR</option><option value="공통">공통</option></select>
+        </div>
+        <div class="form-group"><label>실</label><input type="text" id="editHealthDept" placeholder="기획실"></div>
+        <div class="form-group"><label>팀</label><input type="text" id="editHealthTeam" placeholder="UI팀"></div>
+      </div>
+    </div>
+    <!-- 입사/수습 정보 (항상 표시) -->
+    <div class="form-row">
+      <div class="form-group"><label>입사일</label><input type="date" id="editHealthJoinDate" onchange="autoFillProbEnd()"></div>
+      <div class="form-group"><label>수습종료일</label><input type="date" id="editHealthProbEnd"></div>
+    </div>
+    <!-- 검진 패턴 -->
+    <div class="form-group">
+      <label>검진 패턴</label>
+      <select id="editHealthPattern">
+        <option value="25만원">매년 25만원</option>
+        <option value="격년50만원">격년 50만원</option>
+      </select>
+    </div>
+    <!-- 연도별 수검 현황 (동적) -->
+    <div id="editHealthYearFields" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
+    <div class="modal-actions" style="justify-content:space-between;">
+      <div><button class="btn btn-danger btn-sm" id="editHealthDeleteBtn" style="display:none;" onclick="deleteHealthEmp(document.getElementById('editHealthId').value)">삭제</button></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="closeModal('editHealthModal')">취소</button>
+        <button class="btn btn-primary" onclick="saveHealthEdit()">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 사택 추가/수정 모달 ===== -->
+<div class="modal-overlay" id="addSateakModal" onclick="if(event.target===this)closeModal('addSateakModal')">
+  <div class="modal" style="max-width:480px;">
+    <h3 id="sateakModalTitle">🏠 사택 추가</h3>
+    <input type="hidden" id="editSateakId">
+    <div class="form-row">
+      <div class="form-group"><label>사택명 *</label><input type="text" id="sateakName" placeholder="예: 트레벨 820호"></div>
+      <div class="form-group" style="max-width:130px;"><label>상태</label>
+        <select id="sateakStatus"><option value="입주중">입주중</option><option value="퇴거">퇴거</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>계약 시작일</label><input type="date" id="sateakStartDate"></div>
+      <div class="form-group"><label>계약 종료일</label><input type="date" id="sateakEndDate"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>입주자명 *</label><input type="text" id="sateakTenant" placeholder="홍길동"></div>
+      <div class="form-group"><label>소속</label><input type="text" id="sateakDept" placeholder="예: SSR 기획실"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>보증금 (원)</label><input type="number" id="sateakDeposit" placeholder="10000000"></div>
+      <div class="form-group">
+        <label>예치금 납부 방식</label>
+        <select id="sateakPayType" onchange="toggleSateakPayFields()">
+          <option value="일시불">일시불</option>
+          <option value="분할">분할납부 (매월 30만)</option>
+        </select>
+      </div>
+    </div>
+    <!-- 일시불 -->
+    <div id="sateakLumpDiv" class="form-group">
+      <label>입주예치금 합계 (원)</label>
+      <input type="number" id="sateakAdvance" placeholder="2100000">
+    </div>
+    <!-- 분할납부 -->
+    <div id="sateakInstDiv" style="display:none;">
+      <div class="form-row" style="margin-bottom:6px;">
+        <div class="form-group">
+          <label>총 납부 개월 수</label>
+          <input type="number" id="sateakInstMonths" value="7" min="1" max="24" oninput="renderSateakMonthChecks()">
+        </div>
+        <div class="form-group">
+          <label>월 납부액 (원)</label>
+          <input type="number" id="sateakInstAmt" value="300000" oninput="renderSateakMonthChecks()">
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:6px;">✅ 체크하면 납부 완료 처리됩니다</div>
+      <div id="sateakMonthChecks" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      <div style="margin-top:8px;font-size:12px;font-weight:600;" id="sateakInstSummary"></div>
+    </div>
+    <div class="form-group"><label>비고</label><input type="text" id="sateakNote" placeholder="메모"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('addSateakModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveSateak()">저장</button>
+    </div>
+  </div>
 </div>
 
 <!-- ===== 바로가기 링크 ===== -->
@@ -1022,7 +1135,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
       <table class="parking-table" id="parkingTable">
         <thead>
           <tr>
-            <th>번호</th><th>주차장</th><th>소속</th><th>이름</th><th>차량번호</th><th>구분</th><th>상태</th><th>비고</th><th>관리</th>
+            <th style="width:40px;">번호</th><th>주차장</th><th>소속</th><th>이름</th><th>차량번호</th><th>구분</th><th>상태</th><th style="width:90px;text-align:center;">등록일</th><th style="width:90px;text-align:center;">해지일</th><th>비고</th><th style="width:90px;">관리</th>
           </tr>
         </thead>
         <tbody id="parkingTbody"></tbody>
@@ -1092,10 +1205,37 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
         </select>
       </div>
     </div>
-    <div class="form-group"><label>비고</label><input type="text" id="empNote" placeholder="차량 변경 이력, 특이사항 등"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group"><label>등록일</label><input type="date" id="empRegDate"></div>
+      <div class="form-group"><label>해지일</label><input type="date" id="empEndDate"></div>
+    </div>
+    <div class="form-group"><label>비고</label><input type="text" id="empNote" placeholder="특이사항 등"></div>
+    <div class="modal-actions" style="justify-content:space-between;">
+      <button class="btn btn-ghost btn-sm" id="empHistoryBtn" onclick="openCarHistoryModal(document.getElementById('editEmpId').value)" style="display:none;">🚘 차량 이력</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="closeModal('addEmpModal')">취소</button>
+        <button class="btn btn-primary" onclick="saveEmp()">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 차량 이력 모달 -->
+<div class="modal-overlay" id="carHistoryModal" onclick="if(event.target===this)closeModal('carHistoryModal')">
+  <div class="modal" style="max-width:480px;">
+    <h3>🚘 차량 이력</h3>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;" id="carHistoryEmpName"></div>
+    <!-- 이력 추가 폼 -->
+    <div style="display:grid;grid-template-columns:130px 1fr auto;gap:8px;align-items:end;margin-bottom:12px;">
+      <div class="form-group" style="margin-bottom:0;"><label style="font-size:11px;">변경일</label><input type="date" id="carHistDate" style="width:100%;"></div>
+      <div class="form-group" style="margin-bottom:0;"><label style="font-size:11px;">차량번호</label><input type="text" id="carHistCarNum" placeholder="12가 3456" style="width:100%;"></div>
+      <button class="btn btn-primary btn-sm" onclick="addCarHistory()" style="white-space:nowrap;">추가</button>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;"><label style="font-size:11px;">메모 (선택)</label><input type="text" id="carHistNote" placeholder="예: 차량 변경, 렌트카 교체" style="width:100%;"></div>
+    <!-- 이력 목록 -->
+    <div id="carHistoryList" style="max-height:240px;overflow-y:auto;border:1px solid var(--border2);border-radius:var(--radius-sm);"></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('addEmpModal')">취소</button>
-      <button class="btn btn-primary" onclick="saveEmp()">저장</button>
+      <button class="btn btn-ghost" onclick="closeModal('carHistoryModal')">닫기</button>
     </div>
   </div>
 </div>
@@ -1134,6 +1274,235 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
         </div>
         <div class="reg-tab-content" id="regTabContent"></div>
       </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== 상품권 관리 ===== -->
+<div class="page" id="pageVoucher">
+<div class="container">
+
+  <!-- 요약 칩 -->
+  <div class="summary-chips" id="voucherSummary"></div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon icon-yellow">🎁</span> 상품권 관리 대장</div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <select id="vFilterYear" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer;" onchange="renderVoucher()">
+          <option value="all">전체 연도</option>
+          <option value="2024">2024년</option>
+          <option value="2025">2025년</option>
+          <option value="2026" selected>2026년</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="exportVoucherCSV()">📊 CSV 내보내기</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importVoucherFile').click()">📂 CSV 가져오기</button>
+        <input type="file" id="importVoucherFile" accept=".csv" style="display:none" onchange="importFromCSV(this,'voucher')">
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- 탭 -->
+      <div class="voucher-tab-row">
+        <button class="vtab active" id="vtab_out" onclick="switchVTab('out')">📤 지급·출고</button>
+        <button class="vtab" id="vtab_in" onclick="switchVTab('in')">📥 입고</button>
+        <button class="vtab" id="vtab_balance" onclick="switchVTab('balance')">📊 잔여현황</button>
+      </div>
+
+      <!-- 지급·출고 폼 -->
+      <div id="vFormOut" class="form-panel">
+        <div class="form-panel-title"><span>📤</span> <span id="voucherFormTitle">지급·출고 등록</span></div>
+        <input type="hidden" id="vEditIdx" value="-1">
+        <div class="form-row">
+          <div class="form-group">
+            <label>지급일 *</label>
+            <input type="date" id="vDate">
+          </div>
+          <div class="form-group">
+            <label>연도</label>
+            <input type="number" id="vYear" value="2026" min="2020" max="2030">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>목적</label>
+            <select id="vPurpose">
+              <option value="명절">명절</option>
+              <option value="경조사">경조사</option>
+              <option value="포상">포상</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>수령인/대상 *</label>
+            <input type="text" id="vRecipient" placeholder="홍길동 또는 부서명">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>상품권 종류</label>
+            <select id="vType">
+              <option value="신세계상품권">신세계상품권</option>
+              <option value="문화상품권">문화상품권</option>
+              <option value="백화점상품권">백화점상품권</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>재원</label>
+            <input type="text" id="vPaidFrom" placeholder="예: 복지비, 행사비">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>단가 (원) *</label>
+            <input type="text" id="vUnit" placeholder="50,000" oninput="const u=parseAmt(this.value),q=parseInt(document.getElementById('vQty').value)||1;document.getElementById('vTotal').value=u*q>0?(u*q).toLocaleString():'';">
+          </div>
+          <div class="form-group">
+            <label>수량</label>
+            <input type="number" id="vQty" value="1" min="1" oninput="const u=parseAmt(document.getElementById('vUnit').value),q=parseInt(this.value)||1;document.getElementById('vTotal').value=u*q>0?(u*q).toLocaleString():'';">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>합계금액</label>
+            <input type="text" id="vTotal" placeholder="자동계산" readonly style="background:var(--bg2);">
+          </div>
+          <div class="form-group">
+            <label>비고</label>
+            <input type="text" id="vNote" placeholder="메모">
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-primary" onclick="saveVoucher('out')">📤 저장</button>
+          <button class="btn btn-ghost" id="vCancelBtn" style="display:none;" onclick="cancelVEdit()">취소</button>
+        </div>
+      </div>
+
+      <!-- 입고 폼 -->
+      <div id="vFormIn" class="form-panel" style="display:none;">
+        <div class="form-panel-title"><span>📥</span> 입고 등록</div>
+        <input type="hidden" id="viEditIdx" value="-1">
+        <div class="form-row">
+          <div class="form-group">
+            <label>구매일 *</label>
+            <input type="date" id="viDate">
+          </div>
+          <div class="form-group">
+            <label>연도</label>
+            <input type="number" id="viYear" value="2026" min="2020" max="2030">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>상품권 종류</label>
+            <select id="viType">
+              <option value="신세계상품권">신세계상품권</option>
+              <option value="문화상품권">문화상품권</option>
+              <option value="백화점상품권">백화점상품권</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>구매처/공급처</label>
+            <input type="text" id="viSupplier" placeholder="구매처">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>단가 (원) *</label>
+            <input type="text" id="viUnit" placeholder="50,000" oninput="calcVITotal()">
+          </div>
+          <div class="form-group">
+            <label>수량</label>
+            <input type="number" id="viQty" value="1" min="1" oninput="calcVITotal()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>합계금액</label>
+            <input type="text" id="viTotal" placeholder="자동계산" readonly style="background:var(--bg2);">
+          </div>
+          <div class="form-group">
+            <label>비고</label>
+            <input type="text" id="viNote" placeholder="메모">
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-primary" onclick="saveVoucher('in')">📥 저장</button>
+          <button class="btn btn-ghost" id="viCancelBtn" style="display:none;" onclick="cancelVIEdit()">취소</button>
+        </div>
+      </div>
+
+      <!-- 잔여현황 -->
+      <div id="vBalanceArea" style="display:none;"></div>
+
+      <!-- 출납 테이블 -->
+      <div id="vTableArea">
+        <table class="tbl" style="min-width:900px;">
+          <thead>
+            <tr>
+              <th style="width:36px;text-align:center;">#</th>
+              <th style="width:55px;">연도</th>
+              <th style="width:90px;">날짜</th>
+              <th style="width:55px;text-align:center;">구분</th>
+              <th style="min-width:100px;">목적/구매처</th>
+              <th style="min-width:90px;">수령인</th>
+              <th style="min-width:100px;">종류</th>
+              <th style="width:80px;text-align:right;">단가</th>
+              <th style="width:55px;text-align:right;">수량</th>
+              <th style="width:90px;text-align:right;">합계금액</th>
+              <th style="min-width:100px;">재원/비고</th>
+              <th style="width:80px;">관리</th>
+            </tr>
+          </thead>
+          <tbody id="voucherTbody"></tbody>
+        </table>
+      </div>
+      <div id="voucherFooter" style="padding:8px 12px;font-size:12px;color:var(--text2);text-align:right;border-top:1px solid var(--border);"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== 거래처 관리 ===== -->
+<div class="page" id="pageVendor">
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon icon-teal">🤝</span> 거래처 관리</div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input id="vendorSearch" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);outline:none;width:180px;" placeholder="🔍 검색..." oninput="renderVendors()">
+        <select id="vendorCatFilter" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer;" onchange="renderVendors()">
+          <option value="all">전체 분류</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="openVendorModal()">＋ 거래처 추가</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportVendorCSV()">📊 CSV 내보내기</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importVendorFile').click()">📂 CSV 가져오기</button>
+        <input type="file" id="importVendorFile" accept=".csv" style="display:none" onchange="importFromCSV(this,'vendor')">
+      </div>
+    </div>
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table class="tbl" style="min-width:1100px;" id="vendorTable">
+        <thead>
+          <tr>
+            <th style="width:90px;">분류</th>
+            <th style="min-width:100px;">거래처명</th>
+            <th style="min-width:80px;">담당자</th>
+            <th style="width:60px;">직급</th>
+            <th style="min-width:140px;">이메일</th>
+            <th style="width:110px;white-space:nowrap;">연락처</th>
+            <th style="width:80px;text-align:right;">단가</th>
+            <th style="width:80px;">입금방법</th>
+            <th style="width:80px;">발행일</th>
+            <th style="width:80px;">입금일</th>
+            <th style="min-width:120px;">비고</th>
+            <th style="width:80px;">총무담당</th>
+            <th style="width:80px;">관리</th>
+          </tr>
+        </thead>
+        <tbody id="vendorTbody"></tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -1683,23 +2052,50 @@ function showToast(msg){
 // ============================================================
 // 페이지 전환 (F5/새로고침 시 현재 탭 유지)
 // ============================================================
-const PAGES=['home','calendar','voucher','vendor','links','notice','checklist','manual','regulation','parking'];
+const PAGES=['home','calendar','sateak','health','links','notice','checklist','manual','regulation','parking','voucher','vendor'];
+// 드롭다운 그룹에 속하는 페이지 목록
+const NAV_GROUP_SYSTEM=['sateak','parking','health','voucher'];
+const NAV_GROUP_DOC=['manual','regulation','vendor'];
+function toggleNavGroup(id,e){
+  e.stopPropagation();
+  const grp=document.getElementById(id);
+  const isOpen=grp.classList.contains('open');
+  closeNavGroups();
+  if(!isOpen)grp.classList.add('open');
+}
+function closeNavGroups(){
+  document.querySelectorAll('.nav-group').forEach(g=>g.classList.remove('open'));
+}
+document.addEventListener('click',closeNavGroups);
+
 function showPage(name){
   PAGES.forEach(p=>{
     document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1)).classList.toggle('active',p===name);
     const btn=document.getElementById('nav'+p.charAt(0).toUpperCase()+p.slice(1));
     if(btn) btn.classList.toggle('active',p===name);
   });
+  // 드롭다운 그룹 트리거 버튼 active 상태
+  const sysBtn=document.getElementById('navGroupSystemBtn');
+  const docBtn=document.getElementById('navGroupDocBtn');
+  if(sysBtn)sysBtn.classList.toggle('active',NAV_GROUP_SYSTEM.includes(name));
+  if(docBtn)docBtn.classList.toggle('active',NAV_GROUP_DOC.includes(name));
   sessionStorage.setItem('intra_current_page', name);
+  // 브라우저 히스토리 관리 (뒤로가기 지원)
+  if(history.state?.page!==name){
+    history.pushState({page:name},'',window.location.pathname+'#'+name);
+  }
+  if(name==='home'){refreshVoucherPreview();renderUpcomingEvents();}
   if(name==='calendar') renderCalendar();
-  if(name==='voucher') renderVoucher();
-  if(name==='vendor') renderVendors();
+  if(name==='sateak') renderSateak();
+  if(name==='health') renderHealth();
   if(name==='links') renderLinks();
   if(name==='notice') renderNotices(false);
   if(name==='checklist') renderChecklist();
   if(name==='manual') renderManualList();
   if(name==='regulation') renderRegulationList();
   if(name==='parking') renderParking();
+  if(name==='voucher'){_vTab='out';renderVoucher();}
+  if(name==='vendor') renderVendors();
 }
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -1973,9 +2369,75 @@ function refreshVoucherPreview(){
   const prev=outOnly.slice(-5).reverse();
   const box=document.getElementById('voucherPreview');
   if(!box) return;
-  box.innerHTML=prev.length===0
-    ?'<div style="color:var(--text3);font-size:12px;padding:4px;">등록된 지급 내역이 없습니다</div>'
-    :prev.map(v=>`<div class="preview-item"><span><span class="tag tag-blue" style="font-size:9px;margin-right:4px;">${v.purpose||''}</span>${v.recipient||''}</span><span style="font-weight:700;color:var(--primary);">${(v.totalAmt||0).toLocaleString()}원</span></div>`).join('');
+  if(prev.length===0){
+    box.innerHTML='<div style="color:var(--text3);font-size:12px;padding:8px;text-align:center;">등록된 지급 내역이 없습니다</div>';
+    return;
+  }
+  box.innerHTML=prev.map(v=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:10px;color:var(--text3);">${v.date||''}</span>
+        <span class="tag tag-blue" style="font-size:10px;">${v.purpose||''}</span>
+        <span style="font-weight:600;">${v.recipient||''}</span>
+        <span style="color:var(--text2);">${v.vtype||''}</span>
+      </div>
+      <span style="font-weight:700;color:var(--primary);font-variant-numeric:tabular-nums;">${(v.totalAmt||0).toLocaleString()}원</span>
+    </div>`).join('');
+}
+function renderUpcomingEvents(){
+  const box=document.getElementById('upcomingEvents');
+  if(!box)return;
+  try{
+    const today=new Date();today.setHours(0,0,0,0);
+    const limit=new Date(today);limit.setDate(limit.getDate()+30);
+    const allItems=[];
+    // 주차 → 해당 달의 날짜 범위 (start일, end일)
+    const weekRange={'1주':[1,7],'2주':[8,14],'3주':[15,21],'4주':[22,28],'5주':[29,31]};
+    // 현재 달 + 다음 달 두 개 검사
+    const ty=today.getFullYear(),tm=today.getMonth();
+    const checks=[{y:ty,m:tm},{y:ty+(tm===11?1:0),m:(tm+1)%12}];
+    checks.forEach(({y,m})=>{
+      const calData=loadCalData(y);
+      Object.entries(weekRange).forEach(([week,[sd,ed]])=>{
+        // 실제 마지막 날 계산 (월마다 다름)
+        const lastDay=new Date(y,m+1,0).getDate();
+        const realEnd=Math.min(ed,lastDay);
+        const weekStart=new Date(y,m,sd);weekStart.setHours(0,0,0,0);
+        const weekEnd=new Date(y,m,realEnd);weekEnd.setHours(23,59,59,999);
+        if(weekEnd<today||weekStart>limit)return;
+        calData.filter(d=>d.week===week&&d.category==='총무'&&d.months&&d.months[m]&&d.months[m].trim()&&d.months[m]!=='　').forEach(d=>{
+          const lines=d.months[m].split('\n').map(l=>l.replace(/^-\s*/,'').trim()).filter(l=>l&&l!=='　');
+          lines.forEach(line=>{
+            allItems.push({title:line.slice(0,50),week,month:m,year:y,weekStart,catColor:'#6366f1'});
+          });
+        });
+      });
+    });
+    allItems.sort((a,b)=>a.weekStart-b.weekStart);
+    const top=allItems.slice(0,8);
+    if(!top.length){
+      box.innerHTML='<div style="color:var(--text3);font-size:12px;padding:8px;text-align:center;">30일 이내 예정 총무 업무가 없습니다</div>';
+      return;
+    }
+    // 중복 월/주 그룹핑 표시
+    let lastGroup='';
+    box.innerHTML=top.map(t=>{
+      const grpKey=t.year+'_'+t.month+'_'+t.week;
+      const mn=MONTHS_KOR[t.month];
+      const diffDays=Math.ceil((t.weekStart-today)/(1000*60*60*24));
+      let header='';
+      if(grpKey!==lastGroup){
+        lastGroup=grpKey;
+        const badge=diffDays<=0?'<span style="background:#dcfce7;color:#166534;border-radius:8px;padding:1px 6px;font-size:10px;">이번주</span>'
+          :`<span style="font-size:10px;color:var(--text3);">${mn} ${t.week}</span>`;
+        header=`<div style="padding:4px 0 2px;font-size:11px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border2);margin-bottom:3px;display:flex;gap:6px;align-items:center;">${badge}</div>`;
+      }
+      return header+`<div style="display:flex;align-items:flex-start;gap:6px;padding:3px 0;font-size:11px;color:var(--text);">
+        <span style="width:6px;height:6px;border-radius:50%;background:#6366f1;margin-top:5px;flex-shrink:0;"></span>
+        <span style="flex:1;line-height:1.4;">${t.title}</span>
+      </div>`;
+    }).join('');
+  }catch(e){box.innerHTML='<div style="font-size:11px;color:var(--text3);padding:8px;">불러오기 실패</div>';}
 }
 function saveVoucher(flowType){
   if(!flowType) flowType='out';
@@ -2728,14 +3190,19 @@ function renderHomeDdayBanner(){
 // 스탯 카드 갱신
 // ============================================================
 function updateStatCards(){
-  const vendors=loadVendors().length;
-  const vouchers=loadVouchers();
-  const sv=document.getElementById('statVendors');if(sv)sv.textContent=vendors;
-  const inAmt=vouchers.filter(v=>v.flowType==='in').reduce((s,v)=>s+(v.totalAmt||0),0);
-  const outAmt=vouchers.filter(v=>v.flowType!=='in').reduce((s,v)=>s+(v.totalAmt||0),0);
-  const outCnt=vouchers.filter(v=>v.flowType!=='in').length;
-  const sc=document.getElementById('statVoucherLabel');if(sc)sc.textContent='상품권 잔액 (지급 '+outCnt+'건)';
-  const sa=document.getElementById('statVoucherAmt');if(sa){sa.textContent=(inAmt-outAmt).toLocaleString()+'원';sa.style.color=(inAmt-outAmt)<0?'var(--danger)':'';}
+  // 사택 현황 스탯
+  try{
+    const sateaks=loadSateaks();
+    const activeSateak=sateaks.filter(s=>s.status==='입주중').length;
+    const ss=document.getElementById('statSateak');if(ss)ss.textContent=activeSateak;
+  }catch(e){}
+
+  // 건강검진 스탯
+  try{
+    const healths=loadHealths();
+    const _currYrH=new Date().getFullYear().toString().slice(-2);const healthTarget=healths.filter(h=>{const v=h['y'+_currYrH]||'';return v!==''&&v!=='미대상'&&v!=='수습중';}).length;
+    const sh=document.getElementById('statHealth');if(sh)sh.textContent=healthTarget;
+  }catch(e){}
 
   // 주차 현황 스탯
   try{
@@ -4096,10 +4563,11 @@ function init(){
   buildCalYearSelect();
   renderNotices(true);
   refreshVoucherPreview();
+  renderUpcomingEvents();
   updateStatCards();
   const today=new Date().toISOString().slice(0,10);
-  document.getElementById('vDate').value=today;
-  document.getElementById('vYear').value=new Date().getFullYear();
+  if(document.getElementById('vDate')) document.getElementById('vDate').value=today;
+  if(document.getElementById('vYear')) document.getElementById('vYear').value=new Date().getFullYear();
   // 체크리스트 초기화
   buildClMonthSelect();
   renderHomeDdayBanner();
@@ -4119,6 +4587,676 @@ function init(){
 const PARKING_LOTS_DEFAULT = [{"id": "mirae", "name": "미래에셋센터", "freeSlots": 16, "paidSlots": 31, "totalSlots": 47, "monthlyFee": 264000, "companyShare": 164000, "deductCount": 35, "waitCount": 2, "color": "#dbeafe", "icon": "🏢"}, {"id": "hoban", "name": "호반메트로큐브", "freeSlots": 0, "paidSlots": 14, "totalSlots": 14, "monthlyFee": 253000, "companyShare": 153000, "deductCount": 14, "waitCount": 0, "color": "#dcfce7", "icon": "🏗️"}, {"id": "samhwan", "name": "삼환하이펙스", "freeSlots": 29, "paidSlots": 0, "totalSlots": 29, "monthlyFee": 0, "companyShare": 0, "deductCount": 22, "waitCount": 0, "color": "#fef9c3", "icon": "🏛️"}, {"id": "wsq", "name": "더블유스퀘어", "freeSlots": 0, "paidSlots": 7, "totalSlots": 7, "monthlyFee": 286000, "companyShare": 186000, "deductCount": 7, "waitCount": 0, "color": "#fce7f3", "icon": "🏬"}];
 
 const PARKING_EMP_DEFAULT = [{"id": "A-01", "lot": "삼환하이펙스", "dept": "SSR 아트실", "name": "김시나", "status": "재직", "carNum": "315주4136", "note": "", "feeType": "무료주차"}, {"id": "VC-01", "lot": "차량 해지", "dept": "SSR 기획실", "name": "김찬중", "status": "재직", "carNum": "63우1391", "note": "", "feeType": "차량해지"}, {"id": "A-03", "lot": "삼환하이펙스", "dept": "SSR 아트실", "name": "김탁곤", "status": "재직", "carNum": "64고 1169", "note": "차량 변경 11노 2814 -> 64고 1169", "feeType": "무료주차"}, {"id": "A-04", "lot": "삼환하이펙스", "dept": "공동대표", "name": "김형석-1", "status": "재직", "carNum": "189서5237", "note": "", "feeType": "무료주차"}, {"id": "A-05", "lot": "삼환하이펙스", "dept": "SSR 기획실", "name": "남현민", "status": "재직", "carNum": "54거9124", "note": "254나 3609 7월 15일부로 변경", "feeType": "무료주차"}, {"id": "A-06", "lot": "삼환하이펙스", "dept": "SSR 아트실", "name": "박나래", "status": "재직", "carNum": "182호2541", "note": "", "feeType": "무료주차"}, {"id": "A-08", "lot": "삼환하이펙스", "dept": "SSR 배경원화", "name": "배제성", "status": "재직", "carNum": "169도8991", "note": "", "feeType": "무료주차"}, {"id": "A-09", "lot": "삼환하이펙스", "dept": "SSR 아트실", "name": "성시우", "status": "재직", "carNum": "42루4563", "note": "", "feeType": "무료주차"}, {"id": "A-10", "lot": "삼환하이펙스", "dept": "SSR 기획실", "name": "이창현", "status": "재직", "carNum": "22무5157", "note": "", "feeType": "무료주차"}, {"id": "A-11", "lot": "삼환하이펙스", "dept": "컨텐츠팀", "name": "최승현", "status": "재직", "carNum": "395주4148", "note": "실장급 무료 지원", "feeType": "무료주차"}, {"id": "A-12", "lot": "삼환하이펙스", "dept": "SSR 배경팀", "name": "최웅환", "status": "재직", "carNum": "128거9764", "note": "", "feeType": "무료주차"}, {"id": "A-13", "lot": "삼환하이펙스", "dept": "SSR 기획실", "name": "홍성식", "status": "재직", "carNum": "19머9766", "note": "11월 5일 퇴사 예정", "feeType": "무료주차"}, {"id": "S-01", "lot": "삼환하이펙스", "dept": "총무팀", "name": "남궁호", "status": "재직", "carNum": "36머6352", "note": "", "feeType": "무료주차"}, {"id": "S-02", "lot": "삼환하이펙스", "dept": "애니메이션팀", "name": "박준식", "status": "재직", "carNum": "334가3152", "note": "", "feeType": "무료주차"}, {"id": "S-03", "lot": "삼환하이펙스", "dept": "애니메이션팀", "name": "이재훈", "status": "재직", "carNum": "08구6801", "note": "안랩 대기 순번 1번", "feeType": "무료주차"}, {"id": "S-04", "lot": "삼환하이펙스", "dept": "PM팀", "name": "이주형", "status": "재직", "carNum": "33러3615", "note": "", "feeType": "무료주차"}, {"id": "VC-03", "lot": "차량 해지", "dept": "SSR", "name": "전수연", "status": "퇴직", "carNum": "316저1975", "note": "퇴사로인한 해지", "feeType": "차량해지"}, {"id": "S-06", "lot": "삼환하이펙스", "dept": "시스템팀", "name": "최재현", "status": "재직", "carNum": "51마8343", "note": "퇴사로 인한 해지", "feeType": "무료주차"}, {"id": "VC-04", "lot": "차량 해지", "dept": "개발지원실", "name": "박홍", "status": "재직", "carNum": "21수 9079", "note": "24년1월1일 부터 미래에셋으로 변경\n차량 변경 신청 24년 5월 16일\n기존 차량 62무 3184 -> 21수 9079\n차량 변경 신청 24년 6월 25일\n21수 9079 -> 69두 3185\n퇴사로 인한 해지", "feeType": "차량해지"}, {"id": "VC-05", "lot": "차량 해지", "dept": "애니메이션팀", "name": "윤관영", "status": "재직", "carNum": "249주 1120", "note": "25년 7월 2일 복귀로 차량 재 등록", "feeType": "차량해지"}, {"id": "VC-06", "lot": "차량 해지", "dept": "PM팀", "name": "안승찬", "status": "재직", "carNum": "111머5701", "note": "3월 29일 퇴사로 해지", "feeType": "차량해지"}, {"id": "VC-07", "lot": "차량 해지", "dept": "컷인팀", "name": "김정철", "status": "재직", "carNum": "06조2195", "note": "6월 5일 퇴사", "feeType": "차량해지"}, {"id": "M-45", "lot": "미래에셋센터", "dept": "프로그램실", "name": "강주영", "status": "재직", "carNum": "368저6850", "note": "24년1월1일 부터 미래에셋으로 변경", "feeType": "유료주차"}, {"id": "H-07", "lot": "호반메트로큐브", "dept": "캐릭터원화팀", "name": "강은표", "status": "재직", "carNum": "54나6104", "note": "", "feeType": "유료주차"}, {"id": "H-08", "lot": "호반메트로큐브", "dept": "코어팀", "name": "이동윤", "status": "재직", "carNum": "139너8533", "note": "", "feeType": "유료주차"}, {"id": "C-11", "lot": "더블유스퀘어", "dept": "컨텐츠팀", "name": "원종영", "status": "재직", "carNum": "51모 9032", "note": "7월 31일 퇴사로 인한 해지", "feeType": "유료주차"}, {"id": "H-10", "lot": "호반메트로큐브", "dept": "시스템팀", "name": "조현진", "status": "재직", "carNum": "10가6359", "note": "육아휴직으로 6월1일부로 해지", "feeType": "유료주차"}, {"id": "H-11", "lot": "호반메트로큐브", "dept": "이펙트팀", "name": "윤준영", "status": "재직", "carNum": "43부0609", "note": "", "feeType": "유료주차"}, {"id": "H-12", "lot": "호반메트로큐브", "dept": "캐릭터원화팀", "name": "김준성", "status": "재직", "carNum": "67버0870", "note": "", "feeType": "유료주차"}, {"id": "VC-10", "lot": "차량 해지", "dept": "총무팀", "name": "이현재", "status": "퇴직", "carNum": "103가2404", "note": "퇴사로인한 해지", "feeType": "차량해지"}, {"id": "VC-11", "lot": "차량 해지", "dept": "전투팀", "name": "이정희", "status": "재직", "carNum": "53버2813", "note": "5월 23일자로 해지", "feeType": "차량해지"}, {"id": "M-46", "lot": "미래에셋센터", "dept": "리소스원화팀", "name": "이은비", "status": "재직", "carNum": "65러7258", "note": "육아휴직 복귀 9월 9일", "feeType": "유료주차"}, {"id": "H-16", "lot": "호반메트로큐브", "dept": "이펙트팀", "name": "이민재", "status": "재직", "carNum": "396저8475", "note": "출산휴가로 2025년 7월 14일부터 8월 8일까지 해지", "feeType": "유료주차"}, {"id": "H-17", "lot": "호반메트로큐브", "dept": "포트애니팀", "name": "권두환", "status": "재직", "carNum": "50나9851", "note": "", "feeType": "유료주차"}, {"id": "VC-12", "lot": "차량 해지", "dept": "기획2팀", "name": "지상준", "status": "재직", "carNum": "41수6292", "note": "육아휴직으로 인한 해지", "feeType": "차량해지"}, {"id": "M-01", "lot": "미래에셋센터", "dept": "공동대표", "name": "강기현-1", "status": "재직", "carNum": "12서 2843", "note": "59고 8426 → 12서 2843 차량 변경", "feeType": "무료주차"}, {"id": "VC-14", "lot": "차량 해지", "dept": "공동대표", "name": "김형석", "status": "재직", "carNum": "189서5237", "note": "요청으로 인한 해지", "feeType": "차량해지"}, {"id": "M-03", "lot": "미래에셋센터", "dept": "프로그램실", "name": "김혁진", "status": "재직", "carNum": "04라9275", "note": "", "feeType": "무료주차"}, {"id": "M-04", "lot": "미래에셋센터", "dept": "애니메이션팀", "name": "이윤수", "status": "재직", "carNum": "209로9274", "note": "", "feeType": "무료주차"}, {"id": "M-05", "lot": "미래에셋센터", "dept": "공동대표", "name": "김형석-3", "status": "재직", "carNum": "307무9419", "note": "지속", "feeType": "무료주차"}, {"id": "M-06", "lot": "미래에셋센터", "dept": "프로그램실", "name": "하동익", "status": "재직", "carNum": "63조 5207", "note": "1월 8일 부로 차량 변경\n차량 변경 전 68주 4753 -> 126소 2697 ->63조 5207", "feeType": "유료주차"}, {"id": "M-07", "lot": "미래에셋센터", "dept": "비주얼아트실", "name": "류한경", "status": "재직", "carNum": "256모3889", "note": "C레벨 지원", "feeType": "무료주차"}, {"id": "M-08", "lot": "미래에셋센터", "dept": "프로그램실", "name": "배현준", "status": "재직", "carNum": "371모3836", "note": "차량변경 371모3836\n변경차량 157하7829\n변경차량 371모3836", "feeType": "무료주차"}, {"id": "VC-15", "lot": "차량 해지", "dept": "코어팀", "name": "문택승", "status": "재직", "carNum": "34보2648", "note": "11월 1일 퇴사로 2일 해지 진행", "feeType": "차량해지"}, {"id": "M-10", "lot": "미래에셋센터", "dept": "캐릭터원화팀", "name": "조성빈", "status": "재직", "carNum": "20수6964", "note": "", "feeType": "유료주차"}, {"id": "VC-16", "lot": "차량 해지", "dept": "전투팀", "name": "고진영", "status": "재직", "carNum": "18러9765", "note": "24년 1월 2일 더블유스퀘어로 변경\n2024년 10월 16일 퇴사로 인하여 해지", "feeType": "차량해지"}, {"id": "VC-17", "lot": "차량 해지", "dept": "SSR 기획실", "name": "이창현", "status": "재직", "carNum": "22무5157", "note": "안랩 근무로 인한 해지", "feeType": "차량해지"}, {"id": "VC-18", "lot": "차량 해지", "dept": "경영지원실", "name": "이혜영", "status": "퇴직", "carNum": "104루9103", "note": "", "feeType": "차량해지"}, {"id": "M-14", "lot": "미래에셋센터", "dept": "공동대표", "name": "강기현-2", "status": "재직", "carNum": "228누8294", "note": "C레벨 지원", "feeType": "유료주차"}, {"id": "VC-19", "lot": "차량 해지", "dept": "경영지원실", "name": "정제균", "status": "재직", "carNum": "64도3042", "note": "C레벨 지원", "feeType": "차량해지"}, {"id": "M-16", "lot": "미래에셋센터", "dept": "PM팀", "name": "김원학", "status": "재직", "carNum": "283더 6468", "note": "", "feeType": "유료주차"}, {"id": "VC-20", "lot": "차량 해지", "dept": "경영지원실", "name": "권기병", "status": "재직", "carNum": "356무2967", "note": "C레벨 지원", "feeType": "차량해지"}, {"id": "M-18", "lot": "미래에셋센터", "dept": "TD", "name": "최호준", "status": "재직", "carNum": "49나6197", "note": "C레벨 지원", "feeType": "무료주차"}, {"id": "C-19", "lot": "더블유스퀘어", "dept": "전략기획팀", "name": "유상용", "status": "재직", "carNum": "30너3948", "note": "26년 3월 1일 더블유스퀘어 주차장", "feeType": "유료주차"}, {"id": "M-20", "lot": "미래에셋센터", "dept": "애니메이션팀", "name": "김종학", "status": "재직", "carNum": "66가9102", "note": "", "feeType": "무료주차"}, {"id": "M-21", "lot": "미래에셋센터", "dept": "캐릭터원화팀", "name": "서연주", "status": "재직", "carNum": "257로8213", "note": "25년 3월 5일부터 28일까지 병가이나 정기주차 유지", "feeType": "무료주차"}, {"id": "M-22", "lot": "미래에셋센터", "dept": "애니메이션팀", "name": "김재형", "status": "재직", "carNum": "148너2033", "note": "", "feeType": "무료주차"}, {"id": "M-23", "lot": "미래에셋센터", "dept": "프로그램실", "name": "박성진", "status": "재직", "carNum": "65거 4423", "note": "차량변경 24부 7086 -> 65거 4423", "feeType": "무료주차"}, {"id": "M-24", "lot": "미래에셋센터", "dept": "CM", "name": "유별라", "status": "재직", "carNum": "211주1933", "note": "", "feeType": "무료주차"}, {"id": "M-25", "lot": "미래에셋센터", "dept": "이펙트팀", "name": "박경수", "status": "재직", "carNum": "05조5241", "note": "24년 3월 휴직 주차 해지\n24년 9월 2일 재 등록", "feeType": "유료주차"}, {"id": "M-26", "lot": "미래에셋센터", "dept": "경영지원실", "name": "신현섭", "status": "재직", "carNum": "12무3103", "note": "3월 1일부터 해지", "feeType": "유료주차"}, {"id": "M-27", "lot": "미래에셋센터", "dept": "총무팀", "name": "함은비", "status": "재직", "carNum": "290노7513", "note": "", "feeType": "유료주차"}, {"id": "M-28", "lot": "미래에셋센터", "dept": "컷인팀", "name": "김신혜", "status": "재직", "carNum": "45너6060", "note": "", "feeType": "유료주차"}, {"id": "M-29", "lot": "미래에셋센터", "dept": "총무팀", "name": "법인차량", "status": "재직", "carNum": "57루4197", "note": "법인차량 / 삼환하이펙스 추가 등록", "feeType": "유료주차"}, {"id": "VC-21", "lot": "차량 해지", "dept": "기획1실", "name": "김윤하", "status": "재직", "carNum": "179조9291", "note": "C레벨 지원", "feeType": "차량해지"}, {"id": "M-31", "lot": "미래에셋센터", "dept": "프로그램실", "name": "박진곤", "status": "재직", "carNum": "26라4190", "note": "", "feeType": "유료주차"}, {"id": "M-32", "lot": "미래에셋센터", "dept": "캐릭터원화팀", "name": "오승재", "status": "재직", "carNum": "108어8080", "note": "", "feeType": "유료주차"}, {"id": "M-33", "lot": "미래에셋센터", "dept": "애니메이션팀", "name": "조성해", "status": "재직", "carNum": "340거2380", "note": "", "feeType": "유료주차"}, {"id": "M-34", "lot": "미래에셋센터", "dept": "인사팀", "name": "최종성", "status": "재직", "carNum": "212소5152", "note": "", "feeType": "유료주차"}, {"id": "VC-22", "lot": "차량 해지", "dept": "전략기획팀", "name": "홍성근", "status": "재직", "carNum": "59오0139", "note": "6월 30일까지만 사용 후 7월 1일부터 해지", "feeType": "차량해지"}, {"id": "VC-23", "lot": "차량 해지", "dept": "총무팀", "name": "법인차량", "status": "퇴직", "carNum": "307나2868", "note": "법인차량(12월 1일 매각완료)", "feeType": "차량해지"}, {"id": "VC-24", "lot": "차량 해지", "dept": "총무팀", "name": "법인차량", "status": "재직", "carNum": "19두7216", "note": "법인차량 매각으로 인한 주차 해지 4월 1일", "feeType": "차량해지"}, {"id": "M-38", "lot": "미래에셋센터", "dept": "프로그램실", "name": "조화평", "status": "재직", "carNum": "37오6601", "note": "", "feeType": "유료주차"}, {"id": "VC-25", "lot": "차량 해지", "dept": "SSR", "name": "전수연", "status": "퇴직", "carNum": "316저1975", "note": "퇴사로인한 해지", "feeType": "차량해지"}, {"id": "VC-26", "lot": "차량 해지", "dept": "총무팀", "name": "이현재", "status": "재직", "carNum": "268너5240", "note": "최호준님 법인차량 해지 4월 1일", "feeType": "차량해지"}, {"id": "M-41", "lot": "미래에셋센터", "dept": "총무팀", "name": "최정효", "status": "재직", "carNum": "226조6990", "note": "", "feeType": "유료주차"}, {"id": "VC-27", "lot": "차량 해지", "dept": "인사팀", "name": "서보경", "status": "퇴직", "carNum": "167라9425", "note": "12월 8일 퇴사", "feeType": "차량해지"}, {"id": "S-07", "lot": "삼환하이펙스", "dept": "프로그램실", "name": "김준범", "status": "재직", "carNum": "07오3802", "note": "삼환으로 변경", "feeType": "무료주차"}, {"id": "VC-28", "lot": "차량 해지", "dept": "프로그램실", "name": "김세형", "status": "재직", "carNum": "28더 1123", "note": "안랩 대기 순번 2번\n12월 1일자로 호반 우선 사용\n2월 15일 해지", "feeType": "차량해지"}, {"id": "VC-29", "lot": "차량 해지", "dept": "포트레이트 애니팀", "name": "김유라", "status": "재직", "carNum": "397소8125", "note": "8월 21일 해지", "feeType": "차량해지"}, {"id": "VC-30", "lot": "차량 해지", "dept": "시나리오팀", "name": "권은서", "status": "퇴직", "carNum": "246고 6330", "note": "퇴사로인한 해지", "feeType": "차량해지"}, {"id": "VC-31", "lot": "차량 해지", "dept": "재무회계팀", "name": "박연옥", "status": "재직", "carNum": "116버8644", "note": "3월 1일자로 등록\n 육아휴직으로 인한 해지", "feeType": "차량해지"}, {"id": "M-71", "lot": "미래에셋센터", "dept": "UI팀", "name": "이명준", "status": "재직", "carNum": "225우8669", "note": "자차 사용하지 않아 2024년 1월 16일부터 해지", "feeType": "유료주차"}, {"id": "C-10", "lot": "더블유스퀘어", "dept": "TD", "name": "이용준", "status": "재직", "carNum": "57누4790", "note": "3월 12일자로 등록\n4월 8일 호반메트로로 변경\n8월 1일 미래에셋센터로 변경", "feeType": "유료주차"}, {"id": "M-51", "lot": "미래에셋센터", "dept": "레벨팀", "name": "허대균", "status": "재직", "carNum": "348보8475", "note": "4월 1일자로 등록", "feeType": "무료주차"}, {"id": "M-52", "lot": "미래에셋센터", "dept": "아트PM팀", "name": "전병성", "status": "재직", "carNum": "243더6491", "note": "미래에셋 센터 5월 1일자로 등록", "feeType": "유료주차"}, {"id": "M-53", "lot": "미래에셋센터", "dept": "경영지원실", "name": "서형택", "status": "재직", "carNum": "46더 4628", "note": "미래에셋 센터 5월 1일자로 등록", "feeType": "무료주차"}, {"id": "VC-44", "lot": "차량 해지", "dept": "기획실", "name": "이승민", "status": "재직", "carNum": "58조2037", "note": "미래에셋센터 6월 1일자로 등록", "feeType": "차량해지"}, {"id": "C-56", "lot": "더블유스퀘어", "dept": "아트실", "name": "박동연", "status": "재직", "carNum": "12어 9514", "note": "미래에셋센터 7월 1일자로 등록", "feeType": "유료주차"}, {"id": "VC-36", "lot": "차량 해지", "dept": "전투컨텐츠팀", "name": "노용균", "status": "재직", "carNum": "327마 4949", "note": "미래에셋센터 7월 1일자로 등록", "feeType": "차량해지"}, {"id": "M-58", "lot": "미래에셋센터", "dept": "시스템팀", "name": "류혜령", "status": "재직", "carNum": "33가 1128", "note": "미래에셋센터 8월 1일자로 등록", "feeType": "유료주차"}, {"id": "M-59", "lot": "미래에셋센터", "dept": "재무회계실", "name": "조혜진", "status": "재직", "carNum": "125노 9328", "note": "미래에셋센터 8월 5일자로 등록", "feeType": "무료주차"}, {"id": "S-9", "lot": "삼환하이펙스", "dept": "SSR 배경원화", "name": "배지환", "status": "재직", "carNum": "11저 4759", "note": "삼환하이펙스 8월 23일자로 등록", "feeType": "무료주차"}, {"id": "VC-37", "lot": "차량 해지", "dept": "SSR 배경원화", "name": "함다예", "status": "재직", "carNum": "48무 1053", "note": "삼환하이펙스 9월 1일자로 등록", "feeType": "차량해지"}, {"id": "H-24", "lot": "호반메트로큐브", "dept": "포트레이트애니팀", "name": "정지현", "status": "재직", "carNum": "153모 7217", "note": "미래에셋센터 9월 7일자로 등록\n호반메트로큐브로 10월 1일자로 변경", "feeType": "유료주차"}, {"id": "H-22", "lot": "호반메트로큐브", "dept": "애니메이션팀", "name": "김민경B", "status": "재직", "carNum": "55무 9725", "note": "호반메트로큐브 9월 4일자로 등록", "feeType": "유료주차"}, {"id": "H-35", "lot": "호반메트로큐브", "dept": "포트레이트애니팀", "name": "임보라", "status": "재직", "carNum": "101우 3669", "note": "호반메트로큐브 10월 1일자로 등록", "feeType": "유료주차"}, {"id": "S-11", "lot": "삼환하이펙스", "dept": "SSR 콘티팀", "name": "이수경", "status": "재직", "carNum": "17저 7385", "note": "삼환하이펙스 10월 14일자로 등록", "feeType": "무료주차"}, {"id": "S-12", "lot": "삼환하이펙스", "dept": "SSR UI팀", "name": "김다은", "status": "재직", "carNum": "291조 6777", "note": "삼환하이펙스 11월 1일자로 등록", "feeType": "무료주차"}, {"id": "H-25", "lot": "호반메트로큐브", "dept": "시나리오팀", "name": "최영현", "status": "재직", "carNum": "63두 5386", "note": "호반메트로큐브 11월 13일 등록", "feeType": "유료주차"}, {"id": "VC-39", "lot": "차량 해지", "dept": "시나리오팀", "name": "천경준", "status": "재직", "carNum": "24보 5020", "note": "삼환하이펙스 12월 1일 등록", "feeType": "차량해지"}, {"id": "S-14", "lot": "삼환하이펙스", "dept": "SSR PM팀", "name": "김소라", "status": "재직", "carNum": "241가 4021", "note": "삼환하이펙스 25년 1월 1일 등록\n삼환하이펙스 25년 2월 1일부터 사용하는 것으로 변경", "feeType": "무료주차"}, {"id": "VC-40", "lot": "차량 해지", "dept": "SSR 시나리오팀", "name": "이민혁", "status": "재직", "carNum": "32두 8714", "note": "삼환하이펙스 25년 1월 1일 등록", "feeType": "차량해지"}, {"id": "H-26", "lot": "호반메트로큐브", "dept": "아트PM팀", "name": "김세은", "status": "재직", "carNum": "48마 2932", "note": "호반메트로큐브 주차장 25년 1월 9일 등록", "feeType": "유료주차"}, {"id": "W-02", "lot": "대기자", "dept": "개발PM팀", "name": "주건영", "status": "재직", "carNum": "04노 4886", "note": "미래에셋센터 25년 1월 16일 등록", "feeType": "유료주차"}, {"id": "M-61", "lot": "미래에셋센터", "dept": "인사팀", "name": "박예령", "status": "재직", "carNum": "25나 0563", "note": "3월 1일부터 미래에셋센터 주차장으로 사용 진행", "feeType": "유료주차"}, {"id": "H-27", "lot": "호반메트로큐브", "dept": "애니메이션팀", "name": "김기윤", "status": "재직", "carNum": "136로 6976", "note": "호반메트로큐브 주차장 25년 3월 1일", "feeType": "유료주차"}, {"id": "H-28", "lot": "호반메트로큐브", "dept": "시나리오팀", "name": "고지혜", "status": "재직", "carNum": "281너 5250", "note": "호반메트로큐브 주차장 25년 4월 1일", "feeType": "유료주차"}, {"id": "H-29", "lot": "호반메트로큐브", "dept": "QA팀", "name": "김동훈", "status": "재직", "carNum": "65모 2634", "note": "호반메트로큐브 주차장 25년 4월 14일", "feeType": "유료주차"}, {"id": "VC-42", "lot": "차량 해지", "dept": "SSR 기획실", "name": "함선우", "status": "재직", "carNum": "64마 6791", "note": "삼환하이펙스 25년 4월 4일", "feeType": "차량해지"}, {"id": "S-17", "lot": "삼환하이펙스", "dept": "프로그램1팀", "name": "이준수", "status": "재직", "carNum": "220두 9502", "note": "삼환하이펙스 주차장으로 이동 6월 12일", "feeType": "무료주차"}, {"id": "S-18", "lot": "삼환하이펙스", "dept": "SSR 컨텐츠팀", "name": "이진원", "status": "재직", "carNum": "312두 5448", "note": "더블유스퀘어 주차장 25년 5월 1일\n삼환하이펙스 주차장으로 이동 9월 29일", "feeType": "무료주차"}, {"id": "S-19", "lot": "삼환하이펙스", "dept": "SSR 프로그램2팀", "name": "박예슬", "status": "재직", "carNum": "57수 5568", "note": "호반메트로큐브 주차장 25년 5월 1일\n더블유스퀘어 25년 6월 1일\n삼환하이펙스 25년 11월 6일", "feeType": "무료주차"}, {"id": "M-62", "lot": "미래에셋센터", "dept": "컷인팀", "name": "김서을", "status": "재직", "carNum": "39나 6033", "note": "미래에셋센터 주차장 25년 5월 1일", "feeType": "유료주차"}, {"id": "S-20", "lot": "삼환하이펙스", "dept": "SSR 시스템팀", "name": "김찬우", "status": "재직", "carNum": "385다8949", "note": "삼환하이펙스 12월 8일 이동", "feeType": "무료주차"}, {"id": "VC-41", "lot": "차량 해지", "dept": "개발 PM팀", "name": "신서아", "status": "재직", "carNum": "53루 4240", "note": "호반메트로큐브 주차장 25년 6월 1일", "feeType": "차량해지"}, {"id": "C-04", "lot": "더블유스퀘어", "dept": "SSR 전투팀", "name": "공지환", "status": "재직", "carNum": "53마 9253", "note": "더블유스퀘어 25년 7월 1일", "feeType": "유료주차"}, {"id": "M-63", "lot": "미래에셋센터", "dept": "코어시스템팀", "name": "이병연", "status": "재직", "carNum": "102수 5611", "note": "미래에셋센터 25년 7월 1일", "feeType": "유료주차"}, {"id": "C-05", "lot": "더블유스퀘어", "dept": "SSR 시스템팀", "name": "차재현", "status": "재직", "carNum": "32더 5848", "note": "미래에셋센터 25년 7월 1일\n더블유스퀘어 25년 8월 1일", "feeType": "유료주차"}, {"id": "VC-45", "lot": "차량 해지", "dept": "총무팀", "name": "조성훈", "status": "재직", "carNum": "13너 9018", "note": "미래에셋센터 25년 7월 1일", "feeType": "차량해지"}, {"id": "M-66", "lot": "미래에셋센터", "dept": "컷인팀", "name": "김화영", "status": "재직", "carNum": "285가 2525", "note": "미래에셋센터 25년 9월 1일", "feeType": "유료주차"}, {"id": "M-67", "lot": "미래에셋센터", "dept": "인사팀", "name": "이민재B", "status": "재직", "carNum": "46주 4700", "note": "미래에셋센터 25년 9월 15일", "feeType": "유료주차"}, {"id": "C-06", "lot": "더블유스퀘어", "dept": "애니메이션팀", "name": "엄지손", "status": "재직", "carNum": "160누 9548", "note": "더블유스퀘어 25년 10월 1일", "feeType": "유료주차"}, {"id": "C-07", "lot": "더블유스퀘어", "dept": "SSR PM팀", "name": "탁다운", "status": "재직", "carNum": "330무 5423", "note": "호반메트로큐브 25년 10월 1일\n더블유스퀘어 25년 11월 1일", "feeType": "유료주차"}, {"id": "M-68", "lot": "미래에셋센터", "dept": "기획실", "name": "탁광진", "status": "재직", "carNum": "384라 6937", "note": "미래에셋센터 25년 10월 1일", "feeType": "무료주차"}, {"id": "H-34", "lot": "호반메트로큐브", "dept": "배경원화팀", "name": "이지은", "status": "재직", "carNum": "28로 4047", "note": "호반메트로큐브 25년 11월 1일", "feeType": "유료주차"}, {"id": "C-08", "lot": "더블유스퀘어", "dept": "SSR 애니메이션팀", "name": "민성호", "status": "재직", "carNum": "109소 5005", "note": "더블유스퀘어 12월 9일 이동", "feeType": "유료주차"}, {"id": "M-69", "lot": "미래에셋센터", "dept": "총무팀", "name": "박용현", "status": "재직", "carNum": "15러 1904", "note": "미래에셋센터 26년 1월 1일", "feeType": "유료주차"}, {"id": "C-09", "lot": "더블유스퀘어", "dept": "시나리오 TF", "name": "권나현", "status": "재직", "carNum": "52로 5930", "note": "더블유스퀘어  26년 2월 1일", "feeType": "유료주차"}, {"id": "M-70", "lot": "미래에셋센터", "dept": "인사팀", "name": "장지아", "status": "재직", "carNum": "134누 1997", "note": "미래에셋센터 26년 2월 2일", "feeType": "유료주차"}, {"id": "H-36", "lot": "호반메트로큐브", "dept": "영웅팀", "name": "박건호", "status": "재직", "carNum": "379로 2625", "note": "호반메트로큐브 26년 3월 1일", "feeType": "유료주차"}, {"id": "W-01", "lot": "대기자", "dept": "SSR PM팀", "name": "고병호", "status": "재직", "carNum": "327무 1364", "note": "더블유스퀘어  26년 4월 1일", "feeType": "유료주차"}, {"id": "25년 예산 반영을 위한 데이터 정리", "lot": "", "dept": "", "name": "", "status": "", "carNum": "", "note": "", "feeType": "유료주차"}, {"id": "25년 실제 비용", "lot": "1월", "dept": "2월", "name": "3월", "status": "6월", "carNum": "8월", "note": "9월", "feeType": "유료주차"}, {"id": "주차비 회사부담분", "lot": "5243346", "dept": "5217558", "name": "5008408", "status": "5298191", "carNum": "5339815", "note": "5638502", "feeType": "유료주차"}, {"id": "주차비 직원부담분", "lot": "6919354", "dept": "6274192", "name": "6632142", "status": "7343009", "carNum": "7341935", "note": "7299998", "feeType": "유료주차"}, {"id": "총 금액", "lot": "12162700", "dept": "11491750", "name": "11640550", "status": "12641200", "carNum": "12681750", "note": "12938500", "feeType": "유료주차"}, {"id": "총 주차 수", "lot": "85", "dept": "84", "name": "84", "status": "93", "carNum": "94", "note": "93", "feeType": "유료주차"}, {"id": "유료 주차 수", "lot": "40", "dept": "39", "name": "39", "status": "48", "carNum": "49", "note": "48", "feeType": "유료주차"}, {"id": "26년 인력계획", "lot": "301", "dept": "307", "name": "315", "status": "330", "carNum": "337", "note": "337", "feeType": "유료주차"}, {"id": "26년도", "lot": "1월", "dept": "2월", "name": "3월", "status": "6월", "carNum": "8월", "note": "9월", "feeType": "유료주차"}, {"id": "회사 부담금", "lot": "8800000", "dept": "9000000", "name": "9200000", "status": "9800000", "carNum": "11400000", "note": "11600000", "feeType": "유료주차"}, {"id": "임직원 부담금", "lot": "8000000", "dept": "8100000", "name": "8200000", "status": "8500000", "carNum": "8700000", "note": "8800000", "feeType": "유료주차"}, {"id": "미래에셋 유료 주차 수", "lot": "33", "dept": "33", "name": "33", "status": "34", "carNum": "38", "note": "39", "feeType": "유료주차"}, {"id": "호반 유료 주차 수", "lot": "16", "dept": "16", "name": "17", "status": "19", "carNum": "20", "note": "20", "feeType": "유료주차"}, {"id": "더블유스퀘어 유료 주차 수", "lot": "5", "dept": "6", "name": "6", "status": "6", "carNum": "7", "note": "7", "feeType": "유료주차"}, {"id": "총 유료 주차 대수", "lot": "54", "dept": "55", "name": "56", "status": "59", "carNum": "65", "note": "66", "feeType": "유료주차"}, {"id": "무료주차 인원 중 임직원 부담 인원", "lot": "30", "dept": "30", "name": "30", "status": "30", "carNum": "30", "note": "30", "feeType": "유료주차"}];
+
+
+// ============================================================
+// 사택 현황
+// ============================================================
+const SATEAK_KEY='intra_sateak';
+const SATEAK_DEFAULT=[{"id": "S-01", "name": "트레벨 820호", "contract": "2024. 08. 26 ~ 2025. 08. 25", "tenant": "이유미", "dept": "SSR 기획실", "deposit": 5000000, "advance": 2100000, "status": "입주중", "note": ""}, {"id": "S-02", "name": "트레벨 717호", "contract": "2024. 09. 05 ~ 2025. 09. 05", "tenant": "김동리", "dept": "에픽 비주얼아트실", "deposit": 10000000, "advance": 2100000, "status": "입주중", "note": ""}, {"id": "S-03", "name": "시티스마트 602호", "contract": "2024. 10. 01 ~ 2025. 09. 30", "tenant": "민소영", "dept": "SSR 아트실", "deposit": 0, "advance": 0, "status": "퇴거", "note": ""}, {"id": "S-04", "name": "푸르지오 535호", "contract": "2024. 11. 23 ~ 2025 .11. 22", "tenant": "허대균", "dept": "에픽 기획실", "deposit": 10000000, "advance": 2100000, "status": "입주중", "note": ""}, {"id": "S-05", "name": "호반메트로 804호", "contract": "2024. 11. 25 ~ 2025. 11. 24", "tenant": "서형택", "dept": "경영지원실", "deposit": 10000000, "advance": 2100000, "status": "입주중", "note": ""}, {"id": "S-06", "name": "샤르망 오피스텔 834호", "contract": "2025. 01. 24 ~ 2026. 01. 24", "tenant": "나동원", "dept": "SSR 아트실", "deposit": 10000000, "advance": 2100000, "status": "입주중", "note": ""}, {"id": "S-07", "name": "풍림아이원 1101호", "contract": "2025. 02. 20 ~ 2026. 02. 20", "tenant": "최정효", "dept": "경영지원실", "deposit": 10000000, "advance": 2100000, "status": "입주중", "note": ""}, {"id": "S-08", "name": "포스빌 893호", "contract": "2025. 03. 28 ~ 2026 .03 28", "tenant": "김현진B", "dept": "경영지원실", "deposit": 10000000, "advance": 2100000, "status": "입주중", "note": ""}, {"id": "S-09", "name": "휴먼빌시티", "contract": "2025. 05. 10 ~ 2026. 05. 09", "tenant": "김소라", "dept": "SSR 기획실", "deposit": 10000000, "advance": 2100000, "status": "입주중", "note": ""}, {"id": "S-10", "name": "세종그랑시아 825호", "contract": "2025. 08. 22 ~ 2026. 08. 22", "tenant": "김장한", "dept": "SSR 비주얼R&D실", "deposit": 10000000, "advance": 900000, "status": "입주중", "note": ""}, {"id": "S-11", "name": "분당현대벤처빌 836호", "contract": "2025. 10. 17 ~ 2026. 10. 16", "tenant": "박예령", "dept": "", "deposit": 10000000, "advance": 900000, "status": "입주중", "note": ""}, {"id": "S-12", "name": "세종그랑시아 331호", "contract": "2025. 10. 17 ~ 2026. 10. 16", "tenant": "문정인", "dept": "", "deposit": 10000000, "advance": 900000, "status": "입주중", "note": ""}];
+
+function loadSateaks(){const s=LS.get(SATEAK_KEY);if(s&&s.length)return s;LS.set(SATEAK_KEY,JSON.parse(JSON.stringify(SATEAK_DEFAULT)));return JSON.parse(JSON.stringify(SATEAK_DEFAULT));}
+function saveSateaks(d){LS.set(SATEAK_KEY,d);}
+
+function renderSateak(){
+  renderSateakExpiryAlert();
+  renderSateakSummary();
+  renderSateakTable();
+}
+
+// 날짜 문자열 파싱 (ISO / yyyy.mm.dd / yyyy. mm. dd 등 → Date)
+function parseSateakDate(s){
+  if(!s)return null;
+  // ISO: 2024-08-26
+  const m1=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m1)return new Date(+m1[1],+m1[2]-1,+m1[3]);
+  // yyyy.mm.dd or yyyy. mm. dd
+  const m2=s.replace(/\s/g,'').match(/^(\d{4})\.(\d{1,2})\.(\d{1,2})\.?$/);
+  if(m2)return new Date(+m2[1],+m2[2]-1,+m2[3]);
+  return null;
+}
+// 날짜→ yyyy.mm.dd 표시
+function fmtSateakDate(s){
+  const d=parseSateakDate(s);
+  if(!d)return s||'-';
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return y+'.'+m+'.'+day+'.';
+}
+// 기존 contract 문자열에서 startDate/endDate 추출
+function extractSateakDates(s){
+  if(!s)return{start:'',end:''};
+  const parts=s.split('~').map(p=>p.trim());
+  const toISO=(str)=>{
+    const d=parseSateakDate(str);
+    if(!d)return '';
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  };
+  return{start:toISO(parts[0]||''),end:toISO(parts[1]||'')};
+}
+// 사택 만료 경고 배너
+function renderSateakExpiryAlert(){
+  const el=document.getElementById('sateakExpiryAlert');if(!el)return;
+  const all=loadSateaks();
+  const today=new Date();today.setHours(0,0,0,0);
+  const soon=[];
+  all.filter(s=>s.status==='입주중').forEach(s=>{
+    const endStr=s.endDate||(s.contract?s.contract.split('~')[1]||'':'');
+    const endD=parseSateakDate(endStr.trim());
+    if(!endD)return;
+    const diff=Math.floor((endD-today)/(1000*60*60*24));
+    if(diff<=60&&diff>=-30)soon.push({...s,diff,endD});
+  });
+  if(!soon.length){el.style.display='none';el.innerHTML='';return;}
+  soon.sort((a,b)=>a.diff-b.diff);
+  el.style.display='block';
+  el.innerHTML=`<div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:var(--radius);padding:12px 16px;">
+    <div style="font-weight:700;color:#92400e;margin-bottom:8px;">⚠️ 계약 만료 임박 알림 (${soon.length}건)</div>
+    ${soon.map(s=>{
+      const badge=s.diff<0
+        ?`<span style="background:#fee2e2;color:#b91c1c;border-radius:10px;padding:1px 8px;font-size:11px;">만료됨 D+${Math.abs(s.diff)}</span>`
+        :s.diff<=30
+        ?`<span style="background:#fee2e2;color:#b91c1c;border-radius:10px;padding:1px 8px;font-size:11px;">D-${s.diff}</span>`
+        :`<span style="background:#fef3c7;color:#92400e;border-radius:10px;padding:1px 8px;font-size:11px;">D-${s.diff}</span>`;
+      return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px;">
+        ${badge}
+        <span style="font-weight:600;">${s.name}</span>
+        <span style="color:var(--text2);">${s.tenant||''}</span>
+        <span style="color:var(--text3);">~ ${fmtSateakDate(s.endDate||(s.contract||'').split('~')[1]?.trim()||'')}</span>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderSateakSummary(){
+  const all=loadSateaks();
+  const active=all.filter(s=>s.status==='입주중');
+  const totalDeposit=active.reduce((s,x)=>s+x.deposit,0);
+  const totalAdvance=active.reduce((s,x)=>s+x.advance,0);
+  const el=document.getElementById('sateakSummaryCards');
+  if(!el)return;
+  const cards=[
+    {label:'총 사택 수',val:all.length+'개',sub:'(입주중 '+active.length+'개)',bg:'#ede9fe',icon:'🏠'},
+    {label:'보증금 합계',val:(totalDeposit/100000000).toFixed(1)+'억',sub:totalDeposit.toLocaleString()+'원',bg:'#dbeafe',icon:'💰'},
+    {label:'입주예치금 합계',val:(totalAdvance/10000).toLocaleString()+'만원',sub:totalAdvance.toLocaleString()+'원',bg:'#dcfce7',icon:'🔐'},
+    {label:'퇴거',val:all.filter(s=>s.status==='퇴거').length+'개',sub:'',bg:'#fee2e2',icon:'📦'},
+  ];
+  el.innerHTML=cards.map(c=>`<div class="parking-lot-card" style="background:${c.bg}20;border-color:${c.bg};">
+    <div class="plc-head"><span style="font-size:22px;">${c.icon}</span></div>
+    <div class="plc-stat-val">${c.val}</div>
+    <div class="plc-stat-lbl">${c.label}</div>
+    ${c.sub?`<div style="font-size:10px;color:var(--text3);margin-top:2px;">${c.sub}</div>`:''}
+  </div>`).join('');
+}
+
+function renderSateakTable(){
+  const all=loadSateaks();
+  const sf=(document.getElementById('sateakStatusFilter')||{}).value||'';
+  const filtered=sf?all.filter(s=>s.status===sf):all;
+  const tbody=document.getElementById('sateakTbody');
+  if(!tbody)return;
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text3);">등록된 사택이 없습니다</td></tr>';return;}
+  const statusBadge={
+    '입주중':'<span class="park-badge active">입주중</span>',
+    '퇴거':'<span class="park-badge retire">퇴거</span>'
+  };
+  const today=new Date();today.setHours(0,0,0,0);
+  tbody.innerHTML=filtered.map((s,i)=>{
+    // 날짜 표시: startDate/endDate 우선, 없으면 contract에서 파싱
+    let startStr=s.startDate||'';
+    let endStr=s.endDate||'';
+    if(!startStr&&!endStr&&s.contract){
+      const ex=extractSateakDates(s.contract);
+      startStr=ex.start;endStr=ex.end;
+    }
+    const contractDisplay=(startStr||endStr)
+      ?(fmtSateakDate(startStr)+' ~ '+fmtSateakDate(endStr))
+      :(s.contract||'-');
+    // 만료 임박 뱃지
+    let expiryBadge='';
+    if(endStr&&s.status==='입주중'){
+      const endD=parseSateakDate(endStr);
+      if(endD){
+        const diff=Math.floor((endD-today)/(1000*60*60*24));
+        if(diff<0)expiryBadge=`<span class="park-badge cancel" style="font-size:9px;margin-left:4px;">만료</span>`;
+        else if(diff<=30)expiryBadge=`<span class="park-badge cancel" style="font-size:9px;margin-left:4px;">D-${diff}</span>`;
+        else if(diff<=60)expiryBadge=`<span class="park-badge" style="background:#fef3c7;color:#92400e;font-size:9px;margin-left:4px;">D-${diff}</span>`;
+      }
+    }
+    return`<tr>
+    <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
+    <td style="font-weight:600;">${s.name}${expiryBadge}</td>
+    <td style="font-size:11px;color:var(--text2);white-space:nowrap;">${contractDisplay}</td>
+    <td style="font-weight:600;text-align:center;">${s.tenant||'-'}</td>
+    <td style="font-size:12px;">${s.dept||'-'}</td>
+    <td style="text-align:right;font-variant-numeric:tabular-nums;font-size:12px;">${s.deposit>0?s.deposit.toLocaleString()+'원':'-'}</td>
+    <td style="text-align:right;font-variant-numeric:tabular-nums;font-size:12px;">${
+      s.payType==='분할'
+        ? `<span style="font-size:11px;">${(s.instPaid||[]).length}/${s.instMonths||7}개월<br><span style="color:var(--primary);">${s.advance>0?s.advance.toLocaleString()+'원':'0원'}</span></span>`
+        : (s.advance>0?s.advance.toLocaleString()+'원':'-')
+    }</td>
+    <td style="text-align:center;">${statusBadge[s.status]||s.status}</td>
+    <td style="white-space:nowrap;text-align:center;">
+      <button class="btn btn-xs btn-ghost" onclick="openEditSateakModal('${s.id}')">수정</button>
+      <button class="btn btn-xs btn-danger" onclick="deleteSateak('${s.id}')">삭제</button>
+    </td>
+  </tr>`;
+  }).join('');
+}
+
+function openAddSateakModal(){
+  document.getElementById('editSateakId').value='';
+  document.getElementById('sateakName').value='';
+  document.getElementById('sateakStartDate').value='';
+  document.getElementById('sateakEndDate').value='';
+  document.getElementById('sateakTenant').value='';
+  document.getElementById('sateakDept').value='';
+  document.getElementById('sateakDeposit').value='';
+  document.getElementById('sateakAdvance').value='';
+  document.getElementById('sateakNote').value='';
+  document.getElementById('sateakStatus').value='입주중';
+  document.getElementById('sateakPayType').value='일시불';
+  toggleSateakPayFields();
+  document.getElementById('sateakInstMonths').value=7;
+  document.getElementById('sateakInstAmt').value=300000;
+  document.getElementById('sateakMonthChecks').innerHTML='';
+  document.getElementById('sateakInstSummary').textContent='';
+  document.getElementById('sateakModalTitle').textContent='🏠 사택 추가';
+  openModal('addSateakModal');
+}
+function openEditSateakModal(id){
+  const all=loadSateaks();
+  const s=all.find(x=>x.id===id);if(!s)return;
+  document.getElementById('editSateakId').value=id;
+  document.getElementById('sateakName').value=s.name||'';
+  // 날짜 필드: startDate/endDate 우선, 없으면 contract에서 파싱
+  let sd=s.startDate||'',ed=s.endDate||'';
+  if(!sd&&!ed&&s.contract){const ex=extractSateakDates(s.contract);sd=ex.start;ed=ex.end;}
+  document.getElementById('sateakStartDate').value=sd;
+  document.getElementById('sateakEndDate').value=ed;
+  document.getElementById('sateakTenant').value=s.tenant||'';
+  document.getElementById('sateakDept').value=s.dept||'';
+  document.getElementById('sateakDeposit').value=s.deposit||'';
+  document.getElementById('sateakNote').value=s.note||'';
+  document.getElementById('sateakStatus').value=s.status||'입주중';
+  const pt=s.payType||'일시불';
+  document.getElementById('sateakPayType').value=pt;
+  if(pt==='분할'){
+    document.getElementById('sateakInstMonths').value=s.instMonths||7;
+    document.getElementById('sateakInstAmt').value=s.instAmt||300000;
+    toggleSateakPayFields();
+    // 저장된 납부 현황 체크박스 복원
+    const paid=s.instPaid||[];
+    const months=s.instMonths||7;
+    [...Array(months)].forEach((_,i)=>{
+      const cb=document.getElementById('smc_'+i);
+      if(cb){cb.checked=paid.includes(i);const lbl=document.getElementById('smcLabel_'+i);if(lbl)lbl.style.background=cb.checked?'#dcfce7':'#fff';}
+    });
+    updateSateakInstSummary(-1);
+  } else {
+    document.getElementById('sateakAdvance').value=s.advance||'';
+    toggleSateakPayFields();
+  }
+  document.getElementById('sateakModalTitle').textContent='✏️ 사택 수정';
+  openModal('addSateakModal');
+}
+function toggleSateakPayFields(){
+  const isInst=document.getElementById('sateakPayType').value==='분할';
+  document.getElementById('sateakLumpDiv').style.display=isInst?'none':'';
+  document.getElementById('sateakInstDiv').style.display=isInst?'':'none';
+  if(isInst) renderSateakMonthChecks();
+}
+function renderSateakMonthChecks(){
+  const months=parseInt(document.getElementById('sateakInstMonths').value)||7;
+  const amt=parseInt(document.getElementById('sateakInstAmt').value)||300000;
+  const id=document.getElementById('editSateakId').value;
+  let paid=[];
+  if(id){const s=loadSateaks().find(x=>x.id===id);if(s)paid=s.instPaid||[];}
+  const container=document.getElementById('sateakMonthChecks');
+  container.innerHTML=[...Array(months)].map((_,i)=>`
+    <label style="display:flex;align-items:center;gap:4px;font-size:12px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;cursor:pointer;background:${paid.includes(i)?'#dcfce7':'#fff'};" id="smcLabel_${i}">
+      <input type="checkbox" id="smc_${i}" ${paid.includes(i)?'checked':''} onchange="updateSateakInstSummary(${i})">
+      ${i+1}월차
+    </label>`).join('');
+  updateSateakInstSummary(-1);
+}
+function updateSateakInstSummary(changedIdx){
+  const months=parseInt(document.getElementById('sateakInstMonths').value)||7;
+  const amt=parseInt(document.getElementById('sateakInstAmt').value)||300000;
+  if(changedIdx>=0){
+    const cb=document.getElementById('smc_'+changedIdx);
+    const lbl=document.getElementById('smcLabel_'+changedIdx);
+    if(lbl) lbl.style.background=cb&&cb.checked?'#dcfce7':'#fff';
+  }
+  const paidCount=[...Array(months)].filter((_,i)=>{const c=document.getElementById('smc_'+i);return c&&c.checked;}).length;
+  const summary=document.getElementById('sateakInstSummary');
+  if(summary) summary.textContent=`납부 완료: ${paidCount}/${months}개월 · ${(paidCount*amt).toLocaleString()}원 / 총 ${(months*amt).toLocaleString()}원`;
+}
+function saveSateak(){
+  const id=document.getElementById('editSateakId').value;
+  const name=document.getElementById('sateakName').value.trim();
+  if(!name){showToast('사택명을 입력하세요','error');return;}
+  const all=loadSateaks();
+  const payType=document.getElementById('sateakPayType').value;
+  const instMonths=parseInt(document.getElementById('sateakInstMonths').value)||7;
+  const instAmt=parseInt(document.getElementById('sateakInstAmt').value)||300000;
+  let instPaid=[];
+  if(payType==='분할'){
+    instPaid=[...Array(instMonths)].map((_,i)=>{const c=document.getElementById('smc_'+i);return c&&c.checked?i:-1;}).filter(x=>x>=0);
+  }
+  const advance=payType==='분할'?(instPaid.length*instAmt):(parseInt(document.getElementById('sateakAdvance').value)||0);
+  const startDate=document.getElementById('sateakStartDate').value;
+  const endDate=document.getElementById('sateakEndDate').value;
+  const contract=(startDate||endDate)?(fmtSateakDate(startDate)+' ~ '+fmtSateakDate(endDate)):'';
+  const obj={
+    id:id||'S-'+(Date.now()),
+    name,
+    startDate,endDate,contract,
+    tenant:document.getElementById('sateakTenant').value.trim(),
+    dept:document.getElementById('sateakDept').value.trim(),
+    deposit:parseInt(document.getElementById('sateakDeposit').value)||0,
+    advance,
+    status:document.getElementById('sateakStatus').value,
+    note:document.getElementById('sateakNote').value.trim(),
+    payType,
+    instMonths:payType==='분할'?instMonths:undefined,
+    instAmt:payType==='분할'?instAmt:undefined,
+    instPaid:payType==='분할'?instPaid:undefined
+  };
+  if(id){const idx=all.findIndex(x=>x.id===id);if(idx>=0)all[idx]=obj;else all.push(obj);}
+  else{all.push(obj);}
+  saveSateaks(all);closeModal('addSateakModal');renderSateak();updateStatCards();showToast('저장되었습니다');
+}
+function deleteSateak(id){
+  if(!confirm('이 사택을 삭제하시겠습니까?'))return;
+  const all=loadSateaks().filter(x=>x.id!==id);
+  saveSateaks(all);renderSateak();updateStatCards();showToast('삭제되었습니다');
+}
+
+// ============================================================
+// 건강검진 현황
+// ============================================================
+const HEALTH_KEY='intra_health';
+const HEALTH_YEARS_KEY='intra_health_years';
+const HEALTH_PLAN_YEAR_KEY='intra_health_plan_yr';
+
+function getHealthYears(){return LS.get(HEALTH_YEARS_KEY,['23','24','25']);}
+function saveHealthYears(yrs){LS.set(HEALTH_YEARS_KEY,yrs);}
+function getHealthPlanYear(){return LS.get(HEALTH_PLAN_YEAR_KEY,new Date().getFullYear().toString().slice(-2));}
+
+function addHealthYear(){
+  const yr=prompt('추가할 연도 끝 2자리를 입력하세요 (예: 26)');
+  if(!yr)return;
+  const cleaned=yr.trim().replace(/[^0-9]/g,'').slice(-2);
+  if(!cleaned||cleaned.length!==2){showToast('올바른 연도를 입력하세요','error');return;}
+  const yrs=getHealthYears();
+  if(yrs.includes(cleaned)){showToast('이미 존재하는 연도입니다','error');return;}
+  yrs.push(cleaned);yrs.sort();
+  saveHealthYears(yrs);
+  renderHealth();showToast(cleaned+'년 컬럼이 추가되었습니다');
+}
+function removeHealthYear(yr){
+  if(!confirm(yr+'년도 컬럼을 삭제하시겠습니까?\n(검진 데이터는 유지됩니다)'))return;
+  saveHealthYears(getHealthYears().filter(y=>y!==yr));
+  renderHealth();showToast(yr+'년 컬럼이 삭제되었습니다');
+}
+function renderHealthYearMgmt(){
+  const el=document.getElementById('healthYearMgmt');if(!el)return;
+  const yrs=getHealthYears();
+  const currYr=new Date().getFullYear().toString().slice(-2);
+  el.innerHTML=yrs.map(yr=>{
+    const isNow=(yr===currYr);
+    return`<span style="display:inline-flex;align-items:center;gap:3px;background:${isNow?'#fef9c3':'var(--surface)'};border:1px solid ${isNow?'#f59e0b':'var(--border2)'};border-radius:12px;padding:2px 10px 2px 10px;font-size:11px;color:${isNow?'#92400e':'var(--text2)'};">${yr}년${isNow?' 🔔':''}<button onclick="removeHealthYear('${yr}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:0 0 0 4px;line-height:1;" title="${yr}년 삭제">×</button></span>`;
+  }).join('')
+  +`<button class="btn btn-ghost btn-sm" style="font-size:11px;padding:3px 10px;" onclick="addHealthYear()">+ 연도 추가</button>`;
+}
+
+function loadHealths(){
+  const s=LS.get(HEALTH_KEY);
+  if(s&&s.length)return s;
+  LS.set(HEALTH_KEY,JSON.parse(JSON.stringify(HEALTH_DEFAULT)));
+  return JSON.parse(JSON.stringify(HEALTH_DEFAULT));
+}
+
+// 패턴 기반 올해 수검 예측
+function predictForYear(h, yr, yrs){
+  // 수습중이면 미대상
+  if(h.probEndDate){
+    const probD=new Date(h.probEndDate);probD.setHours(0,0,0,0);
+    const today=new Date();today.setHours(0,0,0,0);
+    if(probD>today)return'수습중';
+  }
+  const pat=h.checkPattern||'25만원';
+  if(pat==='격년50만원'){
+    // 직전 연도에 50만원 수령했으면 올해는 미대상
+    const sorted=[...yrs].sort();
+    const idx=sorted.indexOf(yr);
+    if(idx>0){
+      const prevV=h['y'+sorted[idx-1]];
+      if(prevV==='50만원')return'미대상';
+    }
+    return'50만원';
+  }
+  return'25만원';
+}
+
+// 예측 일괄 적용
+function applyHealthPredictions(){
+  const yrs=getHealthYears();
+  const currYr=new Date().getFullYear().toString().slice(-2);
+  if(!yrs.includes(currYr)){showToast('현재 연도('+currYr+'년) 컬럼이 없습니다. 먼저 연도를 추가하세요','error');return;}
+  if(!confirm('올해('+currYr+'년) 컬럼에서 비어있는 항목에 패턴 기반 예정 수검 구분을 자동 입력할까요?\n이미 입력된 항목은 변경되지 않습니다.'))return;
+  const all=loadHealths();
+  let cnt=0;
+  all.forEach(h=>{
+    const v=h['y'+currYr];
+    if(!v||v===''){
+      h['y'+currYr]=predictForYear(h,currYr,yrs);
+      cnt++;
+    }
+  });
+  LS.set(HEALTH_KEY,all);
+  renderHealth();updateStatCards();
+  showToast(cnt+'명에게 예정 구분이 적용되었습니다');
+}
+
+function renderHealth(){
+  renderHealthYearMgmt();
+  renderHealthSummary();
+  renderHealthTable();
+}
+
+function renderHealthSummary(){
+  const all=loadHealths();
+  const yrs=getHealthYears();
+  const currYr=new Date().getFullYear().toString().slice(-2);
+  const today=new Date();today.setHours(0,0,0,0);
+  // 수습중 인원
+  const probCount=all.filter(h=>h.probEndDate&&new Date(h.probEndDate)>today).length;
+  // 올해 수검 완료
+  const doneCount=all.filter(h=>{const v=h['y'+currYr];return v==='25만원'||v==='50만원';}).length;
+  // 올해 미수검
+  const noCount=all.filter(h=>h['y'+currYr]==='미수검').length;
+  // 예상 총 금액 (올해 완료분)
+  const totalAmt=all.reduce((s,h)=>{
+    const v=h['y'+currYr]||'';
+    if(v==='25만원')return s+250000;
+    if(v==='50만원')return s+500000;
+    return s;
+  },0);
+  const el=document.getElementById('healthSummaryCards');if(!el)return;
+  const cards=[
+    {label:'전체 임직원',val:all.length+'명',bg:'#dbeafe',icon:'👥'},
+    {label:currYr+'년 수검 완료',val:doneCount+'명',bg:'#dcfce7',icon:'✅'},
+    {label:currYr+'년 미수검',val:noCount+'명',bg:'#fee2e2',icon:'❌'},
+    {label:'수습중(미해당)',val:probCount+'명',bg:'#f3f4f6',icon:'🔰'},
+    {label:currYr+'년 지급액 합계',val:(totalAmt/10000).toLocaleString()+'만원',bg:'#fef3c7',icon:'💰'},
+  ];
+  // 과거 연도별 통계
+  const yrCards=yrs.filter(yr=>yr!==currYr).slice(-3).map(yr=>{
+    const c25=all.filter(h=>{const v=h['y'+yr];return v==='25만원'||v==='Y';}).length;
+    const c50=all.filter(h=>h['y'+yr]==='50만원').length;
+    const cNo=all.filter(h=>h['y'+yr]==='미수검'||h['y'+yr]==='N').length;
+    return{label:yr+'년 수검',val:(c25+c50)+'명',sub:'25만:'+c25+' / 50만:'+c50+' / 미수검:'+cNo,bg:'#ede9fe',icon:'🏥'};
+  });
+  el.innerHTML=[...cards,...yrCards].map(c=>`<div class="parking-lot-card" style="background:${c.bg}20;border-color:${c.bg};">
+    <div class="plc-head"><span style="font-size:22px;">${c.icon}</span></div>
+    <div class="plc-stat-val">${c.val}</div>
+    <div class="plc-stat-lbl">${c.label}</div>
+    ${c.sub?`<div style="font-size:10px;color:var(--text3);margin-top:2px;">${c.sub}</div>`:''}
+  </div>`).join('');
+}
+
+function renderHealthTable(){
+  const all=loadHealths();
+  const yrs=getHealthYears();
+  const currYr=new Date().getFullYear().toString().slice(-2);
+  const q=(document.getElementById('healthSearch')||{}).value||'';
+  const proj=(document.getElementById('healthProjectFilter')||{}).value||'';
+  const plan=(document.getElementById('healthPlanFilter')||{}).value||'';
+  let filtered=all.filter(h=>{
+    if(proj&&h.project!==proj)return false;
+    if(plan){
+      const v=h['y'+currYr]||'';
+      if(v!==plan)return false;
+    }
+    if(q){
+      const lq=q.toLowerCase();
+      if(!(h.name.toLowerCase().includes(lq)||(h.dept||'').toLowerCase().includes(lq)||(h.team||'').toLowerCase().includes(lq)))return false;
+    }
+    return true;
+  });
+  const cnt=document.getElementById('healthCount');
+  if(cnt)cnt.textContent=filtered.length+'명';
+  // thead 렌더링
+  const thead=document.getElementById('healthThead');
+  if(thead){
+    thead.innerHTML='<tr>'
+      +'<th style="width:40px;">#</th>'
+      +'<th style="width:60px;">사번</th>'
+      +'<th style="width:80px;">성명</th>'
+      +'<th style="width:55px;">프로젝트</th>'
+      +'<th>실</th>'
+      +'<th>팀</th>'
+      +'<th style="width:70px;">패턴</th>'
+      +yrs.map(yr=>{
+        const isNow=(yr===currYr);
+        return`<th style="width:90px;text-align:center;${isNow?'background:#fef9c3;color:#92400e;':''}">${yr}년${isNow?'<br><span style="font-size:9px;background:#f59e0b;color:#fff;border-radius:6px;padding:0 4px;font-weight:normal;">올해</span>':''}</th>`;
+      }).join('')
+      +'<th style="width:50px;">관리</th>'
+      +'</tr>';
+  }
+  const tbody=document.getElementById('healthTbody');
+  if(!tbody)return;
+  const colspan=7+yrs.length+1;
+  if(!filtered.length){tbody.innerHTML=`<tr><td colspan="${colspan}" style="text-align:center;padding:32px;color:var(--text3);">조회된 데이터가 없습니다</td></tr>`;return;}
+
+  // 수검 셀 표시
+  const yCell=(v,yr,h,isNow)=>{
+    const baseV=v||'';
+    if(!baseV||baseV===''){
+      // 예측값 표시 (올해이면 패턴 기반)
+      if(isNow){
+        const pred=predictForYear(h,yr,yrs);
+        const predColor=pred==='수습중'?'#6b7280':pred==='미대상'?'#94a3b8':pred==='50만원'?'#7c3aed':'#2563eb';
+        return`<span style="color:${predColor};font-size:10px;opacity:0.65;">${pred}<br><span style="font-size:9px;">(예정)</span></span>`;
+      }
+      return'<span style="color:#94a3b8;">-</span>';
+    }
+    if(baseV==='미수검'||baseV==='N')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;">미수검</span>';
+    if(baseV==='수습중')return'<span style="font-size:10px;color:#6b7280;background:#f3f4f6;border-radius:8px;padding:1px 6px;">수습중</span>';
+    if(baseV==='미대상')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">미대상</span>';
+    if(baseV==='25만원'||baseV==='Y')return'<span class="park-badge paid" style="font-size:10px;padding:1px 5px;">'+(baseV==='Y'?'✓':baseV)+'</span>';
+    if(baseV==='50만원')return'<span class="park-badge free" style="font-size:10px;padding:1px 5px;">50만원</span>';
+    return`<span style="font-size:10px;">${baseV}</span>`;
+  };
+  const patBadge={'25만원':'<span style="font-size:10px;color:#2563eb;">매년25만</span>','격년50만원':'<span style="font-size:10px;color:#7c3aed;">격년50만</span>'};
+  const today=new Date();today.setHours(0,0,0,0);
+
+  tbody.innerHTML=filtered.map((h,i)=>`<tr>
+    <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
+    <td style="font-family:monospace;font-size:11px;color:var(--text3);">${h.id}</td>
+    <td style="font-weight:600;">${h.name}${h.probEndDate&&new Date(h.probEndDate)>today?'<span style="font-size:9px;background:#e2e8f0;color:#64748b;border-radius:6px;padding:0 4px;margin-left:3px;">수습</span>':''}</td>
+    <td><span class="park-badge ${h.project==='E7'?'paid':h.project==='SSR'?'free':'active'}" style="font-size:10px;">${h.project||'-'}</span></td>
+    <td style="font-size:12px;">${h.dept||'-'}</td>
+    <td style="font-size:11px;color:var(--text2);">${h.team||'-'}</td>
+    <td style="text-align:center;">${patBadge[h.checkPattern||'25만원']||''}</td>
+    ${yrs.map(yr=>{
+      const isNow=(yr===currYr);
+      return`<td style="text-align:center;${isNow?'background:#fefce8;':''}">${yCell(h['y'+yr],yr,h,isNow)}</td>`;
+    }).join('')}
+    <td style="text-align:center;white-space:nowrap;">
+      <button class="btn btn-xs btn-ghost" onclick="openEditHealthModal('${h.id}')">수정</button>
+    </td>
+  </tr>`).join('');
+}
+
+// 임직원 추가 모달 열기
+function openAddHealthEmpModal(){
+  document.getElementById('editHealthId').value='';
+  document.getElementById('editHealthModalTitle').textContent='🏥 임직원 추가';
+  document.getElementById('editHealthName').textContent='';
+  document.getElementById('editHealthBaseInfo').style.display='';
+  document.getElementById('editHealthEmpId').value='';
+  document.getElementById('editHealthEmpName').value='';
+  document.getElementById('editHealthProject').value='E7';
+  document.getElementById('editHealthDept').value='';
+  document.getElementById('editHealthTeam').value='';
+  document.getElementById('editHealthJoinDate').value='';
+  document.getElementById('editHealthProbEnd').value='';
+  document.getElementById('editHealthPattern').value='25만원';
+  document.getElementById('editHealthDeleteBtn').style.display='none';
+  _renderEditHealthYearFields(null);
+  openModal('editHealthModal');
+}
+
+function openEditHealthModal(id){
+  const all=loadHealths();
+  const h=all.find(x=>x.id===id);if(!h)return;
+  document.getElementById('editHealthId').value=id;
+  document.getElementById('editHealthModalTitle').textContent='✏️ 건강검진 정보 수정';
+  document.getElementById('editHealthName').textContent=h.name+' ('+h.project+' / '+h.dept+' '+h.team+')';
+  document.getElementById('editHealthBaseInfo').style.display='none';
+  document.getElementById('editHealthJoinDate').value=h.joinDate||'';
+  document.getElementById('editHealthProbEnd').value=h.probEndDate||'';
+  document.getElementById('editHealthPattern').value=h.checkPattern||'25만원';
+  document.getElementById('editHealthDeleteBtn').style.display='';
+  _renderEditHealthYearFields(h);
+  openModal('editHealthModal');
+}
+
+function _renderEditHealthYearFields(h){
+  const yrs=getHealthYears();
+  const yf=document.getElementById('editHealthYearFields');
+  if(!yf)return;
+  yf.innerHTML=yrs.map(yr=>`<div class="form-group" style="min-width:95px;">
+    <label style="font-size:11px;">${yr}년</label>
+    <select id="editHealthY${yr}" style="width:100%;font-size:11px;">
+      <option value="">미입력</option>
+      <option value="미수검">미수검</option>
+      <option value="25만원">25만원</option>
+      <option value="50만원">50만원</option>
+      <option value="미대상">미대상</option>
+      <option value="수습중">수습중</option>
+    </select>
+  </div>`).join('');
+  if(h){
+    yrs.forEach(yr=>{
+      const sel=document.getElementById('editHealthY'+yr);
+      if(!sel)return;
+      const v=h['y'+yr]||'';
+      if(v==='Y')sel.value='25만원';
+      else if(v==='N')sel.value='미수검';
+      else sel.value=v;
+    });
+  }
+}
+
+function autoFillProbEnd(){
+  const jd=document.getElementById('editHealthJoinDate').value;
+  if(!jd)return;
+  const d=new Date(jd);
+  d.setMonth(d.getMonth()+3);
+  document.getElementById('editHealthProbEnd').value=d.toISOString().slice(0,10);
+}
+
+function saveHealthEdit(){
+  const id=document.getElementById('editHealthId').value;
+  const all=loadHealths();
+  const yrs=getHealthYears();
+  const isNew=!id;
+
+  if(isNew){
+    // 신규 추가
+    const empId=document.getElementById('editHealthEmpId').value.trim();
+    const empName=document.getElementById('editHealthEmpName').value.trim();
+    if(!empId||!empName){showToast('사번과 성명을 입력하세요','error');return;}
+    if(all.find(h=>h.id===empId)){showToast('이미 존재하는 사번입니다','error');return;}
+    const entry={
+      id:empId,name:empName,
+      project:document.getElementById('editHealthProject').value,
+      dept:document.getElementById('editHealthDept').value.trim(),
+      team:document.getElementById('editHealthTeam').value.trim(),
+      joinDate:document.getElementById('editHealthJoinDate').value,
+      probEndDate:document.getElementById('editHealthProbEnd').value,
+      checkPattern:document.getElementById('editHealthPattern').value,
+    };
+    yrs.forEach(yr=>{const sel=document.getElementById('editHealthY'+yr);if(sel)entry['y'+yr]=sel.value;});
+    all.push(entry);
+    all.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+  } else {
+    const idx=all.findIndex(x=>x.id===id);if(idx<0)return;
+    all[idx].joinDate=document.getElementById('editHealthJoinDate').value;
+    all[idx].probEndDate=document.getElementById('editHealthProbEnd').value;
+    all[idx].checkPattern=document.getElementById('editHealthPattern').value;
+    yrs.forEach(yr=>{const sel=document.getElementById('editHealthY'+yr);if(sel)all[idx]['y'+yr]=sel.value;});
+  }
+  LS.set(HEALTH_KEY,all);
+  closeModal('editHealthModal');
+  renderHealth();updateStatCards();showToast(isNew?'임직원이 추가되었습니다':'저장되었습니다');
+}
+
+function deleteHealthEmp(id){
+  if(!id)return;
+  const all=loadHealths();
+  const h=all.find(x=>x.id===id);
+  if(!h)return;
+  if(!confirm(h.name+'의 건강검진 데이터를 삭제하시겠습니까?'))return;
+  LS.set(HEALTH_KEY,all.filter(x=>x.id!==id));
+  closeModal('editHealthModal');
+  renderHealth();updateStatCards();showToast('삭제되었습니다');
+}
+
+function exportHealthCSV(){
+  const all=loadHealths();
+  const yrs=getHealthYears();
+  const yrCols=yrs.map(yr=>yr+'년').join(',');
+  const header='사번,성명,프로젝트,실,팀,검진패턴,입사일,수습종료일,'+yrCols+'\n';
+  const rows=all.map(h=>{
+    const yrVals=yrs.map(yr=>h['y'+yr]||'').join(',');
+    return[h.id,h.name,h.project,h.dept,h.team,h.checkPattern||'25만원',h.joinDate||'',h.probEndDate||'',yrVals].join(',');
+  }).join('\n');
+  const blob=new Blob(['\uFEFF'+header+rows],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='건강검진_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  showToast('CSV 내보내기 완료');
+}
+function importHealthCSV(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const yrs=getHealthYears();
+      const lines=e.target.result.replace(/^\uFEFF/,'').split('\n').filter(l=>l.trim());
+      if(lines.length<2){showToast('데이터가 없습니다','error');return;}
+      const headers=lines[0].split(',').map(h=>h.trim());
+      const existing=loadHealths();
+      const map={};existing.forEach(h=>{map[h.id]=h;});
+      let updated=0;
+      lines.slice(1).forEach(line=>{
+        const cols=line.split(',');
+        const id=cols[0]?.trim();if(!id)return;
+        if(!map[id])map[id]={id,name:cols[1]?.trim()||id,project:cols[2]?.trim()||'',dept:cols[3]?.trim()||'',team:cols[4]?.trim()||''};
+        const ci_pat=headers.indexOf('검진패턴');
+        if(ci_pat>=0&&cols[ci_pat])map[id].checkPattern=cols[ci_pat].trim();
+        const ci_join=headers.indexOf('입사일');
+        if(ci_join>=0&&cols[ci_join])map[id].joinDate=cols[ci_join].trim();
+        const ci_prob=headers.indexOf('수습종료일');
+        if(ci_prob>=0&&cols[ci_prob])map[id].probEndDate=cols[ci_prob].trim();
+        yrs.forEach(yr=>{
+          const ci=headers.indexOf(yr+'년');
+          if(ci>=0&&cols[ci]!==undefined)map[id]['y'+yr]=cols[ci].trim();
+        });
+        updated++;
+      });
+      LS.set(HEALTH_KEY,Object.values(map));
+      input.value='';renderHealth();updateStatCards();
+      showToast(updated+'명 업데이트 완료');
+    }catch(err){showToast('파일 오류: '+err.message,'error');}
+  };
+  reader.readAsText(file,'UTF-8');
+}
 
 const PARKING_LOT_KEY='intra_parking_lots';
 const PARKING_EMP_KEY='intra_parking_emp';
@@ -4230,20 +5368,30 @@ function renderParkingTable(){
   const feeClass={'무료주차':'free','유료주차':'paid','차량해지':'cancel'};
   const statClass={'재직':'active','퇴직':'retire'};
   
-  tbody.innerHTML=filtered.map((e,i)=>`<tr>
-    <td style="font-size:11px;color:var(--text3);font-family:monospace;">${i+1}</td>
-    <td>${e.lot||'-'}</td>
+  const fmtParkDate=(s)=>{
+    if(!s)return'-';
+    try{const d=new Date(s);return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');}catch(e){return s;}
+  };
+  tbody.innerHTML=filtered.map((e,i)=>{
+    const histCount=(e.carHistory||[]).length;
+    return`<tr>
+    <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
+    <td style="font-size:12px;">${e.lot||'-'}</td>
     <td style="font-size:12px;">${e.dept||'-'}</td>
     <td style="font-weight:600;">${e.name}</td>
-    <td style="font-family:monospace;font-size:12px;">${e.carNum||'-'}</td>
-    <td><span class="park-badge ${feeClass[e.feeType]||''}">${e.feeType||'-'}</span></td>
-    <td><span class="park-badge ${statClass[e.status]||''}">${e.status||'-'}</span></td>
-    <td style="font-size:12px;color:var(--text3);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${e.note||''}">${e.note||''}</td>
-    <td style="white-space:nowrap;">
+    <td style="font-family:monospace;font-size:12px;">${e.carNum||'-'}${histCount>0?`<span style="font-size:10px;color:var(--primary);margin-left:3px;">(${histCount})</span>`:''}</td>
+    <td style="text-align:center;"><span class="park-badge ${feeClass[e.feeType]||''}">${e.feeType||'-'}</span></td>
+    <td style="text-align:center;"><span class="park-badge ${statClass[e.status]||''}">${e.status||'-'}</span></td>
+    <td style="font-size:11px;color:var(--text3);text-align:center;">${fmtParkDate(e.regDate)}</td>
+    <td style="font-size:11px;color:var(--text3);text-align:center;">${fmtParkDate(e.endDate)}</td>
+    <td style="font-size:12px;color:var(--text3);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${e.note||''}">${e.note||''}</td>
+    <td style="white-space:nowrap;text-align:center;">
       <button class="btn btn-xs btn-ghost" onclick="openEditEmpModal('${e.id}')">수정</button>
+      <button class="btn btn-xs btn-ghost" onclick="openCarHistoryModal('${e.id}')" title="차량 이력">📋</button>
       <button class="btn btn-xs btn-danger" onclick="deleteEmp('${e.id}')">삭제</button>
     </td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 }
 
 // ─ 주차장 CRUD ─
@@ -4313,9 +5461,11 @@ function openAddEmpModal(){
   document.getElementById('empDept').value='';
   document.getElementById('empCarNum').value='';
   document.getElementById('empNote').value='';
+  document.getElementById('empRegDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('empEndDate').value='';
   document.getElementById('empFeeType').value='유료주차';
   document.getElementById('empStatus').value='재직';
-  // 주차장 목록 갱신
+  document.getElementById('empHistoryBtn').style.display='none';
   const sel=document.getElementById('empLot');
   sel.innerHTML=loadParkingLots().map(l=>`<option value="${l.name}">${l.name}</option>`).join('');
   openModal('addEmpModal');
@@ -4330,8 +5480,11 @@ function openEditEmpModal(id){
   document.getElementById('empDept').value=emp.dept||'';
   document.getElementById('empCarNum').value=emp.carNum||'';
   document.getElementById('empNote').value=emp.note||'';
+  document.getElementById('empRegDate').value=emp.regDate||'';
+  document.getElementById('empEndDate').value=emp.endDate||'';
   document.getElementById('empFeeType').value=emp.feeType||'유료주차';
   document.getElementById('empStatus').value=emp.status||'재직';
+  document.getElementById('empHistoryBtn').style.display='';
   const sel=document.getElementById('empLot');
   sel.innerHTML=loadParkingLots().map(l=>`<option value="${l.name}" ${l.name===emp.lot?'selected':''}>${l.name}</option>`).join('');
   sel.value=emp.lot||'';
@@ -4342,15 +5495,25 @@ function saveEmp(){
   if(!name){alert('이름을 입력하세요');return;}
   const emps=loadParkingEmps();
   const editId=document.getElementById('editEmpId').value;
+  const prevEmp=editId?emps.find(e=>e.id===editId):null;
+  const newCarNum=document.getElementById('empCarNum').value.trim();
+  // 차량 이력: 차량번호가 변경된 경우 자동 기록
+  let carHistory=prevEmp?(prevEmp.carHistory||[]):[];
+  if(prevEmp&&prevEmp.carNum&&prevEmp.carNum!==newCarNum&&newCarNum){
+    carHistory=[...carHistory,{date:new Date().toISOString().slice(0,10),carNum:prevEmp.carNum,note:'차량 변경 (이전 번호)'}];
+  }
   const entry={
     id:editId||'E_'+Date.now(),
     name,
     dept:document.getElementById('empDept').value.trim(),
     lot:document.getElementById('empLot').value,
     feeType:document.getElementById('empFeeType').value,
-    carNum:document.getElementById('empCarNum').value.trim(),
+    carNum:newCarNum,
     status:document.getElementById('empStatus').value,
-    note:document.getElementById('empNote').value.trim()
+    note:document.getElementById('empNote').value.trim(),
+    regDate:document.getElementById('empRegDate').value||'',
+    endDate:document.getElementById('empEndDate').value||'',
+    carHistory
   };
   if(editId){
     const idx=emps.findIndex(e=>e.id===editId);
@@ -4374,11 +5537,72 @@ function deleteEmp(id){
   showToast('삭제되었습니다');
 }
 
+// ─ 차량 이력 관리 ─
+let _carHistEmpId='';
+function openCarHistoryModal(empId){
+  if(!empId)return;
+  _carHistEmpId=empId;
+  const emps=loadParkingEmps();
+  const emp=emps.find(e=>e.id===empId);
+  if(!emp)return;
+  document.getElementById('carHistoryEmpName').textContent=emp.name+' / '+emp.lot+' / 현재차량: '+(emp.carNum||'-');
+  document.getElementById('carHistDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('carHistCarNum').value='';
+  document.getElementById('carHistNote').value='';
+  renderCarHistoryList(emp);
+  openModal('carHistoryModal');
+}
+function renderCarHistoryList(emp){
+  const list=document.getElementById('carHistoryList');
+  if(!list)return;
+  const hist=(emp.carHistory||[]).slice().reverse();
+  if(!hist.length){list.innerHTML='<div style="padding:16px;text-align:center;color:var(--text3);font-size:12px;">이력이 없습니다</div>';return;}
+  const fmtD=(s)=>{try{const d=new Date(s);return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');}catch(e){return s||'-';}};
+  list.innerHTML=hist.map((h,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border2);font-size:12px;">
+    <span style="color:var(--text3);white-space:nowrap;">${fmtD(h.date)}</span>
+    <span style="font-family:monospace;font-weight:600;">${h.carNum||'-'}</span>
+    <span style="color:var(--text3);flex:1;">${h.note||''}</span>
+    <button onclick="deleteCarHistory(${hist.length-1-i})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:0;" title="삭제">×</button>
+  </div>`).join('');
+}
+function addCarHistory(){
+  const date=document.getElementById('carHistDate').value;
+  const carNum=document.getElementById('carHistCarNum').value.trim();
+  if(!carNum){showToast('차량번호를 입력하세요','error');return;}
+  const emps=loadParkingEmps();
+  const idx=emps.findIndex(e=>e.id===_carHistEmpId);
+  if(idx<0)return;
+  if(!emps[idx].carHistory)emps[idx].carHistory=[];
+  emps[idx].carHistory.push({date,carNum,note:document.getElementById('carHistNote').value.trim()});
+  saveParkingEmps(emps);
+  document.getElementById('carHistCarNum').value='';
+  document.getElementById('carHistNote').value='';
+  renderCarHistoryList(emps[idx]);
+  renderParkingTable();
+  showToast('이력이 추가되었습니다');
+}
+function deleteCarHistory(realIdx){
+  if(!confirm('이 이력을 삭제할까요?'))return;
+  const emps=loadParkingEmps();
+  const idx=emps.findIndex(e=>e.id===_carHistEmpId);
+  if(idx<0)return;
+  emps[idx].carHistory.splice(realIdx,1);
+  saveParkingEmps(emps);
+  renderCarHistoryList(emps[idx]);
+  renderParkingTable();
+  showToast('삭제되었습니다');
+}
+
 function renderParking(){
   renderParkingLotCards();
   renderParkingTable();
 }
 
+// 뒤로가기/앞으로가기 처리
+window.addEventListener('popstate',(e)=>{
+  const page=(e.state&&e.state.page)||(location.hash.slice(1))||'home';
+  if(PAGES.includes(page))showPage(page);
+});
 window.onload=init;
 </script>
 </body>
