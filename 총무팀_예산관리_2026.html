@@ -192,6 +192,16 @@
   .cloud-dot { width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0;vertical-align:middle; }
   .cloud-ok{background:#4ade80;animation:pulse 2.5s infinite} .cloud-off{background:#6b7280} .cloud-err{background:#f87171} .cloud-syncing{background:#facc15;animation:pulse 0.6s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+  .cloud-status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;flex-shrink:0;}
+  .cs-ok{background:#4ade80;animation:pulse 2.5s infinite;} .cs-off{background:#94a3b8;} .cs-err{background:#f87171;}
+  .bud-cloud-tab{display:flex;gap:0;border-bottom:2px solid var(--gray-200);margin-bottom:14px;}
+  .bud-cloud-btn{padding:8px 16px;border:none;background:none;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;}
+  .bud-cloud-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
+  .bud-cloud-btn:hover{color:var(--primary);}
+  .bud-cloud-panel{display:none;}
+  .bud-cloud-panel.active{display:block;}
+  .bud-step-box{background:var(--gray-50);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:10px 14px;font-size:12px;line-height:1.9;margin-bottom:12px;}
+  .bud-step-box strong{color:#1e3a5f;}
   .cloud-bar{background:#1e1b4b;color:#c7d2fe;padding:5px 24px;font-size:11px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #312e81;flex-wrap:wrap;}
   .cloud-bar a{color:#93c5fd;cursor:pointer;text-decoration:underline;}
   .viewer-badge{background:#7c3aed;color:white;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;}
@@ -333,94 +343,65 @@
 
 <!-- Cloud Modal -->
 <div class="modal-overlay" id="cloudModal">
-  <div class="modal" style="width:560px;">
-    <h3>☁️ 클라우드 공유 설정</h3>
-    <p class="modal-sub">JSONBin.io(무료)를 이용해 팀원들이 실시간으로 볼 수 있게 공유합니다.</p>
-
-    <!-- Step guide -->
-    <div id="cloudSetupGuide">
-      <div class="cloud-step">
-        <strong>① 처음 설정하는 경우 (관리자 — 주희님)</strong><br>
-        1. <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> 접속 → 무료 가입<br>
-        2. 로그인 후 우측 상단 <strong>API Keys</strong> 클릭 → <strong>Master Key</strong> 복사<br>
-        3. 아래 "관리자 설정" 탭에 입력 → [연결 &amp; Bin 생성] 클릭<br>
-        4. 생성된 <strong>Bin ID</strong>를 팀원들에게 공유 (HTML 파일도 함께 공유)
-      </div>
-      <div class="cloud-step">
-        <strong>② 팀원 (보기 전용)</strong><br>
-        HTML 파일을 받아서 열기 → 아래 "팀원 설정" 탭에 <strong>Bin ID</strong>만 입력 → [연결] 클릭<br>
-        이후 "🔄 최신 데이터 불러오기" 버튼으로 주희님이 저장한 최신 데이터 확인 가능
-      </div>
-    </div>
+  <div class="modal" style="max-width:560px;">
+    <h3>☁️ 데이터 동기화 &amp; 백업</h3>
+    <p class="modal-sub" style="font-size:12px;color:var(--gray-500);margin-bottom:14px;">💡 총무 대백과와 동일한 GitHub 저장소·토큰을 공유합니다. 한 번 설정하면 양쪽 모두 사용 가능.</p>
 
     <!-- Tabs -->
-    <div style="display:flex;gap:0;border-bottom:2px solid var(--gray-200);margin-bottom:14px;">
-      <div id="tabAdmin" onclick="switchCloudTab('admin')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:700;color:var(--primary);border-bottom:3px solid var(--primary);">👑 관리자 설정</div>
-      <div id="tabViewer" onclick="switchCloudTab('viewer')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);border-bottom:3px solid transparent;">👁️ 팀원 연결</div>
-      <div id="tabMembers" onclick="switchCloudTab('members')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);border-bottom:3px solid transparent;">👥 팀원 관리</div>
+    <div class="bud-cloud-tab">
+      <button class="bud-cloud-btn active" onclick="switchBudCloudTab('backup')">💾 백업/복원</button>
+      <button class="bud-cloud-btn" onclick="switchBudCloudTab('github')">🐙 GitHub 동기화</button>
     </div>
 
-    <!-- Admin panel -->
-    <div id="panelAdmin">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Master Key (쓰기+읽기)</label>
-          <input type="password" id="cloudMasterKey" placeholder="$2b$10$...">
-        </div>
-        <div class="form-group">
-          <label>Bin ID <span style="font-size:10px;color:var(--gray-500)">(연결 후 자동 생성)</span></label>
-          <input type="text" id="cloudBinId" placeholder="연결 후 여기에 표시됩니다">
-        </div>
+    <!-- 패널: 백업/복원 -->
+    <div class="bud-cloud-panel active" id="bcpanel_backup">
+      <div class="bud-step-box">
+        <strong>📤 내보내기 (현재 브라우저 → 파일)</strong><br>
+        현재 예산관리 데이터(실적, 조정, 이관 이력)를 JSON 파일로 저장합니다.
       </div>
-      <div id="cloudAdminStatus" style="font-size:11px;color:var(--gray-500);margin-bottom:10px;"></div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-purple" onclick="connectAdmin()">연결 &amp; Bin 생성</button>
-        <button class="btn btn-secondary" onclick="disconnectCloud()">연결 해제</button>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:16px;" onclick="budExportJSON()">📤 예산 데이터 내보내기 (.json)</button>
+      <div class="bud-step-box">
+        <strong>📥 가져오기 (파일 → 현재 브라우저)</strong><br>
+        저장해둔 JSON 파일을 선택하면 데이터가 복원됩니다.<br>
+        ⚠️ 기존 데이터는 덮어씌워집니다.
       </div>
+      <button class="btn btn-secondary" style="width:100%;" onclick="document.getElementById('budImportFile').click()">📥 예산 데이터 가져오기 (.json)</button>
+      <input type="file" id="budImportFile" accept=".json" style="display:none" onchange="budImportJSON(this)">
     </div>
 
-    <!-- Viewer panel -->
-    <div id="panelViewer" style="display:none;">
-      <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px;background:var(--gray-50);border-radius:6px;padding:10px 12px;line-height:1.7;">
-        관리자(주희님)에게 <strong>Bin ID</strong>와 <strong>내 개인 토큰</strong>을 받아서 입력하세요.
+    <!-- 패널: GitHub 동기화 -->
+    <div class="bud-cloud-panel" id="bcpanel_github">
+      <div id="budGhStatusBar" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--gray-50);border-radius:8px;margin-bottom:14px;font-size:12px;">
+        <span class="cloud-status-dot cs-off" id="budGhDot"></span>
+        <span id="budGhStatusText">연결 안됨</span>
+        <span style="margin-left:auto;font-size:10px;color:var(--gray-400);" id="budGhLastSync"></span>
       </div>
-      <div class="form-row">
+      <div class="bud-step-box">
+        <strong>1단계.</strong> GitHub → 우측 상단 프로필 → <strong>Settings → Developer settings → Personal access tokens → Tokens (classic)</strong><br>
+        <strong>2단계.</strong> Generate new token → Note에 이름 입력 → <strong>repo</strong> 체크 → Generate<br>
+        <strong>3단계.</strong> 발급된 토큰 복사 후 아래에 입력 (총무 대백과와 동일한 토큰 사용 가능)
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <label>GitHub Token (비공개) — 총무 대백과와 공유</label>
+        <input type="password" id="budGhToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="font-family:monospace;font-size:11px;">
+      </div>
+      <div class="form-row" style="margin-bottom:8px;">
         <div class="form-group">
-          <label>내 이름</label>
-          <input type="text" id="cloudViewerName" placeholder="예: 홍길동">
+          <label>저장소 (owner/repo) — 총무 대백과와 공유</label>
+          <input type="text" id="budGhRepo" placeholder="juhee-1015/chongmu-intranet" style="font-size:11px;">
         </div>
-        <div class="form-group">
-          <label>개인 토큰</label>
-          <input type="text" id="cloudViewerToken" placeholder="관리자에게 받은 토큰">
+        <div class="form-group" style="max-width:150px;">
+          <label>파일명 (예산 전용)</label>
+          <input type="text" id="budGhFile" placeholder="budget_data.json" value="budget_data.json" style="font-size:11px;">
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:12px;">
-        <label>Bin ID</label>
-        <input type="text" id="cloudViewerBinId" placeholder="예: 64a1b2c3d4e5f6...">
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <button class="btn btn-primary" style="flex:1;" onclick="budGhSave()">☁️ GitHub에 저장</button>
+        <button class="btn btn-secondary" style="flex:1;" onclick="budGhLoad()">📥 GitHub에서 불러오기</button>
       </div>
-      <div id="cloudViewerStatus" style="font-size:11px;color:var(--gray-500);margin-bottom:10px;"></div>
-      <button class="btn btn-primary" onclick="connectViewer()">팀원으로 연결</button>
-    </div>
-
-    <!-- Members panel (admin only) -->
-    <div id="panelMembers" style="display:none;">
-      <div id="membersMustLogin" style="display:none;font-size:12px;color:#b91c1c;padding:10px;background:#fef2f2;border-radius:6px;margin-bottom:10px;">
-        ⚠️ 관리자로 먼저 연결해야 팀원을 관리할 수 있습니다.
-      </div>
-      <div id="membersContent">
-        <div style="display:flex;gap:8px;margin-bottom:14px;align-items:flex-end;">
-          <div class="form-group" style="flex:1;margin:0;">
-            <label>팀원 이름 입력</label>
-            <input type="text" id="newMemberName" placeholder="예: 홍길동" style="padding:8px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;width:100%;" onkeydown="if(event.key==='Enter')addViewer()">
-          </div>
-          <button class="btn btn-success" onclick="addViewer()" style="white-space:nowrap;height:36px;">+ 팀원 추가</button>
-        </div>
-        <div id="viewerList" style="min-height:50px;"></div>
-        <div style="margin-top:12px;font-size:11px;color:var(--gray-500);line-height:1.8;background:#fffbeb;border-radius:6px;padding:10px 12px;">
-          💡 추가 후 팀원에게 <strong>이름 + 개인토큰 + Bin ID</strong> 세 가지를 전달하세요<br>
-          🚫 <strong>비활성화</strong>: 해당 팀원이 다음 "최신 데이터 불러오기" 시 차단됩니다<br>
-          ⚠️ 변경 후 반드시 <strong>☁️ 클라우드 저장</strong>을 눌러 적용하세요
-        </div>
+      <div id="budGhMsg" style="font-size:11px;min-height:18px;"></div>
+      <div style="margin-top:12px;padding:10px;background:#f0fdf4;border-radius:6px;font-size:11px;color:#166534;">
+        💡 총무 대백과(<strong>data.json</strong>)와 예산관리(<strong>budget_data.json</strong>)는 같은 저장소의 서로 다른 파일에 저장됩니다. 토큰과 저장소 주소는 공유해요.
       </div>
     </div>
 
@@ -2056,37 +2037,159 @@ function closeModal(id){document.getElementById(id).classList.remove('open');}
 function showYearModal(){document.getElementById('yearInput').value=currentYear;openModal('yearModal');}
 
 function showCloudModal() {
-  if (cloudCfg.masterKey)   document.getElementById('cloudMasterKey').value   = cloudCfg.masterKey;
-  if (cloudCfg.binId)       document.getElementById('cloudBinId').value       = cloudCfg.binId;
-  if (cloudCfg.binId)       document.getElementById('cloudViewerBinId').value = cloudCfg.binId;
-  if (cloudCfg.viewerName)  document.getElementById('cloudViewerName').value  = cloudCfg.viewerName;
-  if (cloudCfg.viewerToken) document.getElementById('cloudViewerToken').value = cloudCfg.viewerToken;
+  // 인트라넷과 공유하는 토큰/저장소 불러오기
+  const savedToken = localStorage.getItem(BUD_GH_TOKEN_KEY)||'';
+  const savedRepo  = localStorage.getItem(BUD_GH_REPO_KEY)||'';
+  const savedFile  = localStorage.getItem(BUD_GH_FILE_KEY)||'budget_data.json';
+  const tEl=document.getElementById('budGhToken');if(tEl&&savedToken) tEl.value=savedToken;
+  const rEl=document.getElementById('budGhRepo');if(rEl&&savedRepo) rEl.value=savedRepo;
+  const fEl=document.getElementById('budGhFile');if(fEl) fEl.value=savedFile;
+  // 연결 상태 표시
+  if(savedToken&&savedRepo) budGhSetStatus('ok','설정됨');
+  switchBudCloudTab('github');
   openModal('cloudModal');
 }
 
-function switchCloudTab(tab) {
-  document.getElementById('panelAdmin').style.display   = tab==='admin'   ? '' : 'none';
-  document.getElementById('panelViewer').style.display  = tab==='viewer'  ? '' : 'none';
-  document.getElementById('panelMembers').style.display = tab==='members' ? '' : 'none';
-  const active = 'padding:8px 18px;cursor:pointer;font-size:12px;font-weight:700;color:var(--primary);border-bottom:3px solid var(--primary);';
-  const inactive = 'padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);border-bottom:3px solid transparent;';
-  document.getElementById('tabAdmin').style.cssText   = tab==='admin'   ? active : inactive;
-  document.getElementById('tabViewer').style.cssText  = tab==='viewer'  ? active : inactive;
-  document.getElementById('tabMembers').style.cssText = tab==='members' ? active : inactive;
+// ── 예산관리 GitHub 동기화 (총무 대백과와 토큰/저장소 공유) ──
+// 토큰·저장소 키는 인트라넷과 동일 → 한번 설정하면 양쪽 사용 가능
+const BUD_GH_TOKEN_KEY='intra_gh_token';   // 인트라넷과 공유
+const BUD_GH_REPO_KEY='intra_gh_repo';     // 인트라넷과 공유
+const BUD_GH_FILE_KEY='budget_gh_file';    // 예산관리 전용 파일
 
-  if (tab === 'members') {
-    const mustLogin = document.getElementById('membersMustLogin');
-    const content   = document.getElementById('membersContent');
-    if (!isAdmin()) {
-      mustLogin.style.display = '';
-      content.style.display = 'none';
-    } else {
-      mustLogin.style.display = 'none';
-      content.style.display = '';
-      renderViewerList();
-    }
+function budGhSetMsg(msg,isErr){
+  const el=document.getElementById('budGhMsg');
+  if(el){el.textContent=msg;el.style.color=isErr?'#dc2626':'#16a34a';}
+}
+function budGhSetStatus(state,text){
+  const dot=document.getElementById('budGhDot');
+  const txt=document.getElementById('budGhStatusText');
+  if(dot){dot.className='cloud-status-dot '+(state==='ok'?'cs-ok':state==='err'?'cs-err':'cs-off');}
+  if(txt) txt.textContent=text;
+}
+function budGhSavePrefs(){
+  const t=(document.getElementById('budGhToken').value||'').trim();
+  const r=(document.getElementById('budGhRepo').value||'').trim();
+  const f=(document.getElementById('budGhFile').value||'budget_data.json').trim();
+  if(t) localStorage.setItem(BUD_GH_TOKEN_KEY,t);
+  if(r) localStorage.setItem(BUD_GH_REPO_KEY,r);
+  localStorage.setItem(BUD_GH_FILE_KEY,f);
+  return{token:t,repo:r,file:f};
+}
+function budGhGatherData(){
+  const key=getStorageKey();
+  const raw=localStorage.getItem(key);
+  let payload={};
+  try{payload=JSON.parse(raw)||{};}catch(e){}
+  return{_version:1,_date:new Date().toISOString(),_app:'총무예산관리',
+    storageKey:key,budgetData:payload};
+}
+async function budGhSave(){
+  const {token,repo,file}=budGhSavePrefs();
+  if(!token){budGhSetMsg('❌ Token을 입력해주세요',true);return;}
+  if(!repo||!repo.includes('/')){budGhSetMsg('❌ 저장소를 owner/repo 형식으로 입력해주세요',true);return;}
+  budGhSetMsg('저장 중...'); budGhSetStatus('off','저장 중...');
+  try{
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(budGhGatherData(),null,2))));
+    const apiUrl=`https://api.github.com/repos/${repo}/contents/${file}`;
+    const headers={'Content-Type':'application/json','Authorization':'token '+token,'Accept':'application/vnd.github+json'};
+    let sha='';
+    try{const chk=await fetch(apiUrl,{headers});if(chk.ok){const j=await chk.json();sha=j.sha||'';}}catch(e){}
+    const body={message:'예산관리 데이터 저장 '+new Date().toLocaleString('ko-KR'),content};
+    if(sha) body.sha=sha;
+    const res=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body)});
+    if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
+    const now=new Date().toLocaleTimeString('ko-KR');
+    budGhSetStatus('ok','연결됨');
+    budGhSetMsg('✅ 저장 완료 — '+now);
+    const ls=document.getElementById('budGhLastSync');if(ls) ls.textContent=now+' 저장';
+    showToast('GitHub 저장 완료 ✅');
+  }catch(err){
+    budGhSetStatus('err','오류');
+    budGhSetMsg('❌ 오류: '+err.message,true);
   }
 }
+async function budGhLoad(){
+  const {token,repo,file}=budGhSavePrefs();
+  if(!repo||!repo.includes('/')){budGhSetMsg('❌ 저장소를 입력해주세요',true);return;}
+  budGhSetMsg('불러오는 중...');
+  try{
+    const apiUrl=`https://api.github.com/repos/${repo}/contents/${file}`;
+    const headers={'Accept':'application/vnd.github+json'};
+    if(token) headers['Authorization']='token '+token;
+    const res=await fetch(apiUrl,{headers});
+    if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
+    const j=await res.json();
+    const decoded=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+    const data=JSON.parse(decoded);
+    // budgetData 복원
+    if(data.budgetData&&data.storageKey){
+      localStorage.setItem(data.storageKey,JSON.stringify(data.budgetData));
+    } else if(data.actuals){
+      // 구버전 호환
+      const payload={actuals:data.actuals,adjBudget:data.adjustments||{},history:data.transferHistory||[]};
+      localStorage.setItem(getStorageKey(),JSON.stringify(payload));
+    }
+    budGhSetStatus('ok','연결됨');
+    const now=new Date().toLocaleTimeString('ko-KR');
+    budGhSetMsg('✅ 불러오기 완료 — '+(data._date?new Date(data._date).toLocaleString('ko-KR'):now));
+    const ls=document.getElementById('budGhLastSync');if(ls) ls.textContent=now+' 불러옴';
+    showToast('GitHub에서 불러오기 완료 ✅');
+    closeModal('cloudModal');
+    location.reload();
+  }catch(err){
+    budGhSetStatus('err','오류');
+    budGhSetMsg('❌ 오류: '+err.message,true);
+  }
+}
+
+// ── 백업/복원 ──
+function budExportJSON(){
+  const key=getStorageKey();
+  const raw=localStorage.getItem(key)||'{}';
+  const data={_version:1,_date:new Date().toISOString(),_app:'총무예산관리',storageKey:key,budgetData:JSON.parse(raw)};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='budget_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  showToast('📤 내보내기 완료');
+}
+function budImportJSON(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.budgetData&&data.storageKey){
+        localStorage.setItem(data.storageKey,JSON.stringify(data.budgetData));
+      } else if(data.actuals){
+        const payload={actuals:data.actuals,adjBudget:data.adjustments||{},history:data.transferHistory||[]};
+        localStorage.setItem(getStorageKey(),JSON.stringify(payload));
+      } else { alert('알 수 없는 형식입니다'); return; }
+      showToast('📥 가져오기 완료! 새로고침합니다');
+      setTimeout(()=>location.reload(),800);
+    }catch(err){alert('파일 형식 오류: '+err.message);}
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+
+function switchBudCloudTab(tab){
+  document.querySelectorAll('.bud-cloud-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bud-cloud-btn').forEach(b=>b.classList.remove('active'));
+  const panel=document.getElementById('bcpanel_'+tab);
+  if(panel) panel.classList.add('active');
+  const btns=document.querySelectorAll('.bud-cloud-btn');
+  const idx={backup:0,github:1}[tab]||0;
+  if(btns[idx]) btns[idx].classList.add('active');
+}
+
+// 구버전 호환 (JSONBin 함수들 - 빈 함수로 유지)
+function switchCloudTab(tab){ switchBudCloudTab(tab==='github'?'github':'backup'); }
+function connectAdmin(){}
+function disconnectCloud(){}
+function connectViewer(){}
+function addViewer(){}
+function renderViewerList(){}
+function isAdmin(){ return false; }
 function applyYear(){
   const y=parseInt(document.getElementById('yearInput').value);
   if(y<2024||y>2035){alert('2024~2035 사이 연도 입력');return;}
