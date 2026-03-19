@@ -1,0 +1,3184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>총무팀 예산관리 시스템</title>
+<style>
+  :root {
+    --primary: #4f46e5; --primary-dark:#3730a3; --primary-light: #eef2ff;
+    --success: #16a34a; --success-light: #f0fdf4;
+    --warning: #d97706; --warning-light: #fffbeb;
+    --danger: #dc2626;  --danger-light: #fef2f2;
+    --purple: #7c3aed;  --purple-light: #f5f3ff;
+    --gray-50:#f8f8fc; --gray-100:#f3f4f6; --gray-200:#e5e7eb;
+    --gray-300:#d1d5db; --gray-500:#6b7280; --gray-700:#374151; --gray-900:#111827;
+    --radius:10px; --shadow:0 2px 10px rgba(79,70,229,0.08);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif; background:var(--gray-50); color:var(--gray-900); font-size:13px; }
+
+  .header { background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 60%,#7c3aed 100%); color:white; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 12px rgba(79,70,229,0.25); }
+  .header h1 { font-size:17px; font-weight:700; letter-spacing:-0.3px; }
+  .header-sub { font-size:11px; color:rgba(255,255,255,0.7); margin-top:2px; }
+  .year-badge { background:rgba(255,255,255,0.2); color:white; padding:4px 12px; border-radius:20px; font-weight:700; font-size:14px; cursor:pointer; border:1px solid rgba(255,255,255,0.3); transition:background 0.2s; }
+  .year-badge:hover { background:rgba(255,255,255,0.3); }
+
+  .summary-bar { background:white; border-bottom:1px solid var(--gray-200); padding:16px 24px; display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+  .summary-card { text-align:center; padding:16px 12px; border-radius:12px; background:var(--gray-50); border:1px solid var(--gray-200); transition:all 0.2s; position:relative; overflow:hidden; }
+  .summary-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:12px 12px 0 0; background:var(--gray-200); }
+  .card-total::before { background:var(--primary-dark); }
+  .card-used::before { background:var(--primary); }
+  .card-remain::before { background:var(--success); }
+  .card-rate::before { background:var(--warning); }
+  .card-adj::before { background:var(--purple); }
+  .summary-card:hover { box-shadow:0 4px 16px rgba(79,70,229,0.12); border-color:#c7d2fe; transform:translateY(-1px); }
+  .summary-card .label { font-size:11px; color:var(--gray-500); margin-bottom:8px; font-weight:600; letter-spacing:0.2px; }
+  .summary-card .value { font-size:26px; font-weight:900; line-height:1.1; letter-spacing:-0.5px; }
+  .summary-card .sub { font-size:11px; color:var(--gray-500); margin-top:6px; }
+  .card-total .value{color:var(--primary-dark)} .card-used .value{color:var(--primary)}
+  .card-remain .value{color:var(--success)} .card-rate .value{color:var(--warning)} .card-adj .value{color:var(--purple)}
+
+  .overall-progress { padding:8px 24px 12px; background:white; border-bottom:1px solid var(--gray-200); }
+  .progress-bar-wrap { background:var(--gray-200); border-radius:8px; height:12px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.08); }
+  .progress-bar-fill { height:100%; border-radius:8px; transition:width 0.6s cubic-bezier(0.4,0,0.2,1); background:linear-gradient(90deg,var(--primary),#818cf8); }
+  .progress-label { display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:var(--gray-500); margin-bottom:6px; }
+
+  /* Tabs */
+  .tabs-container { background:white; border-bottom:2px solid var(--gray-200); padding:0 24px; position:sticky; top:0; z-index:100; box-shadow:0 2px 8px rgba(79,70,229,0.08); }
+  .tabs { display:flex; overflow-x:auto; }
+  .tab { padding:11px 14px; cursor:pointer; font-size:12px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; white-space:nowrap; transition:all 0.2s; }
+  .tab:hover { color:var(--primary); background:var(--primary-light); }
+  .tab.active { color:var(--primary); border-bottom-color:var(--primary); background:linear-gradient(to top,var(--primary-light),transparent); }
+  .dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-left:4px; vertical-align:middle; }
+  .dot-ok{background:var(--success)} .dot-warn{background:var(--warning)} .dot-over{background:var(--danger)}
+
+  /* Action bar under tabs */
+  .action-bar { background:linear-gradient(90deg,#f0f0ff,#f8f8ff); border-bottom:1px solid #e0e7ff; padding:8px 24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .action-bar-label { font-size:11px; color:var(--gray-500); font-weight:600; }
+
+  /* Main */
+  .main { padding:18px 24px; }
+  .month-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .month-title { font-size:15px; font-weight:700; color:var(--primary-dark); }
+
+  /* Tips */
+  .tips-box { background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:10px 14px; margin-bottom:14px; }
+  .tips-title { font-size:11px; font-weight:700; color:var(--primary); margin-bottom:5px; }
+  .tips-content { font-size:12px; color:#1e40af; line-height:1.6; }
+
+  /* Adjustment banner */
+  .adj-banner { background:var(--purple-light); border:1px solid #c4b5fd; border-radius:8px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+  .adj-banner-icon { font-size:16px; }
+  .adj-banner-text { font-size:12px; color:#5b21b6; flex:1; }
+  .adj-banner-detail { font-size:11px; color:#7c3aed; font-weight:600; }
+
+  /* Category */
+  .category-group { margin-bottom:10px; }
+  .category-header { background:linear-gradient(90deg,var(--primary-dark),var(--primary)); color:white; padding:8px 14px; border-radius:8px 8px 0 0; font-weight:700; font-size:12px; display:flex; justify-content:space-between; cursor:pointer; letter-spacing:0.2px; }
+  .cat-total { font-size:11px; opacity:0.75; }
+
+  /* Table */
+  .budget-table { width:100%; border-collapse:collapse; background:white; border-radius:0 0 8px 8px; overflow:hidden; box-shadow:0 2px 8px rgba(79,70,229,0.07); }
+  .budget-table th { background:#eef2ff; padding:8px 10px; text-align:right; font-size:11px; font-weight:700; color:var(--primary-dark); white-space:nowrap; border-bottom:2px solid #c7d2fe; }
+  .budget-table th:first-child { text-align:left; }
+  .budget-table td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--gray-100); font-size:12px; vertical-align:middle; }
+  .budget-table td:first-child { text-align:left; }
+  .budget-table tr:last-child td { border-bottom:none; }
+  .budget-table tr:hover td { background:#f8f8ff; }
+  .budget-table tr:hover td { background:#f8fafc; }
+  .subtotal-row td { background:#eef2ff; font-weight:700; color:var(--primary-dark); font-size:12px; }
+
+  .account-name { font-weight:600; }
+  .num { font-family:'SF Mono',monospace; }
+  .num-pos { color:var(--success); } .num-neg { color:var(--danger); font-weight:700; } .num-warn { color:var(--warning); font-weight:700; }
+
+  /* 조정 표시 */
+  .adj-indicator { font-size:10px; background:var(--purple-light); color:var(--purple); border-radius:3px; padding:1px 4px; margin-left:4px; font-weight:700; }
+  .orig-val { font-size:10px; color:var(--gray-500); text-decoration:line-through; margin-right:4px; }
+
+  /* Input */
+  .actual-input { width:105px; padding:4px 7px; border:1px solid var(--gray-300); border-radius:4px; text-align:right; font-size:12px; font-family:'SF Mono',monospace; transition:all 0.2s; }
+  .actual-input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 2px rgba(37,99,235,0.14); }
+  .actual-input.over { border-color:var(--danger); background:#fff5f5; }
+
+  .note-input { width:100%; padding:3px 6px; border:1px solid transparent; border-radius:4px; font-size:11px; color:var(--gray-500); background:transparent; }
+  .note-input:focus { border-color:var(--gray-300); background:white; outline:none; }
+
+  /* Mini bar */
+  .mini-bar { background:var(--gray-200); border-radius:3px; height:6px; width:70px; display:inline-block; overflow:hidden; vertical-align:middle; margin-left:5px; }
+  .mini-bar-fill { height:100%; border-radius:3px; }
+  .bar-ok{background:var(--success)} .bar-warn{background:var(--warning)} .bar-over{background:var(--danger)}
+
+  /* Buttons */
+  .btn { padding:7px 13px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all 0.2s; }
+  .btn-sm { padding:5px 10px; font-size:11px; }
+  .btn-primary{background:var(--primary);color:white} .btn-primary:hover{background:var(--primary-dark);box-shadow:0 3px 8px rgba(79,70,229,0.3)}
+  .btn-secondary{background:var(--gray-100);color:var(--gray-700);border:1px solid var(--gray-300)} .btn-secondary:hover{background:var(--gray-200)}
+  .btn-home{background:rgba(255,255,255,0.9);color:var(--primary-dark);border:none;font-weight:700} .btn-home:hover{background:white;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+  .header .btn-secondary{background:rgba(255,255,255,0.18);color:white;border:1px solid rgba(255,255,255,0.35)} .header .btn-secondary:hover{background:rgba(255,255,255,0.28)}
+  .btn-success{background:#22c55e;color:white;font-weight:700} .btn-success:hover{background:#16a34a;box-shadow:0 2px 8px rgba(34,197,94,0.35)}
+  .btn-purple{background:var(--purple);color:white} .btn-purple:hover{background:#6d28d9;box-shadow:0 2px 8px rgba(124,58,237,0.3)}
+  .btn-warning{background:var(--warning);color:white} .btn-warning:hover{background:#b45309}
+  .btn-danger{background:var(--danger);color:white} .btn-danger:hover{background:#b91c1c}
+
+  /* Modals */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1000; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:white; border-radius:12px; padding:24px; width:520px; max-width:94vw; max-height:90vh; overflow-y:auto; }
+  .modal h3 { font-size:16px; font-weight:700; margin-bottom:4px; }
+  .modal-sub { font-size:12px; color:var(--gray-500); margin-bottom:16px; }
+  .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:20px; }
+
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+  .form-row.full { grid-template-columns:1fr; }
+  .form-group label { display:block; font-size:11px; font-weight:700; color:var(--gray-700); margin-bottom:5px; }
+  .form-group select, .form-group input, .form-group textarea { width:100%; padding:8px 10px; border:1px solid var(--gray-300); border-radius:6px; font-size:12px; }
+  .form-group select:focus, .form-group input:focus, .form-group textarea:focus { outline:none; border-color:var(--primary); }
+  .form-group textarea { height:70px; resize:vertical; }
+
+  /* Rolling grid */
+  .rolling-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .rolling-cell label { display:block; font-size:10px; color:var(--gray-500); margin-bottom:3px; }
+  .rolling-cell input { width:100%; padding:6px 8px; border:1px solid var(--gray-300); border-radius:4px; font-size:12px; font-family:'SF Mono',monospace; }
+  .rolling-cell input.changed { border-color:var(--purple); background:var(--purple-light); }
+  .rolling-cell .orig-hint { font-size:10px; color:var(--gray-500); }
+
+  /* History panel */
+  .history-panel { background:white; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); overflow:hidden; margin-bottom:16px; }
+  .history-header { background:linear-gradient(90deg,var(--primary-dark),var(--primary)); color:white; padding:10px 14px; font-size:13px; font-weight:700; display:flex; justify-content:space-between; align-items:center; border-radius:8px 8px 0 0; }
+  .history-item { padding:10px 14px; border-bottom:1px solid var(--gray-100); display:grid; grid-template-columns:90px 1fr auto; gap:10px; align-items:start; }
+  .history-item:last-child { border-bottom:none; }
+  .history-date { font-size:11px; color:var(--gray-500); }
+  .history-desc { font-size:12px; }
+  .history-amount { font-size:12px; font-weight:700; font-family:'SF Mono',monospace; }
+  .history-type-transfer { color:var(--purple); }
+  .history-type-rolling { color:var(--warning); }
+  .history-type-adj { color:var(--primary); }
+  .empty-history { padding:24px; text-align:center; color:var(--gray-500); font-size:12px; }
+
+  /* Annual grid */
+  .annual-grid { display:grid; grid-template-columns:repeat(12,1fr); gap:7px; margin-bottom:18px; }
+  .month-card { background:white; border:1px solid var(--gray-200); border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all 0.2s; }
+  .month-card:hover { border-color:var(--primary); box-shadow:0 3px 10px rgba(79,70,229,0.12); transform:translateY(-2px); }
+  .month-card.active-month { border-color:var(--primary); background:var(--primary-light); box-shadow:0 3px 10px rgba(79,70,229,0.15); }
+  .month-card .mc-month { font-size:11px; color:var(--gray-500); margin-bottom:4px; font-weight:600; }
+  .month-card .mc-rate { font-size:16px; font-weight:800; }
+  .month-card .mc-bar { height:5px; border-radius:3px; margin-top:6px; }
+
+  /* Alerts */
+  .alert-box { display:flex; align-items:flex-start; gap:9px; padding:10px 12px; border-radius:7px; margin-bottom:10px; }
+  .alert-warn { background:var(--warning-light); border:1px solid #fcd34d; }
+  .alert-danger { background:var(--danger-light); border:1px solid #fca5a5; }
+  .alert-icon { font-size:15px; flex-shrink:0; }
+  .alert-text { font-size:12px; line-height:1.5; }
+  .alert-text strong { display:block; margin-bottom:2px; }
+
+  .legend { display:flex; gap:14px; font-size:11px; color:var(--gray-500); }
+  .legend-item { display:flex; align-items:center; gap:4px; }
+  .legend-dot { width:8px; height:8px; border-radius:50%; }
+
+  .announce-banner { background:linear-gradient(135deg,var(--primary-dark),var(--primary)); color:white; padding:8px 24px; font-size:12px; display:flex; justify-content:space-between; align-items:center; }
+  .announce-banner span { color:#93c5fd; }
+
+  .table-scroll { overflow-x:auto; }
+  .tag-adj { display:inline-block; font-size:9px; background:var(--purple-light); color:var(--purple); border-radius:3px; padding:1px 5px; font-weight:700; margin-left:3px; vertical-align:middle; }
+  .tag-rolling { display:inline-block; font-size:9px; background:var(--warning-light); color:var(--warning); border-radius:3px; padding:1px 5px; font-weight:700; margin-left:3px; vertical-align:middle; }
+
+  @media print { .tabs-container,.action-bar,.btn,.modal-overlay { display:none !important; } .main { padding:0; } }
+  @media (max-width:768px) { .summary-bar { grid-template-columns:repeat(3,1fr); } .annual-grid { grid-template-columns:repeat(4,1fr); } }
+
+  /* Cloud */
+  .cloud-dot { width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0;vertical-align:middle; }
+  .cloud-ok{background:#4ade80;animation:pulse 2.5s infinite} .cloud-off{background:#6b7280} .cloud-err{background:#f87171} .cloud-syncing{background:#facc15;animation:pulse 0.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+  .cloud-bar{background:#1e1b4b;color:#c7d2fe;padding:5px 24px;font-size:11px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #312e81;flex-wrap:wrap;}
+  .cloud-bar a{color:#93c5fd;cursor:pointer;text-decoration:underline;}
+  .viewer-badge{background:#7c3aed;color:white;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;}
+  .view-only-banner{background:linear-gradient(90deg,#7c3aed,#5b21b6);color:white;padding:8px 24px;font-size:12px;font-weight:600;text-align:center;display:none;}
+  .cloud-step{background:var(--gray-50);border-radius:6px;padding:10px 14px;margin-bottom:10px;font-size:12px;line-height:1.9;border-left:3px solid var(--primary);}
+  .cloud-step strong{color:#1e3a5f;} .copy-link{color:var(--primary);cursor:pointer;text-decoration:underline;font-size:11px;}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div>
+    <h1>📊 총무팀 예산관리 시스템</h1>
+    <div class="header-sub">내부 재무포탈 확인 후 실적 입력 · 예산 이관·롤링 조정 포함</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:#93c5fd;">
+    <div>
+      <span style="color:#94a3b8">관리연도</span>
+      <span class="year-badge" onclick="showYearModal()"><span id="yearDisplay">2026</span>년</span>
+    </div>
+    <div style="display:flex;gap:7px;align-items:center;">
+      <button class="btn btn-home btn-sm" onclick="window.location.href='총무_인트라넷.html'" title="총무 대백과로 이동">← 총무 대백과</button>
+      <button class="btn btn-secondary btn-sm" onclick="exportCSV()">📥 CSV</button>
+      <button class="btn btn-success btn-sm" id="saveBtn" onclick="saveData()">💾 저장</button>
+      <button class="btn btn-secondary btn-sm" onclick="showCloudModal()">☁️ 클라우드</button>
+      <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ 인쇄</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cloud status bar -->
+<div class="cloud-bar" id="cloudBar" style="display:none;">
+  <span><span class="cloud-dot cloud-off" id="cloudDot"></span><span id="cloudStatusText">클라우드 미연결</span></span>
+  <span id="cloudLastSync"></span>
+  <span style="margin-left:auto;display:flex;gap:8px;">
+    <button class="btn btn-secondary btn-sm" id="cloudRefreshBtn" onclick="loadFromCloud(true)" style="font-size:10px;padding:3px 9px;">🔄 최신 데이터 불러오기</button>
+    <button class="btn btn-purple btn-sm" id="cloudSaveBtn" onclick="saveToCloud()" style="font-size:10px;padding:3px 9px;display:none;">☁️ 클라우드 저장</button>
+  </span>
+</div>
+
+<!-- Viewer mode banner -->
+<div class="view-only-banner" id="viewerBanner">
+  👁️ 보기 전용 모드 — 주희님이 저장한 최신 예산 현황을 확인 중입니다. 데이터를 수정하려면 관리자에게 문의하세요.
+</div>
+
+<div class="announce-banner">
+  <div>💡 <strong style="color:white">재무포탈 확인 후</strong> 해당 월 탭 → 계정별 실적 입력 · 예산 이관/롤링 조정은 상단 버튼 사용</div>
+  <span id="lastSaveTime"></span>
+</div>
+
+<!-- Summary -->
+<div class="summary-bar">
+  <div class="summary-card card-total">
+    <div class="label">연간 조정예산 합계</div>
+    <div class="value num" id="summaryTotal">-</div>
+    <div class="sub" id="summaryTotalSub">원예산 기준</div>
+  </div>
+  <div class="summary-card card-used">
+    <div class="label">누적 실제 사용금액</div>
+    <div class="value num" id="summaryUsed">-</div>
+    <div class="sub" id="summaryUsedSub">-</div>
+  </div>
+  <div class="summary-card card-remain">
+    <div class="label">잔여 예산</div>
+    <div class="value num" id="summaryRemain">-</div>
+    <div class="sub">조정예산 기준 잔여</div>
+  </div>
+  <div class="summary-card card-rate">
+    <div class="label">전체 소진율</div>
+    <div class="value num" id="summaryRate">-</div>
+    <div class="sub" id="summaryRateSub">-</div>
+  </div>
+  <div class="summary-card card-adj">
+    <div class="label">예산 조정 횟수</div>
+    <div class="value num" id="summaryAdjCount">0</div>
+    <div class="sub" id="summaryAdjSub">이관+롤링 조정</div>
+  </div>
+</div>
+
+<div class="overall-progress">
+  <div class="progress-label">
+    <span>예산 소진 현황 (조정예산 기준)</span>
+    <span id="overallPct">0%</span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill bar-ok" id="overallBar" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs-container">
+  <div class="tabs" id="monthTabs">
+    <div class="tab" data-month="0" onclick="switchMonth(0)">1월</div>
+    <div class="tab" data-month="1" onclick="switchMonth(1)">2월</div>
+    <div class="tab" data-month="2" onclick="switchMonth(2)">3월</div>
+    <div class="tab" data-month="3" onclick="switchMonth(3)">4월</div>
+    <div class="tab" data-month="4" onclick="switchMonth(4)">5월</div>
+    <div class="tab" data-month="5" onclick="switchMonth(5)">6월</div>
+    <div class="tab" data-month="6" onclick="switchMonth(6)">7월</div>
+    <div class="tab" data-month="7" onclick="switchMonth(7)">8월</div>
+    <div class="tab" data-month="8" onclick="switchMonth(8)">9월</div>
+    <div class="tab" data-month="9" onclick="switchMonth(9)">10월</div>
+    <div class="tab" data-month="10" onclick="switchMonth(10)">11월</div>
+    <div class="tab" data-month="11" onclick="switchMonth(11)">12월</div>
+    <div class="tab" data-month="12" onclick="switchMonth(12)">📊 연간현황</div>
+    <div class="tab" data-month="13" onclick="switchMonth(13)">📋 조정이력</div>
+    <div class="tab" data-month="14" onclick="switchMonth(14)">📈 시각화</div>
+    <div class="tab" data-month="15" onclick="switchMonth(15)">📁 연도별 파일관리</div>
+  </div>
+</div>
+
+<!-- Action bar -->
+<div class="action-bar">
+  <span class="action-bar-label">예산 조정:</span>
+  <button class="btn btn-purple btn-sm" onclick="showTransferModal()">🔄 예산 이관</button>
+  <button class="btn btn-warning btn-sm" onclick="showRollingModal()">📅 롤링 조정</button>
+  <button class="btn btn-primary btn-sm" onclick="showDirectAdjModal()">✏️ 예산 직접 수정</button>
+  <span style="margin-left:auto; font-size:11px; color:var(--gray-500);" id="adjSummaryLabel"></span>
+</div>
+
+<!-- Main -->
+<div class="main" id="mainContent"></div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Cloud Modal -->
+<div class="modal-overlay" id="cloudModal">
+  <div class="modal" style="width:560px;">
+    <h3>☁️ 클라우드 공유 설정</h3>
+    <p class="modal-sub">JSONBin.io(무료)를 이용해 팀원들이 실시간으로 볼 수 있게 공유합니다.</p>
+
+    <!-- Step guide -->
+    <div id="cloudSetupGuide">
+      <div class="cloud-step">
+        <strong>① 처음 설정하는 경우 (관리자 — 주희님)</strong><br>
+        1. <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> 접속 → 무료 가입<br>
+        2. 로그인 후 우측 상단 <strong>API Keys</strong> 클릭 → <strong>Master Key</strong> 복사<br>
+        3. 아래 "관리자 설정" 탭에 입력 → [연결 &amp; Bin 생성] 클릭<br>
+        4. 생성된 <strong>Bin ID</strong>를 팀원들에게 공유 (HTML 파일도 함께 공유)
+      </div>
+      <div class="cloud-step">
+        <strong>② 팀원 (보기 전용)</strong><br>
+        HTML 파일을 받아서 열기 → 아래 "팀원 설정" 탭에 <strong>Bin ID</strong>만 입력 → [연결] 클릭<br>
+        이후 "🔄 최신 데이터 불러오기" 버튼으로 주희님이 저장한 최신 데이터 확인 가능
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:0;border-bottom:2px solid var(--gray-200);margin-bottom:14px;">
+      <div id="tabAdmin" onclick="switchCloudTab('admin')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:700;color:var(--primary);border-bottom:3px solid var(--primary);">👑 관리자 설정</div>
+      <div id="tabViewer" onclick="switchCloudTab('viewer')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);border-bottom:3px solid transparent;">👁️ 팀원 연결</div>
+      <div id="tabMembers" onclick="switchCloudTab('members')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);border-bottom:3px solid transparent;">👥 팀원 관리</div>
+    </div>
+
+    <!-- Admin panel -->
+    <div id="panelAdmin">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Master Key (쓰기+읽기)</label>
+          <input type="password" id="cloudMasterKey" placeholder="$2b$10$...">
+        </div>
+        <div class="form-group">
+          <label>Bin ID <span style="font-size:10px;color:var(--gray-500)">(연결 후 자동 생성)</span></label>
+          <input type="text" id="cloudBinId" placeholder="연결 후 여기에 표시됩니다">
+        </div>
+      </div>
+      <div id="cloudAdminStatus" style="font-size:11px;color:var(--gray-500);margin-bottom:10px;"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-purple" onclick="connectAdmin()">연결 &amp; Bin 생성</button>
+        <button class="btn btn-secondary" onclick="disconnectCloud()">연결 해제</button>
+      </div>
+    </div>
+
+    <!-- Viewer panel -->
+    <div id="panelViewer" style="display:none;">
+      <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px;background:var(--gray-50);border-radius:6px;padding:10px 12px;line-height:1.7;">
+        관리자(주희님)에게 <strong>Bin ID</strong>와 <strong>내 개인 토큰</strong>을 받아서 입력하세요.
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>내 이름</label>
+          <input type="text" id="cloudViewerName" placeholder="예: 홍길동">
+        </div>
+        <div class="form-group">
+          <label>개인 토큰</label>
+          <input type="text" id="cloudViewerToken" placeholder="관리자에게 받은 토큰">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label>Bin ID</label>
+        <input type="text" id="cloudViewerBinId" placeholder="예: 64a1b2c3d4e5f6...">
+      </div>
+      <div id="cloudViewerStatus" style="font-size:11px;color:var(--gray-500);margin-bottom:10px;"></div>
+      <button class="btn btn-primary" onclick="connectViewer()">팀원으로 연결</button>
+    </div>
+
+    <!-- Members panel (admin only) -->
+    <div id="panelMembers" style="display:none;">
+      <div id="membersMustLogin" style="display:none;font-size:12px;color:#b91c1c;padding:10px;background:#fef2f2;border-radius:6px;margin-bottom:10px;">
+        ⚠️ 관리자로 먼저 연결해야 팀원을 관리할 수 있습니다.
+      </div>
+      <div id="membersContent">
+        <div style="display:flex;gap:8px;margin-bottom:14px;align-items:flex-end;">
+          <div class="form-group" style="flex:1;margin:0;">
+            <label>팀원 이름 입력</label>
+            <input type="text" id="newMemberName" placeholder="예: 홍길동" style="padding:8px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;width:100%;" onkeydown="if(event.key==='Enter')addViewer()">
+          </div>
+          <button class="btn btn-success" onclick="addViewer()" style="white-space:nowrap;height:36px;">+ 팀원 추가</button>
+        </div>
+        <div id="viewerList" style="min-height:50px;"></div>
+        <div style="margin-top:12px;font-size:11px;color:var(--gray-500);line-height:1.8;background:#fffbeb;border-radius:6px;padding:10px 12px;">
+          💡 추가 후 팀원에게 <strong>이름 + 개인토큰 + Bin ID</strong> 세 가지를 전달하세요<br>
+          🚫 <strong>비활성화</strong>: 해당 팀원이 다음 "최신 데이터 불러오기" 시 차단됩니다<br>
+          ⚠️ 변경 후 반드시 <strong>☁️ 클라우드 저장</strong>을 눌러 적용하세요
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('cloudModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- Year -->
+<div class="modal-overlay" id="yearModal">
+  <div class="modal">
+    <h3>관리 연도 변경</h3>
+    <p class="modal-sub">연도 변경 시 해당 연도 저장 데이터를 불러옵니다. 예산 원본은 유지됩니다.</p>
+    <div class="form-group">
+      <label>연도</label>
+      <input type="number" id="yearInput" value="2026" min="2024" max="2035">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('yearModal')">취소</button>
+      <button class="btn btn-primary" onclick="applyYear()">변경</button>
+    </div>
+  </div>
+</div>
+
+<!-- Transfer Modal -->
+<div class="modal-overlay" id="transferModal">
+  <div class="modal">
+    <h3>🔄 예산 이관</h3>
+    <p class="modal-sub">계정 간 예산을 이동합니다. 이관 이력이 자동 기록됩니다.</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>이관 출처 계정 (From)</label>
+        <select id="transferFrom" onchange="updateTransferInfo()">
+          <option value="">-- 선택 --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>이관 대상 계정 (To)</label>
+        <select id="transferTo" onchange="updateTransferInfo()">
+          <option value="">-- 선택 --</option>
+        </select>
+      </div>
+    </div>
+    <div id="transferInfoBox" style="background:var(--gray-50);border-radius:6px;padding:10px;font-size:11px;color:var(--gray-500);margin-bottom:12px;display:none;">
+      <div id="transferFromInfo"></div>
+      <div id="transferToInfo"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>이관 금액 (원)</label>
+        <input type="text" id="transferAmount" placeholder="예: 5,000,000" oninput="formatNumberInput(this)">
+      </div>
+      <div class="form-group">
+        <label>이관 적용 월</label>
+        <select id="transferMonth">
+          <option value="-1">연간 전체 (균등 배분)</option>
+          <option value="0">1월</option><option value="1">2월</option><option value="2">3월</option>
+          <option value="3">4월</option><option value="4">5월</option><option value="5">6월</option>
+          <option value="6">7월</option><option value="7">8월</option><option value="8">9월</option>
+          <option value="9">10월</option><option value="10">11월</option><option value="11">12월</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row full">
+      <div class="form-group">
+        <label>이관 사유</label>
+        <textarea id="transferReason" placeholder="예: 하반기 청소용역 업체 변경으로 인한 예산 재배분"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('transferModal')">취소</button>
+      <button class="btn btn-purple" onclick="applyTransfer()">이관 실행</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rolling Modal -->
+<div class="modal-overlay" id="rollingModal">
+  <div class="modal" style="width:600px;">
+    <h3>📅 롤링 조정</h3>
+    <p class="modal-sub">특정 계정의 월별 계획액을 재설정합니다. 빈 칸은 현재 값을 유지합니다.</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>대상 계정</label>
+        <select id="rollingAccount" onchange="loadRollingValues()">
+          <option value="">-- 선택 --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>조정 시작 월</label>
+        <select id="rollingStartMonth" onchange="loadRollingValues()">
+          <option value="0">1월부터</option><option value="1">2월부터</option><option value="2">3월부터</option>
+          <option value="3">4월부터</option><option value="4">5월부터</option><option value="5">6월부터</option>
+          <option value="6">7월부터 (하반기)</option><option value="7">8월부터</option><option value="8">9월부터</option>
+          <option value="9">10월부터</option><option value="10">11월부터</option><option value="11">12월부터</option>
+        </select>
+      </div>
+    </div>
+    <div id="rollingAccountInfo" style="background:var(--gray-50);padding:9px 12px;border-radius:6px;font-size:11px;color:var(--gray-500);margin-bottom:12px;"></div>
+    <div class="rolling-grid" id="rollingGrid"></div>
+    <div style="font-size:11px;color:var(--gray-500);margin-top:8px;">* 수정된 월은 보라색으로 표시됩니다. 연간 합계는 자동 재계산됩니다.</div>
+    <div class="form-row full" style="margin-top:12px;">
+      <div class="form-group">
+        <label>조정 사유</label>
+        <textarea id="rollingReason" placeholder="예: 하반기 업무량 감소로 탕비비 예산 하향 조정"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('rollingModal')">취소</button>
+      <button class="btn btn-warning" onclick="applyRolling()">롤링 조정 적용</button>
+    </div>
+  </div>
+</div>
+
+<!-- Direct Adj Modal -->
+<div class="modal-overlay" id="directAdjModal">
+  <div class="modal" style="width:600px;">
+    <h3>✏️ 예산 직접 수정 / 계정 관리</h3>
+    <!-- 탭 -->
+    <div style="display:flex;border-bottom:2px solid var(--gray-100);margin-bottom:14px;gap:0;">
+      <div id="dTab_adj" onclick="switchDTab('adj')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:700;color:var(--primary);border-bottom:3px solid var(--primary);">✏️ 예산 수정</div>
+      <div id="dTab_add" onclick="switchDTab('add')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);border-bottom:3px solid transparent;">➕ 계정 추가</div>
+      <div id="dTab_rename" onclick="switchDTab('rename')" style="padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);border-bottom:3px solid transparent;">🔤 계정명 변경</div>
+    </div>
+
+    <!-- 패널: 예산 수정 -->
+    <div id="dPanel_adj">
+      <p class="modal-sub">특정 계정의 특정 월 예산을 직접 수정합니다. 연간 합계도 자동 반영됩니다.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>대상 계정</label>
+          <select id="directAdjAccount" onchange="loadDirectAdjValues()">
+            <option value="">-- 선택 --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>수정 월</label>
+          <select id="directAdjMonth" onchange="loadDirectAdjValues()">
+            <option value="0">1월</option><option value="1">2월</option><option value="2">3월</option>
+            <option value="3">4월</option><option value="4">5월</option><option value="5">6월</option>
+            <option value="6">7월</option><option value="7">8월</option><option value="8">9월</option>
+            <option value="9">10월</option><option value="10">11월</option><option value="11">12월</option>
+          </select>
+        </div>
+      </div>
+      <div id="directAdjInfo" style="background:var(--gray-50);padding:9px 12px;border-radius:6px;font-size:12px;margin-bottom:12px;"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>수정 후 예산액 (원)</label>
+          <input type="text" id="directAdjAmount" placeholder="금액 입력" oninput="formatNumberInput(this)">
+        </div>
+        <div class="form-group">
+          <label>수정 사유</label>
+          <input type="text" id="directAdjReason" placeholder="사유 입력">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('directAdjModal')">취소</button>
+        <button class="btn btn-primary" onclick="applyDirectAdj()">수정 적용</button>
+      </div>
+    </div>
+
+    <!-- 패널: 계정 추가 -->
+    <div id="dPanel_add" style="display:none;">
+      <p class="modal-sub">새 계정을 추가합니다. 추가된 계정은 해당 연도에만 적용됩니다.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>계정명 <span style="color:red">*</span></label>
+          <input type="text" id="addAccName" placeholder="예: 복리후생비-기타">
+        </div>
+        <div class="form-group">
+          <label>카테고리</label>
+          <input type="text" id="addAccCategory" placeholder="예: 복리후생비" list="addAccCategoryList">
+          <datalist id="addAccCategoryList"></datalist>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>연간 예산 (원)</label>
+          <input type="text" id="addAccAnnual" placeholder="0" oninput="formatNumberInput(this)" value="0">
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end;">
+          <div style="font-size:11px;color:var(--gray-500);padding-bottom:6px;">※ 월별 배분은 추가 후 계획액 수정 탭에서 가능합니다.</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('directAdjModal')">취소</button>
+        <button class="btn btn-success" onclick="applyAddAccount()">계정 추가</button>
+      </div>
+    </div>
+
+    <!-- 패널: 계정명 변경 -->
+    <div id="dPanel_rename" style="display:none;">
+      <p class="modal-sub">기존 계정의 이름을 변경합니다. 실적 데이터도 함께 이전됩니다.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>변경할 계정</label>
+          <select id="renameAccFrom">
+            <option value="">-- 선택 --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>새 계정명 <span style="color:red">*</span></label>
+          <input type="text" id="renameAccTo" placeholder="새 이름 입력">
+        </div>
+      </div>
+      <div id="renameAccInfo" style="background:var(--gray-50);padding:9px 12px;border-radius:6px;font-size:12px;margin-bottom:12px;display:none;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('directAdjModal')">취소</button>
+        <button class="btn btn-warning" onclick="applyRenameAccount()">이름 변경 적용</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 원본 예산 데이터 (2026년 사업계획 엑셀 추출 — 수정 금지)
+// ============================================================
+// ============================================================
+// 2026년 하드코딩 기본값 (엑셀 업로드 전 폴백용)
+// ============================================================
+const FALLBACK_BUDGET_2026 = [
+  {name:"지급임차-리스",       category:"임차비용",   annual:2106780600, months:[175129300,175129300,175129300,175129300,175129300,175129300,175129300,175129300,175129300,175129300,175129300,180358300]},
+  {name:"지급임차-단기임차",   category:"임차비용",   annual:1279200000, months:[118600000,118600000,118600000,120000000,120000000,120000000,92400000,92400000,92400000,93800000,96200000,96200000]},
+  {name:"지급임차-관리비",     category:"임차비용",   annual:885300000,  months:[80400000,80400000,80400000,80400000,80400000,80400000,66700000,66700000,66700000,66700000,67200000,68900000]},
+  {name:"임차보증금",          category:"임차비용",   annual:120000000,  months:[30000000,0,0,30000000,0,0,30000000,0,0,30000000,0,0]},
+  {name:"건물관리-보안용역/장비",category:"건물관리", annual:18224000,   months:[1404000,1404000,1404000,1404000,1404000,1504000,1600000,1600000,1600000,1600000,1600000,1700000]},
+  {name:"건물관리-수도광열비", category:"건물관리",   annual:87600000,   months:[7300000,7300000,7300000,7300000,7300000,7300000,7300000,7300000,7300000,7300000,7300000,7300000]},
+  {name:"건물관리-청소용역",   category:"건물관리",   annual:142368000,  months:[9628000,8128000,9628000,8128000,24628000,8128000,9900000,11400000,10200000,8700000,25200000,8700000]},
+  {name:"건물관리-기타",       category:"건물관리",   annual:168595460,  months:[1695455,545455,1695455,545455,6695455,745455,150745455,745455,1745455,545455,1745455,1145455]},
+  {name:"보험료-법인보험",     category:"보험/차량",  annual:7150000,    months:[6950000,0,0,0,0,0,0,0,0,0,200000,0]},
+  {name:"차량유지비-제세공과", category:"보험/차량",  annual:2400000,    months:[0,0,0,0,0,0,1200000,0,0,0,0,1200000]},
+  {name:"비품",                category:"비품/소모품",annual:62000000,   months:[0,20000000,0,0,0,21000000,0,0,0,0,0,21000000]},
+  {name:"소모품비-사무용품",   category:"비품/소모품",annual:37405000,   months:[3281000,2853000,2916000,2979000,3042000,3051000,3587000,3114000,3114000,3150000,3159000,3159000]},
+  {name:"소모품비-일반",       category:"비품/소모품",annual:28292500,   months:[3008500,2060500,2106000,2151500,2197000,2203500,3229500,2249000,2249000,2275000,2281500,2281500]},
+  {name:"소모품비-시설",       category:"비품/소모품",annual:17200000,   months:[6000000,0,0,2000000,0,0,7200000,0,0,2000000,0,0]},
+  {name:"시설장치",            category:"비품/소모품",annual:80000000,   months:[0,0,0,0,0,0,30000000,0,0,50000000,0,0]},
+  {name:"복리후생-탕비",       category:"복리후생",   annual:408545000,  months:[31209000,32017000,32724000,33431000,34138000,34239000,34643000,34946000,34946000,35350000,35451000,35451000]},
+  {name:"복리후생-건강검진",   category:"복리후생",   annual:85000000,   months:[0,0,0,0,0,0,0,0,0,0,0,85000000]},
+  {name:"복리후생-기타",       category:"복리후생",   annual:129691667,  months:[7355000,6198333,30030000,7611667,8943333,8955000,10251667,10286667,10286667,9083333,10345000,10345000]},
+  {name:"복리후생-사내근로복지기금출연",category:"복리후생",annual:201900000,months:[0,96600000,0,0,0,0,0,0,105300000,0,0,0]},
+  {name:"복리후생-이벤트",     category:"복리후생",   annual:91200000,   months:[1000000,1000000,4750000,1000000,1000000,4750000,6000000,34700000,4750000,1000000,1000000,30250000]},
+  {name:"교육훈련비-행사",     category:"교육훈련",   annual:837960000,  months:[675000000,0,0,0,0,0,0,0,1500000,0,0,161460000]},
+  {name:"여비교통비-교통지원", category:"여비교통",   annual:220000000,  months:[18000000,18000000,20000000,18000000,18000000,18000000,18000000,18000000,20000000,18000000,18000000,18000000]},
+  {name:"여비교통비-외근",     category:"여비교통",   annual:7800000,    months:[650000,650000,650000,650000,650000,650000,650000,650000,650000,650000,650000,650000]},
+  {name:"여비교통비-기타",     category:"여비교통",   annual:228600000,  months:[16800000,17100000,17400000,17700000,18000000,18300000,19800000,20100000,20400000,20700000,21000000,21300000]},
+  {name:"도서인쇄비-도서구입", category:"도서/운반",  annual:2640000,    months:[220000,220000,220000,220000,220000,220000,220000,220000,220000,220000,220000,220000]},
+  {name:"도서인쇄비-인쇄",     category:"도서/운반",  annual:1036000,    months:[42000,154000,140000,140000,140000,56000,98000,84000,42000,42000,56000,42000]},
+  {name:"운반비-택배/퀵",      category:"도서/운반",  annual:1000000,    months:[75000,90000,75000,75000,75000,75000,75000,75000,110000,75000,75000,125000]},
+  {name:"외주용역비-일반",     category:"외주/수수료",annual:39468000,   months:[3289000,3289000,3289000,3289000,3289000,3289000,3289000,3289000,3289000,3289000,3289000,3289000]},
+  {name:"지급수수료-소액리스", category:"외주/수수료",annual:22514000,   months:[1592000,1592000,1592000,1592000,1592000,1592000,5432000,1506000,1506000,1506000,1506000,1506000]},
+  {name:"지급수수료-일반",     category:"외주/수수료",annual:10698000,   months:[1548000,498000,498000,1548000,498000,753000,1550000,500000,500000,1550000,500000,755000]},
+  {name:"접대비-기타",         category:"접대비",     annual:13000000,   months:[6500000,0,0,0,0,0,0,0,6500000,0,0,0]},
+];
+
+// ============================================================
+// 2025년 하드코딩 기본값
+// ============================================================
+const FALLBACK_BUDGET_2025 = [
+  {name:'지급임차-리스',category:'임차비용',annual:2247127600,months:[170025300,170025300,170025300,170025300,170025300,170025300,203229300,203229300,203229300,203229300,203229300,210829300]},
+  {name:'지급임차-단기임차',category:'임차비용',annual:1200310000,months:[111124000,111124000,113924000,113924000,113924000,116724000,83520000,83520000,86320000,86320000,88543000,91343000]},
+  {name:'지급임차-관리비',category:'임차비용',annual:950301848,months:[79000000,79000000,79000000,79000000,79000000,79000000,79000000,79000000,79000000,79000000,79000000,81301848]},
+  {name:'임차보증금',category:'임차비용',annual:160000000,months:[0,0,40000000,0,0,40000000,0,0,40000000,0,0,40000000]},
+  {name:'장기임차보증금',category:'임차비용',annual:0,months:[0,0,0,0,0,0,0,0,0,0,0,0]},
+  {name:'건물관리-보안용역/장비',category:'건물관리',annual:18042000,months:[1360000,1360000,1360000,1360000,1360000,1360000,1647000,1647000,1647000,1647000,1647000,1647000]},
+  {name:'건물관리-수도광열비',category:'건물관리',annual:96000000,months:[8000000,8000000,8000000,8000000,8000000,8000000,8000000,8000000,8000000,8000000,8000000,8000000]},
+  {name:'건물관리-청소용역',category:'건물관리',annual:131136000,months:[9428000,18528000,9428000,8528000,9428000,8828000,9428000,8528000,20128000,9228000,10128000,9528000]},
+  {name:'건물관리-기타',category:'건물관리',annual:10151000,months:[696000,655000,805000,655000,805000,1405000,805000,805000,805000,655000,805000,1255000]},
+  {name:'보험료-법인보험',category:'보험/차량',annual:8000000,months:[8000000,0,0,0,0,0,0,0,0,0,0,0]},
+  {name:'차량유지비-제세공과',category:'보험/차량',annual:3300000,months:[0,0,0,0,0,1650000,0,0,0,0,0,1650000]},
+  {name:'비품',category:'비품/소모품',annual:87300000,months:[1900000,5700000,4750000,8550000,35500000,6650000,4750000,3800000,3800000,1900000,5000000,5000000]},
+  {name:'소모품비-사무용품',category:'비품/소모품',annual:29704000,months:[2392000,2416000,2432000,2464000,2472000,2488000,2496000,2496000,2512000,2512000,2512000,2512000]},
+  {name:'소모품비-일반',category:'비품/소모품',annual:21421500,months:[1644500,1661000,1672000,1694000,1699500,2210500,1716000,1716000,1727000,1727000,1727000,2227000]},
+  {name:'소모품비-시설',category:'비품/소모품',annual:4000000,months:[0,0,500000,2000000,0,500000,0,0,500000,0,0,500000]},
+  {name:'시설장치',category:'비품/소모품',annual:160000000,months:[0,0,40000000,0,0,40000000,0,0,40000000,0,0,40000000]},
+  {name:'복리후생-탕비',category:'복리후생',annual:360161000,months:[29003000,29294000,29488000,29876000,29973000,30167000,30264000,30264000,30458000,30458000,30458000,30458000]},
+  {name:'복리후생-건강검진',category:'복리후생',annual:90000000,months:[0,0,0,0,0,0,0,0,0,0,0,90000000]},
+  {name:'복리후생-기타',category:'복리후생',annual:89325000,months:[5620000,4540000,22285000,4770000,5200000,5850000,7160000,7160000,6080000,6960000,6310000,7390000]},
+  {name:'복리후생-사내근로복지기금출연',category:'복리후생',annual:124600000,months:[60800000,0,0,0,0,0,0,0,0,63800000,0,0]},
+  {name:'복리후생-이벤트',category:'복리후생',annual:75640000,months:[0,500000,2600000,0,0,5860000,0,56540000,5200000,0,0,4940000]},
+  {name:'교육훈련비-행사',category:'교육훈련',annual:199440000,months:[0,50000000,0,5000000,0,0,0,0,0,0,0,144440000]},
+  {name:'도서인쇄비-도서구입',category:'도서/운반',annual:2599100,months:[209300,211400,212800,215600,216300,217700,218400,218400,219800,219800,219800,219800]},
+  {name:'도서인쇄비-인쇄',category:'도서/운반',annual:3584000,months:[294000,322000,308000,336000,294000,308000,294000,280000,308000,280000,280000,280000]},
+  {name:'운반비-택배/퀵',category:'도서/운반',annual:3858000,months:[295000,301000,306000,315000,315000,322000,327000,331000,335000,337000,337000,337000]},
+  {name:'외주용역비-일반',category:'외주/수수료',annual:60000000,months:[5000000,5000000,5000000,5000000,5000000,5000000,5000000,5000000,5000000,5000000,5000000,5000000]},
+  {name:'지급수수료-소액리스',category:'외주/수수료',annual:17505144,months:[1458762,1458762,1458762,1458762,1458762,1458762,1458762,1458762,1458762,1458762,1458762,1458762]},
+  {name:'지급수수료-일반',category:'외주/수수료',annual:14882500,months:[747500,755000,2160000,770000,772500,2177500,780000,780000,2185000,785000,785000,2185000]},
+  {name:'접대비-기타',category:'접대비',annual:14000000,months:[6000000,0,0,0,0,0,0,0,8000000,0,0,0]},
+];
+
+const INITIAL_ACTUALS_2025 = {
+  '건물관리-기타':[{amount:695455,note:'25년 실적'},{amount:545455,note:'25년 실적'},{amount:695455,note:'25년 실적'},{amount:545455,note:'25년 실적'},{amount:695455,note:'25년 실적'},{amount:695455,note:'25년 실적'},{amount:2995455,note:'25년 실적'},{amount:3195455,note:'25년 실적'},{amount:1484545,note:'25년 실적'},{amount:631819,note:'25년 실적'},{amount:695455,note:'25년 실적'},{amount:1545455,note:'25년 실적'}],
+  '건물관리-보안용역/장비':[{amount:1360000,note:'25년 실적'},{amount:1360000,note:'25년 실적'},{amount:1360000,note:'25년 실적'},{amount:1360000,note:'25년 실적'},{amount:1739000,note:'25년 실적'},{amount:1404000,note:'25년 실적'},{amount:1404000,note:'25년 실적'},{amount:1404000,note:'25년 실적'},{amount:1404000,note:'25년 실적'},{amount:1404000,note:'25년 실적'},{amount:1404000,note:'25년 실적'},{amount:1404000,note:'25년 실적'}],
+  '건물관리-수도광열비':[{amount:5335938,note:'25년 실적'},{amount:6109873,note:'25년 실적'},{amount:5876012,note:'25년 실적'},{amount:6189887,note:'25년 실적'},{amount:5450480,note:'25년 실적'},{amount:5760366,note:'25년 실적'},{amount:6313443,note:'25년 실적'},{amount:8846796,note:'25년 실적'},{amount:9253750,note:'25년 실적'},{amount:8736142,note:'25년 실적'},{amount:9300000,note:'25년 실적'},{amount:9300000,note:'25년 실적'}],
+  '건물관리-청소용역':[{amount:8928000,note:'25년 실적'},{amount:9009819,note:'25년 실적'},{amount:9558000,note:'25년 실적'},{amount:19048000,note:'25년 실적'},{amount:9758000,note:'25년 실적'},{amount:9345273,note:'25년 실적'},{amount:7928000,note:'25년 실적'},{amount:12928000,note:'25년 실적'},{amount:8928000,note:'25년 실적'},{amount:8128000,note:'25년 실적'},{amount:17928000,note:'25년 실적'},{amount:8228000,note:'25년 실적'}],
+  '교육훈련비-행사':[{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:18790388,note:'25년 실적'},{amount:11175000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:8646686,note:'25년 실적'},{amount:13536000,note:'25년 실적'},{amount:212789000,note:'25년 실적'}],
+  '도서인쇄비-도서구입':[{amount:101340,note:'25년 실적'},{amount:230670,note:'25년 실적'},{amount:156800,note:'25년 실적'},{amount:861030,note:'25년 실적'},{amount:112680,note:'25년 실적'},{amount:233640,note:'25년 실적'},{amount:70820,note:'25년 실적'},{amount:41510,note:'25년 실적'},{amount:438300,note:'25년 실적'},{amount:52920,note:'25년 실적'},{amount:100000,note:'25년 실적'},{amount:100000,note:'25년 실적'}],
+  '도서인쇄비-인쇄':[{amount:0,note:'25년 실적'},{amount:378000,note:'25년 실적'},{amount:84000,note:'25년 실적'},{amount:112000,note:'25년 실적'},{amount:42000,note:'25년 실적'},{amount:98000,note:'25년 실적'},{amount:264000,note:'25년 실적'},{amount:98000,note:'25년 실적'},{amount:154000,note:'25년 실적'},{amount:42000,note:'25년 실적'},{amount:100000,note:'25년 실적'},{amount:100000,note:'25년 실적'}],
+  '보험료-법인보험':[{amount:7026500,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:126720,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:150000,note:'25년 실적'},{amount:0,note:'25년 실적'}],
+  '복리후생-건강검진':[{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:75000000,note:'25년 실적'}],
+  '복리후생-기타':[{amount:4861615,note:'25년 실적'},{amount:6406090,note:'25년 실적'},{amount:20503114,note:'25년 실적'},{amount:3582227,note:'25년 실적'},{amount:4452937,note:'25년 실적'},{amount:4109886,note:'25년 실적'},{amount:5284343,note:'25년 실적'},{amount:4798090,note:'25년 실적'},{amount:4558727,note:'25년 실적'},{amount:4103206,note:'25년 실적'},{amount:5500000,note:'25년 실적'},{amount:7000000,note:'25년 실적'}],
+  '복리후생-사내근로복지기금출연':[{amount:57900000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:62500000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'}],
+  '복리후생-이벤트':[{amount:149673,note:'25년 실적'},{amount:163000,note:'25년 실적'},{amount:265782,note:'25년 실적'},{amount:2745528,note:'25년 실적'},{amount:3814820,note:'25년 실적'},{amount:478000,note:'25년 실적'},{amount:51885908,note:'25년 실적'},{amount:20578137,note:'25년 실적'},{amount:796773,note:'25년 실적'},{amount:5223567,note:'25년 실적'},{amount:8500000,note:'25년 실적'},{amount:8500000,note:'25년 실적'}],
+  '복리후생-탕비':[{amount:28280334,note:'25년 실적'},{amount:27765512,note:'25년 실적'},{amount:27620613,note:'25년 실적'},{amount:30961488,note:'25년 실적'},{amount:28507560,note:'25년 실적'},{amount:29245954,note:'25년 실적'},{amount:28476601,note:'25년 실적'},{amount:29864498,note:'25년 실적'},{amount:31578615,note:'25년 실적'},{amount:24595996,note:'25년 실적'},{amount:32000000,note:'25년 실적'},{amount:32500000,note:'25년 실적'}],
+  '비품':[{amount:0,note:'25년 실적'},{amount:16608000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:7600000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:21105000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:12895000,note:'25년 실적'}],
+  '소모품비-사무용품':[{amount:4059273,note:'25년 실적'},{amount:2092000,note:'25년 실적'},{amount:2098909,note:'25년 실적'},{amount:2082909,note:'25년 실적'},{amount:2088000,note:'25년 실적'},{amount:2090909,note:'25년 실적'},{amount:2281818,note:'25년 실적'},{amount:2598182,note:'25년 실적'},{amount:2363636,note:'25년 실적'},{amount:2370909,note:'25년 실적'},{amount:2600000,note:'25년 실적'},{amount:2600000,note:'25년 실적'}],
+  '소모품비-시설':[{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:2350000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:880000,note:'25년 실적'},{amount:1200000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:1000000,note:'25년 실적'},{amount:1000000,note:'25년 실적'}],
+  '소모품비-일반':[{amount:1131449,note:'25년 실적'},{amount:1065165,note:'25년 실적'},{amount:2328218,note:'25년 실적'},{amount:1739645,note:'25년 실적'},{amount:2533273,note:'25년 실적'},{amount:942636,note:'25년 실적'},{amount:3830091,note:'25년 실적'},{amount:1785992,note:'25년 실적'},{amount:1354500,note:'25년 실적'},{amount:2749238,note:'25년 실적'},{amount:3200000,note:'25년 실적'},{amount:3300000,note:'25년 실적'}],
+  '시설장치':[{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:4300000,note:'25년 실적'},{amount:5600000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:12650000,note:'25년 실적'},{amount:1500000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:10000000,note:'25년 실적'}],
+  '외주용역비-일반':[{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:3090000,note:'25년 실적'},{amount:2990000,note:'25년 실적'},{amount:2990000,note:'25년 실적'}],
+  '운반비-택배/퀵':[{amount:104900,note:'25년 실적'},{amount:117300,note:'25년 실적'},{amount:68700,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:110100,note:'25년 실적'},{amount:70700,note:'25년 실적'},{amount:14928,note:'25년 실적'},{amount:12400,note:'25년 실적'},{amount:163520,note:'25년 실적'},{amount:36800,note:'25년 실적'},{amount:100000,note:'25년 실적'},{amount:100000,note:'25년 실적'}],
+  '임차보증금':[{amount:11000000,note:'25년 실적'},{amount:9000000,note:'25년 실적'},{amount:10000000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:10000000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:10000000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:20000000,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:10000000,note:'25년 실적'}],
+  '장기임차보증금':[{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:258991200,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'}],
+  '접대비-기타':[{amount:5293800,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:5118124,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'}],
+  '지급수수료-소액리스':[{amount:1415308,note:'25년 실적'},{amount:1415308,note:'25년 실적'},{amount:1415308,note:'25년 실적'},{amount:1078565,note:'25년 실적'},{amount:1439751,note:'25년 실적'},{amount:1439751,note:'25년 실적'},{amount:1439751,note:'25년 실적'},{amount:1349296,note:'25년 실적'},{amount:1396305,note:'25년 실적'},{amount:1351933,note:'25년 실적'},{amount:1351933,note:'25년 실적'},{amount:1351933,note:'25년 실적'}],
+  '지급수수료-일반':[{amount:1126000,note:'25년 실적'},{amount:2200200,note:'25년 실적'},{amount:807000,note:'25년 실적'},{amount:495000,note:'25년 실적'},{amount:644000,note:'25년 실적'},{amount:495000,note:'25년 실적'},{amount:495000,note:'25년 실적'},{amount:815000,note:'25년 실적'},{amount:1118550,note:'25년 실적'},{amount:1135000,note:'25년 실적'},{amount:495000,note:'25년 실적'},{amount:1242500,note:'25년 실적'}],
+  '지급임차-관리비':[{amount:76817294,note:'25년 실적'},{amount:76812744,note:'25년 실적'},{amount:77008204,note:'25년 실적'},{amount:74996164,note:'25년 실적'},{amount:74332614,note:'25년 실적'},{amount:74459394,note:'25년 실적'},{amount:75767054,note:'25년 실적'},{amount:91361594,note:'25년 실적'},{amount:77952174,note:'25년 실적'},{amount:76929024,note:'25년 실적'},{amount:78341600,note:'25년 실적'},{amount:80400000,note:'25년 실적'}],
+  '지급임차-단기임차':[{amount:99297378,note:'25년 실적'},{amount:100026732,note:'25년 실적'},{amount:100516732,note:'25년 실적'},{amount:100466732,note:'25년 실적'},{amount:101253732,note:'25년 실적'},{amount:101166732,note:'25년 실적'},{amount:101166732,note:'25년 실적'},{amount:193214384,note:'25년 실적'},{amount:112069160,note:'25년 실적'},{amount:112769160,note:'25년 실적'},{amount:115689388,note:'25년 실적'},{amount:117027828,note:'25년 실적'}],
+  '지급임차-리스':[{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:170024300,note:'25년 실적'},{amount:175129300,note:'25년 실적'}],
+  '차량유지비-제세공과':[{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:204110,note:'25년 실적'},{amount:925390,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:0,note:'25년 실적'},{amount:1200000,note:'25년 실적'}],
+};
+
+const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+
+// ============================================================
+// 동적 예산 데이터 — 연도별 localStorage에서 로드, 없으면 폴백
+// ============================================================
+let ORIGINAL_BUDGET = [...FALLBACK_BUDGET_2026];
+
+function getBudgetStorageKey(year) { return `budgetData_${year}`; }
+
+function loadBudgetData(year) {
+  try {
+    const raw = localStorage.getItem(getBudgetStorageKey(year));
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        ORIGINAL_BUDGET = parsed;
+        // 25년 첫 로드: 실적 데이터 자동 초기화
+        if (year === 2025) initYear2025Actuals();
+        return true;
+      }
+    }
+  } catch(e) {}
+  // 폴백
+  if (year === 2026) ORIGINAL_BUDGET = [...FALLBACK_BUDGET_2026];
+  else if (year === 2025) { ORIGINAL_BUDGET = [...FALLBACK_BUDGET_2025]; initYear2025Actuals(); }
+  else ORIGINAL_BUDGET = [];
+  return false;
+}
+
+function initYear2025Actuals() {
+  // localStorage에 25년 실적이 없으면 하드코딩 데이터로 초기화
+  // getStorageKey()는 currentYear 기준 → budgetMgr_2025
+  const key = `budgetMgr_2025`;
+  if (localStorage.getItem(key)) return; // 이미 있으면 스킵
+  const init = {};
+  Object.keys(INITIAL_ACTUALS_2025).forEach(name => {
+    init[name] = INITIAL_ACTUALS_2025[name].map(m => ({...m}));
+  });
+  localStorage.setItem(key, JSON.stringify({ actuals: init, adjBudget: {}, history: [] }));
+}
+
+function saveBudgetData(year, data) {
+  localStorage.setItem(getBudgetStorageKey(year), JSON.stringify(data));
+  ORIGINAL_BUDGET = data;
+}
+
+function hasBudgetData(year) {
+  if (year === 2026 || year === 2025) return true;
+  try { const r = localStorage.getItem(getBudgetStorageKey(year)); return !!(r && JSON.parse(r).length); } catch(e) { return false; }
+}
+
+// 카테고리 자동 감지 (계정명 → 카테고리)
+function detectCategory(name) {
+  if (!name) return '기타';
+  const n = String(name);
+  if (n.includes('임차') || n.includes('보증금')) return '임차비용';
+  if (n.includes('건물관리')) return '건물관리';
+  if (n.includes('보험') || n.includes('차량')) return '보험/차량';
+  if (n.includes('비품') || n.includes('소모품') || n.includes('시설장치')) return '비품/소모품';
+  if (n.includes('복리후생')) return '복리후생';
+  if (n.includes('교육') || n.includes('훈련')) return '교육훈련';
+  if (n.includes('여비') || n.includes('교통')) return '여비교통';
+  if (n.includes('도서') || n.includes('인쇄') || n.includes('운반')) return '도서/운반';
+  if (n.includes('외주') || n.includes('용역') || n.includes('수수료')) return '외주/수수료';
+  if (n.includes('접대')) return '접대비';
+  if (n.includes('광고') || n.includes('마케팅')) return '마케팅';
+  return '기타';
+}
+
+let CATEGORIES = [...new Set(ORIGINAL_BUDGET.map(d=>d.category))];
+function refreshCategories() { CATEGORIES = [...new Set(ORIGINAL_BUDGET.map(d=>d.category))]; }
+
+// ============================================================
+// State
+// ============================================================
+let currentYear = 2026;
+let currentMonth = new Date().getMonth();
+
+// 실적 데이터: actuals[accName][monthIdx] = {amount, note}
+let actuals = {};
+
+// 조정 예산: adjBudget[accName].months[0..11] 조정된 계획액, adjBudget[accName].annual 조정 연간합계
+// 없으면 ORIGINAL_BUDGET 사용
+let adjBudget = {};
+
+// 변경 이력
+// [{id, date, type:'transfer'|'rolling'|'direct', desc, amount, reason, detail}]
+let history = [];
+
+function getStorageKey() { return `budgetMgr_${currentYear}`; }
+
+// ============================================================
+// 유효 예산 (원본 + 조정)
+// ============================================================
+function getEffectiveBudget(accName) {
+  const orig = ORIGINAL_BUDGET.find(a=>a.name===accName);
+  if (!orig) return null;
+  if (!adjBudget[accName]) return { months:[...orig.months], annual:orig.annual };
+  return adjBudget[accName];
+}
+
+function getTotalEffectiveAnnual() {
+  return ORIGINAL_BUDGET.reduce((s,a) => {
+    const eff = getEffectiveBudget(a.name);
+    return s + (eff ? eff.annual : a.annual);
+  }, 0);
+}
+
+function isAdjusted(accName) { return !!adjBudget[accName]; }
+
+function initActuals() {
+  ORIGINAL_BUDGET.forEach(acc => {
+    if (!actuals[acc.name]) {
+      actuals[acc.name] = Array(12).fill(null).map(()=>({amount:0,note:''}));
+    }
+  });
+}
+
+// ============================================================
+// Cloud config
+// ============================================================
+const CLOUD_CFG_KEY = 'budgetCloud_cfg';
+let cloudCfg = { mode: 'none', masterKey: '', binId: '', viewerName: '', viewerToken: '' };
+// mode: 'none' | 'admin' | 'viewer'
+
+// 팀원 목록: [{id, name, token, active, createdAt}]
+let viewers = [];
+// 상품권 관리대장: [{id, date, purpose, recipient, unit, qty, totalAmt, paidFrom, note}]
+let voucherData = [];
+
+function loadCloudCfg() {
+  try { const r = localStorage.getItem(CLOUD_CFG_KEY); if(r) cloudCfg = { ...cloudCfg, ...JSON.parse(r) }; } catch(e){}
+}
+function saveCloudCfg() { localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify(cloudCfg)); }
+
+function isAdmin()  { return cloudCfg.mode === 'admin'; }
+function isViewer() { return cloudCfg.mode === 'viewer'; }
+function hasCloud() { return cloudCfg.binId && cloudCfg.mode !== 'none'; }
+
+// ── 토큰 생성
+function generateToken() {
+  const chars = 'abcdefghijkmnpqrstuvwxyz23456789';
+  return Array.from({length: 12}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+}
+
+// ── 팀원 추가
+function addViewer() {
+  if (!isAdmin()) { showToast('관리자만 팀원을 추가할 수 있습니다'); return; }
+  const name = (document.getElementById('newMemberName').value || '').trim();
+  if (!name) { showToast('이름을 입력하세요'); return; }
+  if (viewers.find(v => v.name === name)) { showToast('이미 등록된 이름입니다'); return; }
+  const token = generateToken();
+  viewers.push({ id: 'v_' + Date.now(), name, token, active: true, createdAt: new Date().toLocaleDateString('ko-KR') });
+  document.getElementById('newMemberName').value = '';
+  renderViewerList();
+  showToast(`✅ ${name} 추가됨 — 클라우드 저장 후 토큰을 전달하세요`);
+}
+
+// ── 팀원 활성/비활성 토글
+function toggleViewer(id) {
+  const v = viewers.find(v => v.id === id);
+  if (!v) return;
+  v.active = !v.active;
+  renderViewerList();
+  showToast(v.active ? `✅ ${v.name} 활성화됨` : `🚫 ${v.name} 비활성화됨 — 클라우드 저장 후 적용`);
+}
+
+// ── 팀원 삭제
+function deleteViewer(id) {
+  const v = viewers.find(v => v.id === id);
+  if (!v) return;
+  if (!confirm(`"${v.name}" 팀원을 삭제할까요?`)) return;
+  viewers = viewers.filter(v => v.id !== id);
+  renderViewerList();
+  showToast(`${v.name} 삭제됨 — 클라우드 저장 후 적용`);
+}
+
+// ── 토큰 복사
+function copyViewerInfo(name, token, binId) {
+  const text = `[예산관리 접속 정보]\n이름: ${name}\n개인토큰: ${token}\nBin ID: ${binId}`;
+  navigator.clipboard.writeText(text).then(() => showToast(`📋 ${name} 접속정보 복사됨`)).catch(() => {
+    prompt('아래 내용을 복사하세요:', text);
+  });
+}
+
+// ── 팀원 목록 렌더링
+function renderViewerList() {
+  const el = document.getElementById('viewerList');
+  if (!el) return;
+  if (viewers.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:20px;font-size:12px;color:var(--gray-400)">등록된 팀원이 없습니다</div>`;
+    return;
+  }
+  const binId = cloudCfg.binId || '(Bin ID 미생성)';
+  el.innerHTML = `
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr style="background:#f0f4f8;">
+        <th style="padding:7px 10px;text-align:left">이름</th>
+        <th style="padding:7px 10px;text-align:left">개인 토큰</th>
+        <th style="padding:7px 10px;text-align:center">상태</th>
+        <th style="padding:7px 10px;text-align:center">등록일</th>
+        <th style="padding:7px 10px;text-align:center">관리</th>
+      </tr></thead>
+      <tbody>
+        ${viewers.map(v => `
+        <tr style="border-bottom:1px solid var(--gray-200);${!v.active?'opacity:0.5':''}">
+          <td style="padding:7px 10px;font-weight:700">${v.name}</td>
+          <td style="padding:7px 10px;font-family:monospace;font-size:11px;color:#4b5563">${v.token}</td>
+          <td style="padding:7px 10px;text-align:center">
+            <span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:${v.active?'#dcfce7':'#fee2e2'};color:${v.active?'#166534':'#991b1b'}">
+              ${v.active ? '✅ 활성' : '🚫 차단'}
+            </span>
+          </td>
+          <td style="padding:7px 10px;text-align:center;color:var(--gray-500)">${v.createdAt}</td>
+          <td style="padding:7px 10px;text-align:center;white-space:nowrap;">
+            <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;margin:0 2px;background:#f3f4f6;border:1px solid var(--gray-300);"
+              onclick="copyViewerInfo('${v.name}','${v.token}','${binId}')">📋 복사</button>
+            <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;margin:0 2px;background:${v.active?'#fef9c3':'#dcfce7'};border:1px solid ${v.active?'#fcd34d':'#86efac'};"
+              onclick="toggleViewer('${v.id}')">${v.active ? '🚫 차단' : '✅ 활성화'}</button>
+            <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;margin:0 2px;background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;"
+              onclick="deleteViewer('${v.id}')">🗑️</button>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+// ============================================================
+// Save / Load (local + cloud)
+// ============================================================
+function getVoucherKey() { return `voucherData_${currentYear}`; }
+
+function saveData() {
+  // 뷰어는 저장 불가
+  if (isViewer()) { showToast('보기 전용 — 저장할 수 없습니다'); return; }
+  try {
+    const payload = { actuals, adjBudget, history };
+    localStorage.setItem(getStorageKey(), JSON.stringify(payload));
+    // 상품권 별도 저장
+    localStorage.setItem(getVoucherKey(), JSON.stringify(voucherData));
+    const now = new Date();
+    document.getElementById('lastSaveTime').textContent =
+      `로컬저장 ${now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}`;
+    showToast('로컬 저장 완료 ✓  (클라우드 공유하려면 ☁️ 클라우드 저장 클릭)');
+  } catch(e) { alert('저장 오류'); }
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(getStorageKey());
+    if (raw) {
+      const p = JSON.parse(raw);
+      actuals = p.actuals || {};
+      adjBudget = p.adjBudget || {};
+      history = p.history || [];
+    } else {
+      actuals = {}; adjBudget = {}; history = [];
+    }
+  } catch(e) { actuals={}; adjBudget={}; history=[]; }
+  // 상품권 로드
+  try {
+    const vRaw = localStorage.getItem(getVoucherKey());
+    voucherData = vRaw ? JSON.parse(vRaw) : [];
+  } catch(e) { voucherData = []; }
+  initActuals();
+}
+
+// ============================================================
+// Cloud: JSONBin.io
+// ============================================================
+const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
+
+// 복사 시 딸려오는 불가시 특수문자 제거 (ISO-8859-1 범위만 허용)
+function sanitizeKey(key) {
+  return (key || '').replace(/[^\x20-\x7E]/g, '').trim();
+}
+
+async function connectAdmin() {
+  const masterKey = sanitizeKey(document.getElementById('cloudMasterKey').value);
+  if (!masterKey) { alert('Master Key를 입력하세요'); return; }
+  // 정리된 값을 입력창에 다시 표시
+  document.getElementById('cloudMasterKey').value = masterKey;
+
+  const statusEl = document.getElementById('cloudAdminStatus');
+  statusEl.textContent = '⏳ 연결 중...';
+
+  try {
+    // 기존 binId가 있으면 재사용, 없으면 새로 생성
+    let binId = document.getElementById('cloudBinId').value.trim() || cloudCfg.binId;
+
+    if (!binId) {
+      // 새 Bin 생성
+      const payload = { actuals: {}, adjBudget: {}, history: [], year: currentYear, savedAt: new Date().toISOString() };
+      const res = await fetch(`${JSONBIN_BASE}/b`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': masterKey, 'X-Bin-Name': `budget-mgmt-${currentYear}`, 'X-Bin-Private': 'false' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status} — Master Key를 확인하세요`);
+      const data = await res.json();
+      binId = data.metadata.id;
+    } else {
+      // 기존 Bin 접근 테스트
+      const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, { headers: { 'X-Master-Key': masterKey } });
+      if (!res.ok) throw new Error(`HTTP ${res.status} — Bin ID 또는 Key가 올바르지 않습니다`);
+    }
+
+    cloudCfg = { mode: 'admin', masterKey, binId };
+    saveCloudCfg();
+    document.getElementById('cloudBinId').value = binId;
+    statusEl.innerHTML = `✅ 연결 성공! Bin ID: <strong>${binId}</strong> — 팀원들에게 이 ID를 공유하세요`;
+    updateCloudUI();
+    showToast('관리자로 클라우드 연결 완료!');
+  } catch(e) {
+    statusEl.textContent = '❌ 오류: ' + e.message;
+  }
+}
+
+async function connectViewer() {
+  const binId     = document.getElementById('cloudViewerBinId').value.trim();
+  const vName     = document.getElementById('cloudViewerName').value.trim();
+  const vToken    = document.getElementById('cloudViewerToken').value.trim();
+  if (!binId)   { alert('Bin ID를 입력하세요'); return; }
+  if (!vName)   { alert('이름을 입력하세요'); return; }
+  if (!vToken)  { alert('개인 토큰을 입력하세요'); return; }
+
+  const statusEl = document.getElementById('cloudViewerStatus');
+  statusEl.textContent = '⏳ 연결 중...';
+
+  try {
+    const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`);
+    if (!res.ok) throw new Error(`HTTP ${res.status} — Bin ID를 확인하세요`);
+    const data = await res.json();
+    const record = data.record;
+
+    // 토큰 검증
+    const viewerList = record.viewers || [];
+    const matched = viewerList.find(v => v.name === vName && v.token === vToken);
+    if (viewerList.length > 0 && !matched) {
+      statusEl.innerHTML = '❌ <strong>이름 또는 토큰이 올바르지 않습니다.</strong> 관리자에게 재확인하세요.';
+      return;
+    }
+    if (matched && !matched.active) {
+      statusEl.innerHTML = '🚫 <strong>접근이 차단된 계정입니다.</strong> 관리자에게 문의하세요.';
+      return;
+    }
+
+    cloudCfg = { mode: 'viewer', masterKey: '', binId, viewerName: vName, viewerToken: vToken };
+    saveCloudCfg();
+
+    applyCloudData(record);
+    statusEl.textContent = `✅ ${vName}님, 연결 성공!`;
+    closeModal('cloudModal');
+    updateCloudUI();
+    renderMain(); updateSummary();
+    showToast(`👁️ ${vName}님 — 보기 전용 모드로 연결됨`);
+  } catch(e) {
+    statusEl.textContent = '❌ 오류: ' + e.message;
+  }
+}
+
+async function saveToCloud() {
+  if (!isAdmin()) { showToast('관리자만 클라우드에 저장할 수 있습니다'); return; }
+  setCloudStatus('syncing', '클라우드 저장 중...');
+  try {
+    const payload = { actuals, adjBudget, history, viewers, year: currentYear, savedAt: new Date().toISOString(), savedBy: '관리자' };
+    const res = await fetch(`${JSONBIN_BASE}/b/${cloudCfg.binId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': sanitizeKey(cloudCfg.masterKey) },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const now = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+    setCloudStatus('ok', `☁️ 클라우드 저장됨 ${now}`);
+    document.getElementById('cloudLastSync').textContent = `마지막 공유: ${now}`;
+    showToast('☁️ 클라우드 저장 완료! 팀원들이 새로고침하면 볼 수 있어요');
+  } catch(e) {
+    setCloudStatus('err', '클라우드 저장 실패: '+e.message);
+    showToast('클라우드 저장 실패 — 인터넷 연결 확인');
+  }
+}
+
+async function loadFromCloud(manual = false) {
+  if (!hasCloud()) { if(manual) showToast('클라우드 미연결'); return; }
+  if (manual) setCloudStatus('syncing', '데이터 불러오는 중...');
+  try {
+    const headers = isAdmin() ? { 'X-Master-Key': sanitizeKey(cloudCfg.masterKey) } : {};
+    const res = await fetch(`${JSONBIN_BASE}/b/${cloudCfg.binId}/latest`, { headers });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const record = data.record;
+
+    // 뷰어 토큰 재검증 (매 sync마다)
+    if (isViewer() && cloudCfg.viewerToken) {
+      const vList = record.viewers || [];
+      if (vList.length > 0) {
+        const matched = vList.find(v => v.name === cloudCfg.viewerName && v.token === cloudCfg.viewerToken);
+        if (!matched) {
+          setCloudStatus('err', '❌ 접근 권한 없음');
+          if (manual) showToast('❌ 접근이 거부됐습니다. 관리자에게 문의하세요.');
+          cloudCfg = { mode: 'none', masterKey: '', binId: '', viewerName: '', viewerToken: '' };
+          saveCloudCfg();
+          updateCloudUI();
+          return;
+        }
+        if (!matched.active) {
+          setCloudStatus('err', '🚫 차단된 계정');
+          if (manual) showToast('🚫 관리자에 의해 접근이 차단됐습니다.');
+          cloudCfg = { mode: 'none', masterKey: '', binId: '', viewerName: '', viewerToken: '' };
+          saveCloudCfg();
+          updateCloudUI();
+          return;
+        }
+      }
+    }
+
+    applyCloudData(record);
+    const now = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+    setCloudStatus('ok', `☁️ ${isAdmin()?'관리자':'보기전용'} 연결됨`);
+    document.getElementById('cloudLastSync').textContent = `동기화: ${now}`;
+    if (manual) { renderMain(); updateSummary(); showToast('최신 데이터 불러오기 완료'); }
+  } catch(e) {
+    setCloudStatus('err', '불러오기 실패');
+    if (manual) showToast('데이터 불러오기 실패 — 인터넷 연결 확인');
+  }
+}
+
+function applyCloudData(record) {
+  if (!record) return;
+  if (record.actuals)   actuals   = record.actuals;
+  if (record.adjBudget) adjBudget = record.adjBudget;
+  if (record.history)   history   = record.history;
+  if (record.viewers)   viewers   = record.viewers;
+  initActuals();
+  // 로컬에도 캐시
+  localStorage.setItem(getStorageKey(), JSON.stringify({ actuals, adjBudget, history }));
+}
+
+function disconnectCloud() {
+  if (!confirm('클라우드 연결을 해제할까요? 로컬 데이터는 유지됩니다.')) return;
+  cloudCfg = { mode: 'none', masterKey: '', binId: '', viewerName: '', viewerToken: '' };
+  saveCloudCfg();
+  updateCloudUI();
+  document.getElementById('cloudMasterKey').value = '';
+  document.getElementById('cloudBinId').value = '';
+  document.getElementById('cloudViewerName').value = '';
+  document.getElementById('cloudViewerToken').value = '';
+  document.getElementById('cloudAdminStatus').textContent = '';
+  showToast('클라우드 연결 해제됨');
+}
+
+function setCloudStatus(state, text) {
+  const dot = document.getElementById('cloudDot');
+  const label = document.getElementById('cloudStatusText');
+  if (!dot || !label) return;
+  dot.className = 'cloud-dot cloud-' + state;
+  label.textContent = text;
+}
+
+function updateCloudUI() {
+  const bar = document.getElementById('cloudBar');
+  const viewerBanner = document.getElementById('viewerBanner');
+  const saveBtn = document.getElementById('saveBtn');
+  const cloudSaveBtn = document.getElementById('cloudSaveBtn');
+  const actionBar = document.querySelector('.action-bar');
+
+  if (!hasCloud()) {
+    bar.style.display = 'none';
+    viewerBanner.style.display = 'none';
+    if (saveBtn) saveBtn.style.display = '';
+    if (cloudSaveBtn) cloudSaveBtn.style.display = 'none';
+    return;
+  }
+
+  bar.style.display = 'flex';
+
+  if (isViewer()) {
+    const vLabel = cloudCfg.viewerName ? `${cloudCfg.viewerName}님 — ` : '';
+    viewerBanner.innerHTML = `👁️ ${vLabel}보기 전용 모드 — 주희님이 저장한 최신 예산 현황을 확인 중입니다. 데이터를 수정하려면 관리자에게 문의하세요.`;
+    viewerBanner.style.display = 'block';
+    if (saveBtn) saveBtn.style.display = 'none';      // 저장 버튼 숨김
+    if (cloudSaveBtn) cloudSaveBtn.style.display = 'none';
+    if (actionBar) actionBar.style.display = 'none';  // 조정 버튼 숨김
+    setCloudStatus('ok', `👁️ ${cloudCfg.viewerName||'팀원'} 보기 전용`);
+    // 모든 input 비활성화
+    document.querySelectorAll('.actual-input, .note-input').forEach(el => { el.disabled = true; el.style.background='#f3f4f6'; });
+  } else {
+    viewerBanner.style.display = 'none';
+    if (saveBtn) saveBtn.style.display = '';
+    if (cloudSaveBtn) cloudSaveBtn.style.display = '';
+    if (actionBar) actionBar.style.display = '';
+    setCloudStatus('ok', `☁️ 관리자 모드 (Bin: ${cloudCfg.binId.slice(0,8)}...)`);
+  }
+}
+
+// 관리자가 클라우드 설정 열 때 뷰어 목록도 복원
+function openCloudModal() {
+  if (cloudCfg.masterKey) document.getElementById('cloudMasterKey').value = cloudCfg.masterKey;
+  if (cloudCfg.binId)     document.getElementById('cloudBinId').value     = cloudCfg.binId;
+  if (cloudCfg.binId)     document.getElementById('cloudViewerBinId').value = cloudCfg.binId;
+  if (cloudCfg.viewerName)  document.getElementById('cloudViewerName').value  = cloudCfg.viewerName;
+  if (cloudCfg.viewerToken) document.getElementById('cloudViewerToken').value = cloudCfg.viewerToken;
+  openModal('cloudModal');
+}
+
+// ============================================================
+// Formatting
+// ============================================================
+function fmt(n) {
+  n = Math.round(n);
+  if (Math.abs(n)>=100000000) return (n/100000000).toFixed(1)+'억';
+  if (Math.abs(n)>=10000) return Math.round(n/10000).toLocaleString()+'만';
+  return n.toLocaleString();
+}
+function fmtFull(n) { return Math.round(n).toLocaleString()+'원'; }
+function pct(used,total) { if(!total) return 0; return Math.round(used/total*100); }
+function formatNumberInput(el) {
+  const v = el.value.replace(/,/g,'').replace(/[^0-9]/g,'');
+  el.value = v ? parseInt(v).toLocaleString() : '';
+}
+function parseInput(str) { return parseInt((str||'').replace(/,/g,''))||0; }
+function nowStr() { return new Date().toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+
+// ============================================================
+// Summary
+// ============================================================
+function calcSummary() {
+  const totalBudget = getTotalEffectiveAnnual();
+  let totalUsed = 0;
+  ORIGINAL_BUDGET.forEach(acc => {
+    if (actuals[acc.name]) actuals[acc.name].forEach(m => { totalUsed += (m.amount||0); });
+  });
+  const remain = totalBudget - totalUsed;
+  const rate = pct(totalUsed, totalBudget);
+  let monthPlan=0, monthUsed=0;
+  if (currentMonth<12) {
+    ORIGINAL_BUDGET.forEach(acc => {
+      const eff = getEffectiveBudget(acc.name);
+      monthPlan += eff.months[currentMonth];
+      if (actuals[acc.name]) monthUsed += (actuals[acc.name][currentMonth].amount||0);
+    });
+  }
+  return {totalBudget,totalUsed,remain,rate,monthPlan,monthUsed};
+}
+
+function updateSummary() {
+  const s = calcSummary();
+  const origTotal = ORIGINAL_BUDGET.reduce((x,a)=>x+a.annual,0);
+  const adjDiff = s.totalBudget - origTotal;
+
+  document.getElementById('summaryTotal').textContent = fmt(s.totalBudget);
+  document.getElementById('summaryTotalSub').textContent =
+    adjDiff!==0 ? `원예산 대비 ${adjDiff>0?'+':''}${fmt(adjDiff)}` : '원예산 기준';
+  document.getElementById('summaryUsed').textContent = fmt(s.totalUsed);
+  document.getElementById('summaryUsedSub').textContent = `${s.rate}% 소진됨`;
+  document.getElementById('summaryRemain').textContent = fmt(s.remain);
+  document.getElementById('summaryRemain').className = 'value num '+(s.remain<0?'num-neg':'num-pos');
+  document.getElementById('summaryRate').textContent = s.rate+'%';
+  document.getElementById('summaryRate').className='value num '+(s.rate>=100?'num-neg':s.rate>=80?'num-warn':'num-pos');
+  document.getElementById('overallPct').textContent = s.rate+'%';
+  const bar = document.getElementById('overallBar');
+  bar.style.width = Math.min(s.rate,100)+'%';
+  bar.className = 'progress-bar-fill '+(s.rate>=100?'bar-over':s.rate>=80?'bar-warn':'bar-ok');
+
+  const adjHistory = history.filter(h=>h.type!=='actuals_import');
+  const adjCount = adjHistory.length;
+  document.getElementById('summaryAdjCount').textContent = adjCount;
+  const lastAdj = adjHistory[adjHistory.length-1];
+  document.getElementById('summaryAdjSub').textContent = adjCount>0 ? `마지막: ${lastAdj.date}` : '조정 없음';
+  document.getElementById('adjSummaryLabel').textContent =
+    adjCount>0 ? `조정 ${adjCount}건 | 원예산 대비 ${adjDiff>=0?'+':''}${fmt(adjDiff)}` : '';
+
+  if (currentMonth<12) {
+    const diff = s.monthUsed - s.monthPlan;
+    // handled in renderMonth
+  }
+  updateTabDots();
+}
+
+function updateTabDots() {
+  for (let m=0;m<12;m++) {
+    let mUsed=0, mPlan=0;
+    ORIGINAL_BUDGET.forEach(acc => {
+      mPlan += getEffectiveBudget(acc.name).months[m];
+      if (actuals[acc.name]) mUsed += (actuals[acc.name][m].amount||0);
+    });
+    const hasData = ORIGINAL_BUDGET.some(acc => actuals[acc.name]&&actuals[acc.name][m].amount>0);
+    const tab = document.querySelector(`.tab[data-month="${m}"]`);
+    if (!tab) continue;
+    const old = tab.querySelector('.dot');
+    if (old) old.remove();
+    if (hasData) {
+      const r = pct(mUsed, mPlan);
+      const dot = document.createElement('span');
+      dot.className='dot '+(r>=100?'dot-over':r>=80?'dot-warn':'dot-ok');
+      tab.appendChild(dot);
+    }
+  }
+}
+
+// ============================================================
+// Navigation
+// ============================================================
+function switchMonth(m) {
+  currentMonth = m;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`.tab[data-month="${m}"]`).classList.add('active');
+  renderMain();
+  updateSummary();
+}
+
+function renderMain() {
+  const c = document.getElementById('mainContent');
+  if (currentMonth===12) renderAnnual(c);
+  else if (currentMonth===13) renderHistory(c);
+  else if (currentMonth===14) renderCharts(c);
+  else if (currentMonth===15) renderUpload(c);
+  else renderMonth(c, currentMonth);
+}
+
+// ============================================================
+// Month View
+// ============================================================
+function renderMonth(container, m) {
+  // Alerts
+  let alertsHTML='';
+  const overAccs=[], warnAccs=[];
+  ORIGINAL_BUDGET.forEach(acc => {
+    const eff = getEffectiveBudget(acc.name);
+    const cumUsed = actuals[acc.name] ? actuals[acc.name].slice(0,m+1).reduce((s,x)=>s+(x.amount||0),0) : 0;
+    const r = pct(cumUsed, eff.annual);
+    if (cumUsed > eff.annual) overAccs.push({name:acc.name, over:cumUsed-eff.annual});
+    else if (r>=80) warnAccs.push({name:acc.name, r});
+  });
+  if (overAccs.length) alertsHTML+=`<div class="alert-box alert-danger"><span class="alert-icon">🚨</span><div class="alert-text"><strong>예산 초과 (${overAccs.length}건)</strong>${overAccs.map(a=>`${a.name}: +${fmtFull(a.over)}`).join(' · ')}</div></div>`;
+  if (warnAccs.length) alertsHTML+=`<div class="alert-box alert-warn"><span class="alert-icon">⚠️</span><div class="alert-text"><strong>소진율 80%+ 주의 (${warnAccs.length}건)</strong>${warnAccs.map(a=>`${a.name} ${a.r}%`).join(' · ')}</div></div>`;
+
+  // Adj banner
+  const adjAccs = ORIGINAL_BUDGET.filter(a=>isAdjusted(a.name));
+  let adjBannerHTML='';
+  if (adjAccs.length) {
+    adjBannerHTML=`<div class="adj-banner"><span class="adj-banner-icon">🔧</span><div class="adj-banner-text"><strong>예산 조정 적용 중:</strong> ${adjAccs.map(a=>`<span class="tag-adj">조정</span> ${a.name}`).join(', ')}</div><span class="adj-banner-detail">총 ${adjAccs.length}개 계정 조정됨</span></div>`;
+  }
+
+  const s = calcSummary();
+  const tipsHTML = buildTips(m, s);
+
+  // Tables
+  let tablesHTML='';
+  CATEGORIES.forEach(cat => {
+    const catAccs = ORIGINAL_BUDGET.filter(a=>a.category===cat);
+    let catPlan=0,catUsed=0,catAnnBudget=0,catCumUsed=0;
+    let rows='';
+
+    catAccs.forEach(acc => {
+      const eff = getEffectiveBudget(acc.name);
+      const origAcc = ORIGINAL_BUDGET.find(a=>a.name===acc.name);
+      const adj = isAdjusted(acc.name);
+      const monthPlan = eff.months[m];
+      const origMonthPlan = origAcc.months[m];
+      const monthUsed = actuals[acc.name] ? (actuals[acc.name][m].amount||0) : 0;
+      const monthNote = actuals[acc.name] ? (actuals[acc.name][m].note||'') : '';
+      const cumUsed = actuals[acc.name] ? actuals[acc.name].slice(0,m+1).reduce((s,x)=>s+(x.amount||0),0) : 0;
+      const annualRemain = eff.annual - cumUsed;
+      const totalRate = pct(cumUsed, eff.annual);
+      const monthDiff = monthUsed - monthPlan;
+
+      catPlan += monthPlan; catUsed += monthUsed;
+      catAnnBudget += eff.annual; catCumUsed += cumUsed;
+
+      const rClass = totalRate>=100?'num-neg':totalRate>=80?'num-warn':'num-pos';
+      const bClass = totalRate>=100?'bar-over':totalRate>=80?'bar-warn':'bar-ok';
+      const inClass = (monthUsed>monthPlan&&monthPlan>0)?' over':'';
+      const rClass2 = annualRemain<0?'num-neg':annualRemain<eff.annual*0.1?'num-warn':'';
+
+      const adjTag = adj ? '<span class="tag-adj">조정</span>' : '';
+      const origPlanHint = adj && origMonthPlan!==monthPlan
+        ? `<span class="orig-val">${fmt(origMonthPlan)}</span>` : '';
+
+      rows += `<tr>
+        <td><span class="account-name">${acc.name}</span>${adjTag}</td>
+        <td class="num">${adj&&origAcc.annual!==eff.annual?`<span class="orig-val">${fmt(origAcc.annual)}</span>`:''}${fmt(eff.annual)}</td>
+        <td class="num">${origPlanHint}${monthPlan===0?'<span style="color:#ccc">-</span>':fmt(monthPlan)}</td>
+        <td>
+          <input type="text" class="actual-input${inClass}"
+            value="${monthUsed===0?'':monthUsed.toLocaleString()}"
+            placeholder="0"
+            onchange="updateActual('${acc.name}',${m},this.value);saveData();"
+            onkeydown="handleInputKey(event,'${acc.name}',${m})"
+            title="수식 입력 가능: =100+50-30 또는 +50000 / -30000">
+        </td>
+        <td class="num ${monthDiff>0?'num-neg':monthDiff<0?'num-pos':''}">${monthDiff===0?'-':(monthDiff>0?'+':'')+fmt(monthDiff)}</td>
+        <td class="num">${fmt(cumUsed)}</td>
+        <td class="num ${rClass2}">${fmt(annualRemain)}</td>
+        <td>
+          <span class="num ${rClass}">${totalRate}%</span>
+          <span class="mini-bar"><span class="mini-bar-fill ${bClass}" style="width:${Math.min(totalRate,100)}%"></span></span>
+        </td>
+        <td><input type="text" class="note-input" value="${monthNote}" placeholder="메모..." onchange="updateNote('${acc.name}',${m},this.value)"></td>
+      </tr>`;
+    });
+
+    const catRate = pct(catCumUsed, catAnnBudget);
+    const catDiff = catUsed-catPlan;
+    rows+=`<tr class="subtotal-row">
+      <td>▶ 소계: ${cat}</td>
+      <td class="num">${fmt(catAnnBudget)}</td>
+      <td class="num">${fmt(catPlan)}</td>
+      <td class="num">${fmt(catUsed)}</td>
+      <td class="num ${catDiff>0?'num-neg':''}">${catDiff===0?'-':(catDiff>0?'+':'')+fmt(catDiff)}</td>
+      <td class="num">${fmt(catCumUsed)}</td>
+      <td class="num ${catAnnBudget-catCumUsed<0?'num-neg':''}">${fmt(catAnnBudget-catCumUsed)}</td>
+      <td><span class="num ${catRate>=100?'num-neg':catRate>=80?'num-warn':'num-pos'}">${catRate}%</span></td>
+      <td></td>
+    </tr>`;
+
+    tablesHTML+=`<div class="category-group">
+      <div class="category-header" onclick="toggleCat('${cat}')">
+        <span>📁 ${cat}</span>
+        <span class="cat-total">조정예산 ${fmt(catAnnBudget)} | 잔여 ${fmt(catAnnBudget-catCumUsed)}</span>
+      </div>
+      <div class="table-scroll" id="cat_${cat.replace(/[\/\s]/g,'_')}">
+        <table class="budget-table">
+          <thead><tr>
+            <th style="width:185px">계정명</th>
+            <th>조정연간예산</th>
+            <th>${MONTHS[m]} 계획</th>
+            <th>${MONTHS[m]} 실적 입력</th>
+            <th>계획 대비</th>
+            <th>누적 실적</th>
+            <th>잔여예산</th>
+            <th>소진율</th>
+            <th style="width:110px">메모</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+  });
+
+  const monthDiffVal = s.monthUsed - s.monthPlan;
+
+  container.innerHTML=`
+    <div class="month-header">
+      <div>
+        <div class="month-title">📅 ${currentYear}년 ${MONTHS[m]} 예산 관리</div>
+        <div style="font-size:11px;color:var(--gray-500);margin-top:3px;">
+          이달 계획: ${fmtFull(s.monthPlan)} | 입력된 실적: ${fmtFull(s.monthUsed)}
+          <span class="${monthDiffVal>0?'num-neg':monthDiffVal<0?'num-pos':''}">${monthDiffVal===0?'':` (${monthDiffVal>0?'+':''}${fmt(monthDiffVal)})`}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#16a34a"></span>정상</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#d97706"></span>주의 80%+</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#dc2626"></span>초과</span>
+          <span class="legend-item"><span style="font-size:9px;background:#f5f3ff;color:#7c3aed;border-radius:3px;padding:1px 5px;font-weight:700">조정</span>예산조정됨</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="copyMonthFromPrev(${m})">⬆️ 전월 복사</button>
+      </div>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:11px;color:#166534;">
+      💡 <strong>실적 입력 팁:</strong> 수식 입력 가능 — <code>=100000+50000-30000</code> (Enter) 또는 <code>+50000</code> / <code>-30000</code> 으로 현재값 증감
+    </div>
+    ${alertsHTML}${adjBannerHTML}${tipsHTML}${tablesHTML}
+    <div style="text-align:center;padding:16px;color:#9ca3af;font-size:11px;">
+      Tab으로 이동 · Enter로 저장 · 조정예산은 <span style="background:#f5f3ff;color:#7c3aed;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700">조정</span> 태그로 표시됩니다
+    </div>`;
+}
+
+function buildTips(m, s) {
+  const left = 11-m;
+  let tip='';
+  if (s.rate>=100) tip=`🚨 <strong>긴급:</strong> 전체 예산 초과! 즉시 팀장/재무팀 보고 필요.`;
+  else if (s.rate>=90) tip=`🚨 <strong>긴급:</strong> 소진율 ${s.rate}%. 잔여 ${fmt(s.remain)} / ${left}개월. 지출 보류 검토.`;
+  else if (s.rate>=80) tip=`⚠️ <strong>주의:</strong> 소진율 ${s.rate}%. 월 한도 약 ${fmt(s.remain/Math.max(left,1))}. 집행 신중히.`;
+  else tip=`✅ <strong>양호:</strong> 소진율 ${s.rate}%. 잔여 ${fmt(s.remain)} — 정상 운영 중.`;
+  const adjCount = history.filter(h=>h.type!=='actuals_import').length;
+  if (adjCount>0) tip+=`<br>🔧 <strong>예산 조정 ${adjCount}건 적용 중</strong> — 조정이력 탭에서 내역 확인 가능`;
+  return `<div class="tips-box"><div class="tips-title">💡 관리 가이드</div><div class="tips-content">${tip}</div></div>`;
+}
+
+// ============================================================
+// Annual View
+// ============================================================
+function renderAnnual(container) {
+  let monthCards='';
+  for (let m=0;m<12;m++) {
+    let plan=0,used=0;
+    ORIGINAL_BUDGET.forEach(acc => {
+      plan += getEffectiveBudget(acc.name).months[m];
+      if (actuals[acc.name]) used += (actuals[acc.name][m].amount||0);
+    });
+    const r = pct(used,plan);
+    const color = r>=100?'#dc2626':r>=80?'#d97706':used>0?'#16a34a':'#9ca3af';
+    const hasAdj = ORIGINAL_BUDGET.some(a=>isAdjusted(a.name)&&getEffectiveBudget(a.name).months[m]!==ORIGINAL_BUDGET.find(o=>o.name===a.name).months[m]);
+    monthCards+=`<div class="month-card" onclick="switchMonth(${m})">
+      <div class="mc-month">${MONTHS[m]}${hasAdj?'<span style="font-size:8px;background:#f5f3ff;color:#7c3aed;border-radius:2px;padding:0 3px;margin-left:2px">조정</span>':''}</div>
+      <div class="mc-rate" style="color:${color}">${used>0?r+'%':'-'}</div>
+      <div style="font-size:10px;color:#6b7280;margin-top:2px">${used>0?fmt(used):'미입력'}</div>
+      <div class="mc-bar" style="background:${color};width:${Math.min(r,100)}%;min-width:${used>0?2:0}px"></div>
+    </div>`;
+  }
+
+  let rows='',gTotal=0,gUsed=0;
+  CATEGORIES.forEach(cat => {
+    ORIGINAL_BUDGET.filter(a=>a.category===cat).forEach(acc => {
+      const eff = getEffectiveBudget(acc.name);
+      const origAcc = ORIGINAL_BUDGET.find(a=>a.name===acc.name);
+      const totalUsed = actuals[acc.name]?actuals[acc.name].reduce((s,x)=>s+(x.amount||0),0):0;
+      const remain = eff.annual-totalUsed;
+      const r = pct(totalUsed,eff.annual);
+      const bClass = r>=100?'bar-over':r>=80?'bar-warn':'bar-ok';
+      const adj = isAdjusted(acc.name);
+      gTotal+=eff.annual; gUsed+=totalUsed;
+
+      let mCells='';
+      for(let m=0;m<12;m++){
+        const mu = actuals[acc.name]?(actuals[acc.name][m].amount||0):0;
+        const mp = eff.months[m];
+        const adjM = adj && mp!==origAcc.months[m];
+        mCells+=`<td class="num" style="${mu>mp&&mp>0?'color:#dc2626;font-weight:700':mu>0?'':adjM?'color:#7c3aed':'color:#ccc'}">${mu>0?fmt(mu):adjM?`<span style="color:#c4b5fd;font-size:10px">${fmt(mp)}</span>`:'-'}</td>`;
+      }
+      rows+=`<tr>
+        <td style="font-size:11px;color:#6b7280">${cat}</td>
+        <td>${acc.name}${adj?'<span class="tag-adj">조정</span>':''}</td>
+        <td class="num">${adj&&origAcc.annual!==eff.annual?`<span class="orig-val">${fmt(origAcc.annual)}</span>`:''}${fmt(eff.annual)}</td>
+        <td class="num">${fmt(totalUsed)}</td>
+        <td class="num ${remain<0?'num-neg':remain<eff.annual*0.1?'num-warn':'num-pos'}">${fmt(remain)}</td>
+        <td><span class="num ${r>=100?'num-neg':r>=80?'num-warn':'num-pos'}">${r}%</span><span class="mini-bar"><span class="mini-bar-fill ${bClass}" style="width:${Math.min(r,100)}%"></span></span></td>
+        ${mCells}
+      </tr>`;
+    });
+  });
+
+  const gRemain=gTotal-gUsed, gRate=pct(gUsed,gTotal);
+  rows+=`<tr class="subtotal-row"><td colspan="2">📊 합계</td><td class="num">${fmt(gTotal)}</td><td class="num">${fmt(gUsed)}</td><td class="num ${gRemain<0?'num-neg':'num-pos'}">${fmt(gRemain)}</td><td class="num">${gRate}%</td>${Array(12).fill('<td></td>').join('')}</tr>`;
+
+  let mHeaders='';
+  for(let m=0;m<12;m++) mHeaders+=`<th style="min-width:58px">${m+1}월 실적</th>`;
+
+  container.innerHTML=`
+    <div class="month-title" style="margin-bottom:12px">📊 ${currentYear}년 연간 예산 현황</div>
+    <div class="annual-grid">${monthCards}</div>
+    <div class="table-scroll">
+      <table class="budget-table">
+        <thead><tr>
+          <th>카테고리</th><th style="min-width:175px">계정명</th>
+          <th>조정연간예산</th><th>총 실적</th><th>잔여예산</th><th>소진율</th>
+          ${mHeaders}
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+// ============================================================
+// History View
+// ============================================================
+function renderHistory(container) {
+  const origTotal = ORIGINAL_BUDGET.reduce((s,a)=>s+a.annual,0);
+  const effTotal = getTotalEffectiveAnnual();
+  const diff = effTotal-origTotal;
+
+  // 조정이력 (transfer, rolling, direct) vs 파일업로드 (actuals_import) 분리
+  const adjHistory = [...history].filter(h=>h.type!=='actuals_import').reverse();
+  const uploadHistory = [...history].filter(h=>h.type==='actuals_import').reverse();
+
+  function makeHistoryItem(h) {
+    const typeLabel = h.type==='transfer'?'🔄 이관':h.type==='rolling'?'📅 롤링':h.type==='direct'?'✏️ 직접수정':h.type==='actuals_import'?'📁 파일업로드':'조정';
+    const typeClass = h.type==='transfer'?'history-type-transfer':h.type==='rolling'?'history-type-rolling':h.type==='actuals_import'?'history-type-adj':'history-type-adj';
+    return `<div class="history-item">
+      <div>
+        <div class="history-date">${h.date}</div>
+        <div style="font-size:11px;color:#7c3aed;font-weight:700;margin-top:2px">${typeLabel}</div>
+      </div>
+      <div class="history-desc">
+        <div style="font-weight:600">${h.desc}</div>
+        <div style="font-size:11px;color:#6b7280;margin-top:2px">${h.reason||''}</div>
+        ${h.detail?`<div style="font-size:10px;color:#9ca3af;margin-top:2px">${h.detail}</div>`:''}
+      </div>
+      <div>
+        <div class="history-amount ${typeClass}">${h.amount?fmtFull(h.amount):'-'}</div>
+        <div style="text-align:right;margin-top:4px;display:flex;gap:4px;justify-content:flex-end;">
+          ${h.type!=='actuals_import'?`<button class="btn btn-danger btn-sm" style="font-size:10px;padding:2px 7px" onclick="revertHistory('${h.id}')">되돌리기</button>`:''}
+          <button class="btn btn-secondary btn-sm" style="font-size:10px;padding:2px 7px" onclick="deleteHistoryItem('${h.id}')">삭제</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const adjItems = adjHistory.length===0
+    ? '<div class="empty-history">📭 조정 이력이 없습니다</div>'
+    : adjHistory.map(makeHistoryItem).join('');
+  const uploadItems = uploadHistory.length===0
+    ? '<div class="empty-history">📭 파일 업로드 이력이 없습니다</div>'
+    : uploadHistory.map(makeHistoryItem).join('');
+
+  container.innerHTML=`
+    <div class="month-title" style="margin-bottom:14px">📋 조정이력 & 파일업로드 이력</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
+      <div class="summary-card"><div class="label">원 사업계획 합계</div><div class="value num" style="color:#1e3a5f">${fmt(origTotal)}</div></div>
+      <div class="summary-card"><div class="label">조정 후 합계</div><div class="value num" style="color:${diff!==0?'#7c3aed':'#1e3a5f'}">${fmt(effTotal)}</div></div>
+      <div class="summary-card"><div class="label">조정 총액 변동</div><div class="value num ${diff>0?'num-pos':diff<0?'num-neg':''}">${diff===0?'변동 없음':(diff>0?'+':'')+fmtFull(diff)}</div></div>
+    </div>
+    <div class="history-panel" style="margin-bottom:16px;">
+      <div class="history-header" style="background:#1e3a5f;">
+        <span>🔧 조정이력 (최신순) — 총 ${adjHistory.length}건</span>
+        ${adjHistory.length>0?`<button class="btn btn-secondary btn-sm" onclick="clearAdjHistory()">초기화</button>`:''}
+      </div>
+      ${adjItems}
+    </div>
+    <div class="history-panel">
+      <div class="history-header" style="background:#166534;">
+        <span>📁 파일업로드 이력 (최신순) — 총 ${uploadHistory.length}건</span>
+        ${uploadHistory.length>0?`<button class="btn btn-secondary btn-sm" onclick="clearUploadHistory()">초기화</button>`:''}
+      </div>
+      ${uploadItems}
+    </div>`;
+}
+
+function deleteHistoryItem(id) {
+  const h = history.find(x=>x.id===id);
+  if(!h) return;
+  const label = h.type==='actuals_import' ? `파일업로드: ${h.desc}` : `조정이력: ${h.desc}`;
+  if(!confirm(`이 항목을 삭제할까요?\n${label}`)) return;
+  history = history.filter(x=>x.id!==id);
+  saveData(); renderMain(); updateSummary();
+  showToast('삭제 완료');
+}
+
+function clearAdjHistory() {
+  if(!confirm('조정이력(이관/롤링/직접수정)을 모두 초기화하고 원예산으로 복원할까요?')) return;
+  adjBudget={};
+  history=history.filter(h=>h.type==='actuals_import');
+  saveData();renderMain();updateSummary();
+  showToast('조정이력 초기화 완료 — 원예산으로 복원됨');
+}
+
+function clearUploadHistory() {
+  if(!confirm('파일업로드 이력을 모두 삭제할까요? (실적 데이터는 유지됩니다)')) return;
+  history=history.filter(h=>h.type!=='actuals_import');
+  saveData();renderMain();updateSummary();
+  showToast('파일업로드 이력 삭제 완료');
+}
+
+// ============================================================
+// Budget Transfer (이관)
+// ============================================================
+function showTransferModal() {
+  const sel = ['transferFrom','transferTo'];
+  sel.forEach(id => {
+    const el=document.getElementById(id);
+    el.innerHTML='<option value="">-- 선택 --</option>';
+    ORIGINAL_BUDGET.forEach(a => { el.innerHTML+=`<option value="${a.name}">${a.name} (잔여: ${fmt(getEffectiveBudget(a.name).annual-(actuals[a.name]?actuals[a.name].reduce((s,x)=>s+(x.amount||0),0):0))})</option>`; });
+  });
+  document.getElementById('transferAmount').value='';
+  document.getElementById('transferReason').value='';
+  document.getElementById('transferInfoBox').style.display='none';
+  openModal('transferModal');
+}
+
+function updateTransferInfo() {
+  const from=document.getElementById('transferFrom').value;
+  const to=document.getElementById('transferTo').value;
+  const box=document.getElementById('transferInfoBox');
+  if(from||to) {
+    box.style.display='block';
+    if(from){const eff=getEffectiveBudget(from);const used=actuals[from]?actuals[from].reduce((s,x)=>s+(x.amount||0),0):0;document.getElementById('transferFromInfo').textContent=`FROM ${from}: 조정예산 ${fmtFull(eff.annual)}, 누적실적 ${fmtFull(used)}, 잔여 ${fmtFull(eff.annual-used)}`;}
+    if(to){const eff=getEffectiveBudget(to);document.getElementById('transferToInfo').textContent=`TO  ${to}: 조정예산 ${fmtFull(eff.annual)}`;}
+  } else box.style.display='none';
+}
+
+function applyTransfer() {
+  const from=document.getElementById('transferFrom').value;
+  const to=document.getElementById('transferTo').value;
+  const amt=parseInput(document.getElementById('transferAmount').value);
+  const monthIdx=parseInt(document.getElementById('transferMonth').value);
+  const reason=document.getElementById('transferReason').value;
+
+  if(!from||!to){alert('이관 출처·대상 계정을 선택하세요');return;}
+  if(from===to){alert('같은 계정끼리 이관할 수 없습니다');return;}
+  if(amt<=0){alert('이관 금액을 입력하세요');return;}
+
+  // Apply to adjBudget
+  [from,to].forEach(name=>{
+    if(!adjBudget[name]){
+      const orig=ORIGINAL_BUDGET.find(a=>a.name===name);
+      adjBudget[name]={months:[...orig.months],annual:orig.annual};
+    }
+  });
+
+  if(monthIdx===-1) {
+    // 연간 균등 (12개월)
+    const perMonth=Math.round(amt/12);
+    for(let i=0;i<12;i++){adjBudget[from].months[i]-=perMonth;adjBudget[to].months[i]+=perMonth;}
+    adjBudget[from].annual-=amt;adjBudget[to].annual+=amt;
+  } else {
+    adjBudget[from].months[monthIdx]-=amt;adjBudget[from].annual-=amt;
+    adjBudget[to].months[monthIdx]+=amt;adjBudget[to].annual+=amt;
+  }
+
+  const id='h'+Date.now();
+  history.push({id,date:nowStr(),type:'transfer',desc:`${from} → ${to}`,amount:amt,reason,
+    detail:`적용월: ${monthIdx===-1?'연간 균등':MONTHS[monthIdx]}`});
+
+  closeModal('transferModal');
+  saveData();renderMain();updateSummary();
+  showToast(`이관 완료: ${fmtFull(amt)}`);
+}
+
+// ============================================================
+// Rolling Adjustment (롤링)
+// ============================================================
+let rollingOrigVals=[];
+function showRollingModal() {
+  const sel=document.getElementById('rollingAccount');
+  sel.innerHTML='<option value="">-- 선택 --</option>';
+  ORIGINAL_BUDGET.forEach(a=>{sel.innerHTML+=`<option value="${a.name}">${a.name}</option>`;});
+  document.getElementById('rollingStartMonth').value=String(Math.max(0,new Date().getMonth()));
+  document.getElementById('rollingReason').value='';
+  document.getElementById('rollingAccountInfo').textContent='계정을 선택하면 현재 예산액이 표시됩니다.';
+  document.getElementById('rollingGrid').innerHTML='';
+  rollingOrigVals=[];
+  openModal('rollingModal');
+}
+
+function loadRollingValues() {
+  const accName=document.getElementById('rollingAccount').value;
+  const startM=parseInt(document.getElementById('rollingStartMonth').value);
+  if(!accName){document.getElementById('rollingGrid').innerHTML='';return;}
+  const eff=getEffectiveBudget(accName);
+  const orig=ORIGINAL_BUDGET.find(a=>a.name===accName);
+  rollingOrigVals=[...eff.months];
+  document.getElementById('rollingAccountInfo').textContent=
+    `${accName} — 조정예산 연간 합계: ${fmtFull(eff.annual)} (원예산: ${fmtFull(orig.annual)})`;
+
+  let grid='';
+  for(let m=0;m<12;m++){
+    const disabled=m<startM;
+    grid+=`<div class="rolling-cell" style="${disabled?'opacity:0.35':''}">
+      <label>${MONTHS[m]}${m<startM?'(확정)':''}</label>
+      <input type="text" id="rolling_m${m}" value="${eff.months[m].toLocaleString()}"
+        ${disabled?'disabled':''}
+        placeholder="${eff.months[m].toLocaleString()}"
+        oninput="markRollingChanged(${m},this)"
+        onfocus="formatNumberInput(this)">
+      <div class="orig-hint">원: ${orig.months[m].toLocaleString()}</div>
+    </div>`;
+  }
+  document.getElementById('rollingGrid').innerHTML=grid;
+}
+
+function markRollingChanged(m, el) {
+  formatNumberInput(el);
+  const orig=rollingOrigVals[m];
+  const newVal=parseInput(el.value);
+  el.classList.toggle('changed', newVal!==orig);
+}
+
+function applyRolling() {
+  const accName=document.getElementById('rollingAccount').value;
+  const startM=parseInt(document.getElementById('rollingStartMonth').value);
+  const reason=document.getElementById('rollingReason').value;
+  if(!accName){alert('계정을 선택하세요');return;}
+
+  if(!adjBudget[accName]){
+    const orig=ORIGINAL_BUDGET.find(a=>a.name===accName);
+    adjBudget[accName]={months:[...orig.months],annual:orig.annual};
+  }
+
+  let changedMonths=[];
+  for(let m=startM;m<12;m++){
+    const el=document.getElementById(`rolling_m${m}`);
+    if(!el) continue;
+    const newVal=parseInput(el.value);
+    if(newVal!==rollingOrigVals[m]){
+      changedMonths.push(`${MONTHS[m]}: ${fmtFull(rollingOrigVals[m])}→${fmtFull(newVal)}`);
+      adjBudget[accName].months[m]=newVal;
+    }
+  }
+  adjBudget[accName].annual=adjBudget[accName].months.reduce((s,v)=>s+v,0);
+
+  if(changedMonths.length===0){alert('변경된 값이 없습니다');return;}
+
+  const id='h'+Date.now();
+  history.push({id,date:nowStr(),type:'rolling',desc:`${accName} 롤링 조정 (${startM+1}월~)`,
+    amount:null,reason,detail:changedMonths.join(' | ')});
+
+  closeModal('rollingModal');
+  saveData();renderMain();updateSummary();
+  showToast(`롤링 조정 완료 (${changedMonths.length}개월)`);
+}
+
+// ============================================================
+// Direct Adj
+// ============================================================
+function switchDTab(tab) {
+  ['adj','add','rename'].forEach(t => {
+    document.getElementById('dPanel_'+t).style.display = t===tab ? '' : 'none';
+    const btn = document.getElementById('dTab_'+t);
+    if(t===tab) { btn.style.color='var(--primary)'; btn.style.borderBottom='3px solid var(--primary)'; btn.style.fontWeight='700'; }
+    else { btn.style.color='var(--gray-500)'; btn.style.borderBottom='3px solid transparent'; btn.style.fontWeight='600'; }
+  });
+}
+
+function showDirectAdjModal() {
+  // 계획액 수정 탭 계정 목록
+  const sel=document.getElementById('directAdjAccount');
+  sel.innerHTML='<option value="">-- 선택 --</option>';
+  ORIGINAL_BUDGET.forEach(a=>{sel.innerHTML+=`<option value="${a.name}">${a.name}</option>`;});
+  // 계정명 변경 탭 계정 목록
+  const rSel=document.getElementById('renameAccFrom');
+  rSel.innerHTML='<option value="">-- 선택 --</option>';
+  ORIGINAL_BUDGET.forEach(a=>{rSel.innerHTML+=`<option value="${a.name}">${a.name}</option>`;});
+  // 계정 추가 탭 카테고리 목록
+  const cats=[...new Set(ORIGINAL_BUDGET.map(a=>a.category))];
+  const dl=document.getElementById('addAccCategoryList');
+  dl.innerHTML=cats.map(c=>`<option value="${c}">`).join('');
+  // 초기화
+  document.getElementById('directAdjAmount').value='';
+  document.getElementById('directAdjReason').value='';
+  document.getElementById('directAdjInfo').textContent='계정과 월을 선택하면 현재 예산액이 표시됩니다.';
+  document.getElementById('addAccName').value='';
+  document.getElementById('addAccCategory').value='';
+  document.getElementById('addAccAnnual').value='0';
+  document.getElementById('renameAccTo').value='';
+  document.getElementById('renameAccInfo').style.display='none';
+  switchDTab('adj');
+  openModal('directAdjModal');
+}
+
+function applyAddAccount() {
+  const name = document.getElementById('addAccName').value.trim();
+  const category = document.getElementById('addAccCategory').value.trim() || '기타';
+  const annual = parseInput(document.getElementById('addAccAnnual').value);
+  if(!name){alert('계정명을 입력하세요');return;}
+  if(ORIGINAL_BUDGET.find(a=>a.name===name)){alert('이미 존재하는 계정명입니다');return;}
+  const months = Array(12).fill(0);
+  // 연간을 12등분 (나머지는 12월에)
+  const base = Math.floor(annual/12);
+  months.fill(base);
+  months[11] = annual - base*11;
+  ORIGINAL_BUDGET.push({name, category, annual, months});
+  if(!adjBudget[name]) adjBudget[name]={months:[...months],annual};
+  if(!actuals[name]) actuals[name]=Array.from({length:12},()=>({amount:0,note:''}));
+  const id='h'+Date.now();
+  history.push({id,date:nowStr(),type:'direct',desc:`계정 추가: ${name}`,amount:annual,reason:`카테고리: ${category}`,detail:`연간예산 ${fmtFull(annual)}`});
+  closeModal('directAdjModal');
+  saveData();renderMain();updateSummary();
+  showToast(`계정 추가 완료: ${name}`);
+}
+
+function applyRenameAccount() {
+  const oldName = document.getElementById('renameAccFrom').value;
+  const newName = document.getElementById('renameAccTo').value.trim();
+  if(!oldName){alert('변경할 계정을 선택하세요');return;}
+  if(!newName){alert('새 계정명을 입력하세요');return;}
+  if(ORIGINAL_BUDGET.find(a=>a.name===newName)){alert('이미 존재하는 계정명입니다');return;}
+  // ORIGINAL_BUDGET 업데이트
+  const acc = ORIGINAL_BUDGET.find(a=>a.name===oldName);
+  if(!acc){alert('계정을 찾을 수 없습니다');return;}
+  acc.name = newName;
+  // adjBudget 이전
+  if(adjBudget[oldName]){adjBudget[newName]=adjBudget[oldName];delete adjBudget[oldName];}
+  // actuals 이전
+  if(actuals[oldName]){actuals[newName]=actuals[oldName];delete actuals[oldName];}
+  const id='h'+Date.now();
+  history.push({id,date:nowStr(),type:'direct',desc:`계정명 변경: ${oldName} → ${newName}`,amount:0,reason:'계정명 변경',detail:''});
+  closeModal('directAdjModal');
+  saveData();renderMain();updateSummary();
+  showToast(`계정명 변경 완료: ${oldName} → ${newName}`);
+}
+
+function loadDirectAdjValues() {
+  const accName=document.getElementById('directAdjAccount').value;
+  const m=parseInt(document.getElementById('directAdjMonth').value);
+  if(!accName) return;
+  const eff=getEffectiveBudget(accName);
+  const orig=ORIGINAL_BUDGET.find(a=>a.name===accName);
+  const used=actuals[accName]?(actuals[accName][m].amount||0):0;
+  document.getElementById('directAdjInfo').innerHTML=
+    `현재 ${MONTHS[m]} 예산액: <strong>${fmtFull(eff.months[m])}</strong>
+    ${orig.months[m]!==eff.months[m]?` (원예산 ${fmtFull(orig.months[m])})`:''}<br>
+    실제 입력된 실적: ${fmtFull(used)}`;
+  document.getElementById('directAdjAmount').value=eff.months[m].toLocaleString();
+}
+
+function applyDirectAdj() {
+  const accName=document.getElementById('directAdjAccount').value;
+  const m=parseInt(document.getElementById('directAdjMonth').value);
+  const newVal=parseInput(document.getElementById('directAdjAmount').value);
+  const reason=document.getElementById('directAdjReason').value;
+  if(!accName){alert('계정을 선택하세요');return;}
+
+  if(!adjBudget[accName]){
+    const orig=ORIGINAL_BUDGET.find(a=>a.name===accName);
+    adjBudget[accName]={months:[...orig.months],annual:orig.annual};
+  }
+  const old=adjBudget[accName].months[m];
+  adjBudget[accName].months[m]=newVal;
+  adjBudget[accName].annual=adjBudget[accName].months.reduce((s,v)=>s+v,0);
+
+  const id='h'+Date.now();
+  history.push({id,date:nowStr(),type:'direct',
+    desc:`${accName} ${MONTHS[m]} 예산 수정`,
+    amount:Math.abs(newVal-old),reason,
+    detail:`${fmtFull(old)} → ${fmtFull(newVal)} (${newVal-old>=0?'+':''}${fmtFull(newVal-old)})`});
+
+  closeModal('directAdjModal');
+  saveData();renderMain();updateSummary();
+  showToast(`${MONTHS[m]} 예산 수정 완료`);
+}
+
+// ============================================================
+// History revert
+// ============================================================
+function revertHistory(id) {
+  if(!confirm('이 조정을 되돌릴까요? 조정으로 인한 예산 변경이 취소됩니다.')) return;
+  const h=history.find(x=>x.id===id);
+  if(!h){alert('이력을 찾을 수 없습니다');return;}
+
+  // 간단 되돌리기: 해당 계정 조정 삭제 후 전체 재계산
+  // 복잡한 체이닝 방지를 위해: 되돌리기는 adjBudget 초기화 + 나머지 이력 재적용
+  adjBudget={};
+  history=history.filter(x=>x.id!==id);
+  // 이력 재적용은 복잡하므로 — 해당 조정만 제거하고 adjBudget을 수동 역산하는 방식 사용
+  // 실무상 간단하게: 이력에서 제거만 하고 adjBudget도 삭제, 사용자에게 안내
+  alert('되돌리기 완료. 조정이력이 삭제되었습니다.\n주의: 복수 조정이 있는 경우 다른 조정도 초기화됩니다.\n필요시 다시 적용해 주세요.');
+  saveData();renderMain();updateSummary();
+}
+
+function clearAllHistory() {
+  if(!confirm('모든 조정 이력을 초기화하고 원예산으로 되돌릴까요?')) return;
+  adjBudget={}; history=[];
+  saveData();renderMain();updateSummary();
+  showToast('초기화 완료 — 원예산으로 복원됨');
+}
+// clearAdjHistory, clearUploadHistory 는 renderHistory 아래에 정의됨
+
+// ============================================================
+// Actuals input
+// ============================================================
+function evalFormula(str, currentVal) {
+  // = 로 시작: 수식 계산 (예: =100+50-30)
+  if(str.startsWith('=')) {
+    const expr = str.slice(1).trim();
+    // 숫자, +, -, *, /, (, ), 공백, 콤마만 허용
+    if(!/^[\d\s\+\-\*\/\(\),\.]+$/.test(expr.replace(/,/g,''))) return null;
+    try {
+      const result = Function('"use strict"; return (' + expr.replace(/,/g,'') + ')')();
+      return Math.round(result);
+    } catch(e) { return null; }
+  }
+  // + 또는 - 로 시작: 현재 값에서 증감 (예: +50000, -30000)
+  if(/^[+\-]\d/.test(str.trim())) {
+    const delta = parseInt(str.replace(/,/g,''))||0;
+    return Math.max(0, (currentVal||0) + delta);
+  }
+  return null;
+}
+
+function updateActual(accName,m,rawVal){
+  if(!actuals[accName]) initActuals();
+  const current = actuals[accName][m].amount || 0;
+  const formula = evalFormula(rawVal.trim(), current);
+  const amt = formula !== null ? formula : (parseInt(rawVal.replace(/,/g,'').replace(/[^0-9]/g,''))||0);
+  actuals[accName][m].amount=amt;
+  updateSummary(); renderMain();
+}
+function updateNote(accName,m,val){
+  if(!actuals[accName]) initActuals();
+  actuals[accName][m].note=val;
+}
+function handleInputKey(e,accName,m){
+  const val = e.target.value;
+  // = 나 +/- 입력 중엔 포맷 변환 안함 (수식 입력 중)
+  if(e.key==='Enter'){
+    if(!actuals[accName]) initActuals();
+    const current = actuals[accName][m].amount || 0;
+    const formula = evalFormula(val.trim(), current);
+    if(formula !== null) {
+      actuals[accName][m].amount = formula;
+      saveData(); updateSummary(); renderMain();
+      showToast(`계산 결과: ${formula.toLocaleString()}원`);
+    } else {
+      updateActual(accName,m,val); saveData();
+    }
+  }
+  // = 로 시작 시: 일반 숫자 포맷 적용 안함 (수식 그대로 유지)
+}
+function copyMonthFromPrev(m){
+  if(m===0){alert('1월은 이전 월이 없습니다');return;}
+  if(!ORIGINAL_BUDGET.some(a=>actuals[a.name]&&actuals[a.name][m-1].amount>0)){alert(`${m}월 데이터가 없습니다`);return;}
+  if(!confirm(`${m}월 데이터를 ${m+1}월로 복사할까요?`))return;
+  ORIGINAL_BUDGET.forEach(a=>{if(!actuals[a.name])initActuals();actuals[a.name][m].amount=actuals[a.name][m-1].amount;});
+  renderMain();updateSummary();showToast('복사 완료');
+}
+
+// ============================================================
+// Misc
+// ============================================================
+function toggleCat(cat){
+  const el=document.getElementById('cat_'+cat.replace(/[\/\s]/g,'_'));
+  if(el) el.style.display=el.style.display==='none'?'':'none';
+}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function showYearModal(){document.getElementById('yearInput').value=currentYear;openModal('yearModal');}
+
+function showCloudModal() {
+  if (cloudCfg.masterKey)   document.getElementById('cloudMasterKey').value   = cloudCfg.masterKey;
+  if (cloudCfg.binId)       document.getElementById('cloudBinId').value       = cloudCfg.binId;
+  if (cloudCfg.binId)       document.getElementById('cloudViewerBinId').value = cloudCfg.binId;
+  if (cloudCfg.viewerName)  document.getElementById('cloudViewerName').value  = cloudCfg.viewerName;
+  if (cloudCfg.viewerToken) document.getElementById('cloudViewerToken').value = cloudCfg.viewerToken;
+  openModal('cloudModal');
+}
+
+function switchCloudTab(tab) {
+  document.getElementById('panelAdmin').style.display   = tab==='admin'   ? '' : 'none';
+  document.getElementById('panelViewer').style.display  = tab==='viewer'  ? '' : 'none';
+  document.getElementById('panelMembers').style.display = tab==='members' ? '' : 'none';
+  const active = 'padding:8px 18px;cursor:pointer;font-size:12px;font-weight:700;color:var(--primary);border-bottom:3px solid var(--primary);';
+  const inactive = 'padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);border-bottom:3px solid transparent;';
+  document.getElementById('tabAdmin').style.cssText   = tab==='admin'   ? active : inactive;
+  document.getElementById('tabViewer').style.cssText  = tab==='viewer'  ? active : inactive;
+  document.getElementById('tabMembers').style.cssText = tab==='members' ? active : inactive;
+
+  if (tab === 'members') {
+    const mustLogin = document.getElementById('membersMustLogin');
+    const content   = document.getElementById('membersContent');
+    if (!isAdmin()) {
+      mustLogin.style.display = '';
+      content.style.display = 'none';
+    } else {
+      mustLogin.style.display = 'none';
+      content.style.display = '';
+      renderViewerList();
+    }
+  }
+}
+function applyYear(){
+  const y=parseInt(document.getElementById('yearInput').value);
+  if(y<2024||y>2035){alert('2024~2035 사이 연도 입력');return;}
+  currentYear=y; document.getElementById('yearDisplay').textContent=y;
+  loadBudgetData(y); refreshCategories();
+  actuals={}; adjBudget={}; history=[]; loadData();
+  closeModal('yearModal');
+  if (!hasBudgetData(y) && y !== 2026) {
+    showToast(`${y}년 예산 데이터 없음 — 파일관리 탭에서 엑셀 업로드해 주세요`);
+    switchMonth(15); // 파일 업로드 탭으로 이동
+  } else {
+    renderMain(); updateSummary(); showToast(`${y}년으로 전환됨`);
+  }
+}
+
+function exportCSV(){
+  const m=currentMonth<12?currentMonth:0;
+  let csv='\uFEFF계정명,카테고리,원예산,조정예산,'+MONTHS[m]+' 계획,'+MONTHS[m]+' 실적,누적실적,잔여예산,소진율,메모\n';
+  ORIGINAL_BUDGET.forEach(acc=>{
+    const eff=getEffectiveBudget(acc.name);
+    const mu=actuals[acc.name]?(actuals[acc.name][m].amount||0):0;
+    const note=actuals[acc.name]?(actuals[acc.name][m].note||''):'';
+
+    const cum=actuals[acc.name]?actuals[acc.name].slice(0,m+1).reduce((s,x)=>s+(x.amount||0),0):0;
+    csv+=`${acc.name},${acc.category},${acc.annual},${eff.annual},${eff.months[m]},${mu},${cum},${eff.annual-cum},${pct(cum,eff.annual)}%,"${note}"\n`;
+  });
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;
+  a.download=`총무팀_예산현황_${currentYear}_${m+1}월.csv`;a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';
+    t.style.cssText='position:fixed;bottom:24px;right:24px;background:#1e3a5f;color:white;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;transition:opacity 0.3s';
+    document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';},2200);
+}
+
+setInterval(saveData, 3*60*1000);
+
+// ============================================================
+// 엑셀 파일 파서 (SheetJS 기반)
+// ============================================================
+let parsedPreview = null; // 파싱 결과 임시 보관
+
+async function handleExcelUpload(file, targetYear) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const wb = XLSX.read(e.target.result, { type: 'array' });
+        const result = parseExcelBudget(wb, targetYear);
+        resolve(result);
+      } catch(err) { reject(err); }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function parseExcelBudget(workbook, targetYear) {
+  // 1. 비용 시트 찾기 (3.비용&투자, 비용, cost 등 다양한 이름 대응)
+  const costSheet = workbook.SheetNames.find(n =>
+    n.includes('비용') || n.match(/^3[._]/i) || n.toLowerCase().includes('cost')
+  );
+  if (!costSheet) throw new Error(`비용 시트를 찾을 수 없습니다.\n시트 목록: ${workbook.SheetNames.join(', ')}`);
+
+  const ws = workbook.Sheets[costSheet];
+  // 최대 행/열 범위 계산
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:Z100');
+  const maxRow = range.e.r;
+  const maxCol = range.e.c;
+
+  // 2D 배열로 변환
+  const grid = [];
+  for (let r = 0; r <= maxRow; r++) {
+    const row = [];
+    for (let c = 0; c <= maxCol; c++) {
+      const cell = ws[XLSX.utils.encode_cell({r, c})];
+      row.push(cell ? cell.v : null);
+    }
+    grid.push(row);
+  }
+
+  // 2. 헤더 행 찾기: "예산계정 명" 또는 "예산계정명" 포함 행
+  let headerRow = -1;
+  let accountCol = -1;
+  for (let r = 0; r < Math.min(25, grid.length); r++) {
+    for (let c = 0; c < grid[r].length; c++) {
+      const v = String(grid[r][c] || '');
+      if (v.includes('예산계정') && (v.includes('명') || v.includes('계정명'))) {
+        headerRow = r; accountCol = c; break;
+      }
+    }
+    if (headerRow >= 0) break;
+  }
+  if (headerRow < 0 || accountCol < 0)
+    throw new Error('예산계정명 컬럼을 찾지 못했습니다. 파일 형식을 확인해주세요.');
+
+  // 3. 대상 연도 열 찾기: "{year}년 사업계획" 문자열이 있는 셀
+  let yearColStart = -1;
+  const yearStr = `${targetYear}년 사업계획`;
+  const yearStr2 = `${targetYear}년`;
+  for (let r = 0; r <= headerRow + 2; r++) {
+    for (let c = 0; c < grid[r].length; c++) {
+      const v = String(grid[r][c] || '');
+      if (v.includes(yearStr) || (v === yearStr2)) {
+        yearColStart = c; break;
+      }
+    }
+    if (yearColStart >= 0) break;
+  }
+  // 못 찾으면: 헤더 다음 행에서 "1월" 시작 열 찾기
+  if (yearColStart < 0) {
+    for (let r = headerRow; r <= headerRow + 3; r++) {
+      for (let c = 0; c < grid[r].length; c++) {
+        const v = String(grid[r][c] || '');
+        if (v === '1월' || v === 1) {
+          // 이 앞에 연도 헤더가 있는지 확인
+          yearColStart = c; break;
+        }
+      }
+      if (yearColStart >= 0) break;
+    }
+  }
+  if (yearColStart < 0)
+    throw new Error(`${targetYear}년 사업계획 열을 찾지 못했습니다.\n파일에 "${targetYear}년 사업계획" 항목이 있는지 확인해주세요.`);
+
+  // 4. 데이터 추출 (헤더 행 이후부터)
+  const accountMap = {}; // 계정명 → {months[], annual}
+  const dataStart = headerRow + 1;
+
+  for (let r = dataStart; r < grid.length; r++) {
+    const row = grid[r];
+    const accName = row[accountCol];
+    if (!accName || typeof accName !== 'string' || accName.trim() === '') continue;
+    const name = accName.trim();
+
+    // 월별 12개 값 추출
+    const months = [];
+    let hasAny = false;
+    for (let m = 0; m < 12; m++) {
+      const v = parseFloat(row[yearColStart + m]) || 0;
+      months.push(Math.round(v));
+      if (v !== 0) hasAny = true;
+    }
+    if (!hasAny) continue;
+
+    // 같은 계정명이 여러 행에 걸쳐 있으면 합산
+    if (!accountMap[name]) {
+      accountMap[name] = { months: Array(12).fill(0) };
+    }
+    months.forEach((v, i) => { accountMap[name].months[i] += v; });
+  }
+
+  // 5. 결과 배열 생성
+  const result = Object.entries(accountMap).map(([name, data]) => ({
+    name,
+    category: detectCategory(name),
+    months: data.months,
+    annual: data.months.reduce((s, v) => s + v, 0)
+  })).filter(a => a.annual > 0);
+
+  if (result.length === 0)
+    throw new Error(`${targetYear}년 데이터가 비어 있습니다. 연도와 파일이 맞는지 확인해주세요.`);
+
+  return { accounts: result, sheetName: costSheet, yearColStart, accountCol, headerRow };
+}
+
+// ============================================================
+// 상품권 관리대장 렌더링
+// ============================================================
+function renderVoucher(container) {
+  const VPURPOSE = ['설날','추석','창립기념일','생일','경조사','명절기타','기타'];
+  const VTYPE = ['백화점상품권','문화상품권','신세계상품권','현대상품권','롯데상품권','카카오선물','기타'];
+
+  // 합계 계산
+  const totalAmt = voucherData.reduce((s,v)=>s+(v.totalAmt||0),0);
+  const byPurpose = {};
+  voucherData.forEach(v=>{const p=v.purpose||'기타';byPurpose[p]=(byPurpose[p]||0)+(v.totalAmt||0);});
+
+  const rows = voucherData.length===0
+    ? `<tr><td colspan="10" style="text-align:center;padding:20px;color:#9ca3af;">등록된 상품권 내역이 없습니다</td></tr>`
+    : [...voucherData].reverse().map((v,ridx)=>{
+        const realIdx = voucherData.length-1-ridx;
+        return `<tr>
+          <td style="text-align:center;font-size:11px;color:#6b7280;">${voucherData.length-ridx}</td>
+          <td>${v.date||''}</td>
+          <td><span style="background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:600;">${v.purpose||''}</span></td>
+          <td>${v.recipient||''}</td>
+          <td style="font-size:12px;">${v.vtype||''}</td>
+          <td class="num">${(v.unit||0).toLocaleString()}</td>
+          <td class="num">${(v.qty||0).toLocaleString()}</td>
+          <td class="num" style="font-weight:700;color:#1e3a5f;">${(v.totalAmt||0).toLocaleString()}</td>
+          <td style="font-size:12px;color:#6b7280;">${v.paidFrom||''}</td>
+          <td>
+            <button class="btn btn-secondary btn-sm" style="font-size:10px;padding:2px 6px;margin-right:3px;" onclick="editVoucher(${realIdx})">수정</button>
+            <button class="btn btn-danger btn-sm" style="font-size:10px;padding:2px 6px;" onclick="deleteVoucher(${realIdx})">삭제</button>
+          </td>
+        </tr>`;
+      }).join('');
+
+  const summaryCards = Object.entries(byPurpose).map(([p,a])=>
+    `<div class="summary-card"><div class="label">📋 ${p}</div><div class="value num">${a.toLocaleString()}</div></div>`
+  ).join('');
+
+  container.innerHTML = `
+    <div class="month-title" style="margin-bottom:14px">🎁 상품권 관리대장 ${currentYear}년</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:16px;">
+      <div class="summary-card" style="border-left:4px solid var(--primary);">
+        <div class="label">총 지급액</div>
+        <div class="value num" style="color:var(--primary);">${totalAmt.toLocaleString()}</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">총 건수</div>
+        <div class="value num">${voucherData.length}건</div>
+      </div>
+      ${summaryCards}
+    </div>
+
+    <!-- 입력 폼 -->
+    <div id="voucherFormWrap" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#1e3a5f;" id="voucherFormTitle">➕ 상품권 등록</div>
+      <input type="hidden" id="vEditIdx" value="-1">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;">
+        <div>
+          <label style="font-size:11px;color:#6b7280;font-weight:600;">지급일</label>
+          <input type="date" id="vDate" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#6b7280;font-weight:600;">목적</label>
+          <select id="vPurpose" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;">
+            ${VPURPOSE.map(p=>`<option value="${p}">${p}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label style="font-size:11px;color:#6b7280;font-weight:600;">수령인/대상</label>
+          <input type="text" id="vRecipient" placeholder="예: 전임직원, 홍길동" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#6b7280;font-weight:600;">상품권 종류</label>
+          <select id="vType" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;">
+            ${VTYPE.map(t=>`<option value="${t}">${t}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr) auto;gap:10px;align-items:flex-end;">
+        <div>
+          <label style="font-size:11px;color:#6b7280;font-weight:600;">단가 (원)</label>
+          <input type="text" id="vUnit" placeholder="50,000" oninput="formatNumberInput(this);calcVoucherTotal();" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#6b7280;font-weight:600;">수량</label>
+          <input type="number" id="vQty" placeholder="1" min="1" oninput="calcVoucherTotal();" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#6b7280;font-weight:600;">합계금액</label>
+          <input type="text" id="vTotal" placeholder="자동계산" readonly style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;background:#f3f4f6;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#6b7280;font-weight:600;">재원 (계정)</label>
+          <input type="text" id="vPaidFrom" placeholder="예: 복리후생비" list="vPaidFromList" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;">
+          <datalist id="vPaidFromList">
+            ${ORIGINAL_BUDGET.map(a=>`<option value="${a.name}">`).join('')}
+          </datalist>
+        </div>
+        <div>
+          <button class="btn btn-primary" onclick="saveVoucher()" style="white-space:nowrap;">💾 저장</button>
+          <button class="btn btn-secondary" onclick="cancelVoucherEdit()" id="vCancelBtn" style="display:none;margin-left:4px;">취소</button>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <label style="font-size:11px;color:#6b7280;font-weight:600;">비고</label>
+        <input type="text" id="vNote" placeholder="메모 (선택사항)" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:12px;">
+      </div>
+    </div>
+
+    <!-- 테이블 -->
+    <div style="overflow-x:auto;">
+      <table class="main-table">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th>지급일</th>
+            <th>목적</th>
+            <th>수령인/대상</th>
+            <th>종류</th>
+            <th class="num">단가</th>
+            <th class="num">수량</th>
+            <th class="num">합계</th>
+            <th>재원</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="text-align:right;margin-top:8px;font-size:12px;color:#6b7280;">
+      총 ${voucherData.length}건 | 합계: <strong>${totalAmt.toLocaleString()}원</strong>
+      &nbsp;&nbsp;<button class="btn btn-secondary btn-sm" onclick="exportVoucherExcel()" style="font-size:11px;">📊 엑셀 내보내기</button>
+    </div>
+  `;
+  // 오늘 날짜 기본값
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('vDate').value = today;
+}
+
+function calcVoucherTotal() {
+  const unit = parseInput(document.getElementById('vUnit').value);
+  const qty = parseInt(document.getElementById('vQty').value)||0;
+  const total = unit * qty;
+  document.getElementById('vTotal').value = total>0 ? total.toLocaleString() : '';
+}
+
+function saveVoucher() {
+  const editIdx = parseInt(document.getElementById('vEditIdx').value);
+  const date = document.getElementById('vDate').value;
+  const purpose = document.getElementById('vPurpose').value;
+  const recipient = document.getElementById('vRecipient').value.trim();
+  const vtype = document.getElementById('vType').value;
+  const unit = parseInput(document.getElementById('vUnit').value);
+  const qty = parseInt(document.getElementById('vQty').value)||1;
+  const totalAmt = unit*qty;
+  const paidFrom = document.getElementById('vPaidFrom').value.trim();
+  const note = document.getElementById('vNote').value.trim();
+
+  if(!date){alert('지급일을 입력하세요');return;}
+  if(!recipient){alert('수령인/대상을 입력하세요');return;}
+  if(unit<=0){alert('단가를 입력하세요');return;}
+
+  const entry = {id:'v'+Date.now(), date, purpose, recipient, vtype, unit, qty, totalAmt, paidFrom, note};
+  if(editIdx>=0) {
+    entry.id = voucherData[editIdx].id;
+    voucherData[editIdx] = entry;
+    showToast('상품권 내역이 수정되었습니다');
+  } else {
+    voucherData.push(entry);
+    showToast('상품권 내역이 등록되었습니다');
+  }
+  saveData();
+  renderMain();
+}
+
+function editVoucher(idx) {
+  const v = voucherData[idx];
+  if(!v) return;
+  document.getElementById('vEditIdx').value = idx;
+  document.getElementById('vDate').value = v.date||'';
+  document.getElementById('vPurpose').value = v.purpose||'기타';
+  document.getElementById('vRecipient').value = v.recipient||'';
+  document.getElementById('vType').value = v.vtype||'기타';
+  document.getElementById('vUnit').value = (v.unit||0).toLocaleString();
+  document.getElementById('vQty').value = v.qty||1;
+  document.getElementById('vTotal').value = (v.totalAmt||0).toLocaleString();
+  document.getElementById('vPaidFrom').value = v.paidFrom||'';
+  document.getElementById('vNote').value = v.note||'';
+  document.getElementById('voucherFormTitle').textContent = '✏️ 상품권 수정';
+  document.getElementById('vCancelBtn').style.display = '';
+  document.getElementById('voucherFormWrap').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteVoucher(idx) {
+  const v = voucherData[idx];
+  if(!v) return;
+  if(!confirm(`[${v.date}] ${v.purpose} - ${v.recipient} (${(v.totalAmt||0).toLocaleString()}원)\n이 내역을 삭제할까요?`)) return;
+  voucherData.splice(idx,1);
+  saveData(); renderMain();
+  showToast('삭제 완료');
+}
+
+function cancelVoucherEdit() {
+  document.getElementById('vEditIdx').value = '-1';
+  document.getElementById('voucherFormTitle').textContent = '➕ 상품권 등록';
+  document.getElementById('vCancelBtn').style.display = 'none';
+  document.getElementById('vRecipient').value = '';
+  document.getElementById('vUnit').value = '';
+  document.getElementById('vQty').value = '';
+  document.getElementById('vTotal').value = '';
+  document.getElementById('vNote').value = '';
+}
+
+function exportVoucherExcel() {
+  if(voucherData.length===0){alert('내보낼 데이터가 없습니다');return;}
+  const header = ['번호','지급일','목적','수령인/대상','상품권종류','단가','수량','합계금액','재원(계정)','비고'];
+  const rows = voucherData.map((v,i)=>[i+1,v.date,v.purpose,v.recipient,v.vtype,v.unit,v.qty,v.totalAmt,v.paidFrom,v.note]);
+  let csv = '\uFEFF' + [header,...rows].map(r=>r.map(c=>`"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`상품권관리대장_${currentYear}.csv`; a.click();
+}
+
+// ============================================================
+// 파일 업로드 탭 렌더링
+// ============================================================
+function renderUpload(container) {
+  // 연도별 현황
+  const years = [2024, 2025, 2026, 2027, 2028];
+  let yearCards = years.map(y => {
+    const has = hasBudgetData(y);
+    const isActive = y === currentYear;
+    const isFallback = y === 2026 && !localStorage.getItem(getBudgetStorageKey(2026));
+    return `<div style="background:white;border:2px solid ${isActive?'var(--primary)':'var(--gray-200)'};border-radius:10px;padding:16px;text-align:center;position:relative;">
+      ${isActive ? '<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--primary);color:white;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700">현재 사용 중</div>' : ''}
+      <div style="font-size:20px;font-weight:900;color:${has?'#1e3a5f':'#9ca3af'}">${y}년</div>
+      <div style="margin:6px 0;font-size:11px;color:${has?'var(--success)':'var(--gray-500)'}">
+        ${has ? (isFallback ? '✅ 기본 데이터' : '✅ 업로드됨') : '❌ 데이터 없음'}
+      </div>
+      <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
+        <button class="btn btn-primary btn-sm" onclick="switchYearAndLoad(${y})" ${isActive?'disabled':''} style="${isActive?'opacity:0.4':''}">
+          ${isActive ? '현재' : '전환'}
+        </button>
+        ${has && y !== 2026 ? `<button class="btn btn-danger btn-sm" onclick="deleteBudgetYear(${y})">삭제</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="month-title" style="margin-bottom:4px">📁 연도별 파일관리 &amp; 예산 업로드</div>
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:18px">
+      새 연도 엑셀 파일(사업계획 재무 Template)을 업로드하면 자동 파싱해서 예산 데이터를 생성합니다.
+    </div>
+
+    <!-- 연도 현황 카드 -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;">
+      ${yearCards}
+    </div>
+
+    <!-- 업로드 패널 -->
+    <div style="background:white;border-radius:10px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;">
+      <div style="font-size:14px;font-weight:700;color:#1e3a5f;margin-bottom:4px">📤 새 연도 예산 파일 업로드</div>
+      <div style="font-size:12px;color:var(--gray-500);margin-bottom:18px">
+        회사 사업계획 재무 Template (.xlsx) 파일을 업로드하면 <strong>"3.비용&amp;투자" 시트</strong>를 자동으로 읽어 계정별 예산을 추출합니다.
+      </div>
+
+      <div style="display:grid;grid-template-columns:180px 1fr;gap:16px;align-items:start;">
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:var(--gray-700);margin-bottom:6px">관리 연도</label>
+          <select id="uploadTargetYear" style="width:100%;padding:9px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;font-weight:700;">
+            <option value="2024">2024년</option>
+            <option value="2025">2025년</option>
+            <option value="2026" selected>2026년</option>
+            <option value="2027">2027년</option>
+            <option value="2028">2028년</option>
+          </select>
+          <div style="font-size:10px;color:var(--gray-500);margin-top:4px">파일 안의 해당 연도 열을 자동 검색합니다</div>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:var(--gray-700);margin-bottom:6px">엑셀 파일 선택</label>
+          <div id="dropZone" style="border:2px dashed var(--gray-300);border-radius:8px;padding:28px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--gray-50);"
+            ondragover="event.preventDefault();this.style.borderColor='var(--primary)';this.style.background='var(--primary-light)'"
+            ondragleave="this.style.borderColor='var(--gray-300)';this.style.background='var(--gray-50)'"
+            ondrop="handleDrop(event)"
+            onclick="document.getElementById('fileInput').click()">
+            <div style="font-size:28px;margin-bottom:6px">📂</div>
+            <div style="font-size:13px;font-weight:600;color:var(--gray-700)">클릭 또는 파일을 여기에 끌어다 놓기</div>
+            <div style="font-size:11px;color:var(--gray-500);margin-top:4px">.xlsx 파일만 가능 · 사업계획 재무 Template</div>
+          </div>
+          <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none" onchange="processUploadedFile(this.files[0])">
+        </div>
+      </div>
+
+      <!-- 파싱 진행 상태 -->
+      <div id="uploadStatus" style="margin-top:16px;display:none;"></div>
+
+      <!-- 미리보기 -->
+      <div id="uploadPreview" style="margin-top:16px;display:none;"></div>
+    </div>
+
+    <!-- 안내 -->
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 18px;font-size:12px;color:#1e40af;line-height:1.8;">
+      <strong>💡 파일 형식 안내</strong><br>
+      • 파일명 예시: <code>(2차 수정)2026년 사업계획 재무 Template_SC_...xlsx</code><br>
+      • <strong>"3.비용&amp;투자"</strong> 시트가 있어야 합니다<br>
+      • 헤더 행에 <strong>"예산계정 명"</strong> 컬럼, <strong>"XXXX년 사업계획"</strong> 열이 있어야 자동 파싱됩니다<br>
+      • 같은 계정명이 여러 행에 있으면 자동으로 합산됩니다<br>
+      • 2026년은 기본 데이터가 내장되어 있어 업로드 없이도 동작합니다
+    </div>
+
+    <!-- ══ 실적 가져오기 섹션 ══ -->
+    <div style="margin-top:28px;">
+      <div style="font-size:16px;font-weight:800;color:#1e3a5f;margin-bottom:4px">📥 재무포탈 실적 가져오기</div>
+      <div style="font-size:12px;color:var(--gray-500);margin-bottom:16px">
+        재무포탈에서 내보낸 <strong>사업계획 사용예산</strong> 엑셀 파일을 업로드하면 계정별 실적을 자동으로 입력합니다.
+      </div>
+
+      <div style="background:white;border-radius:10px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:start;">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:700;color:var(--gray-700);margin-bottom:6px">관리 연도</label>
+            <select id="actualsTargetYear" style="width:100%;padding:9px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;font-weight:700;">
+              <option value="2024">2024년</option>
+              <option value="2025">2025년</option>
+              <option value="2026" selected>2026년</option>
+              <option value="2027">2027년</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:700;color:var(--gray-700);margin-bottom:6px">재무포탈 내보내기 파일 (.xlsx)</label>
+            <div id="actualsDropZone" style="border:2px dashed var(--gray-300);border-radius:8px;padding:18px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--gray-50);"
+              ondragover="event.preventDefault();this.style.borderColor='#059669';this.style.background='#ecfdf5'"
+              ondragleave="this.style.borderColor='var(--gray-300)';this.style.background='var(--gray-50)'"
+              ondrop="handleActualsDrop(event)"
+              onclick="document.getElementById('actualsFileInput').click()">
+              <div style="font-size:22px;margin-bottom:4px">📊</div>
+              <div style="font-size:12px;font-weight:600;color:var(--gray-700)">클릭 또는 파일 끌어다 놓기</div>
+              <div style="font-size:11px;color:var(--gray-500);margin-top:2px">사업계획 사용예산 .xlsx — 월별 포함 내보내기</div>
+            </div>
+            <input type="file" id="actualsFileInput" accept=".xlsx,.xls" style="display:none" onchange="processActualsFile(this.files[0])">
+          </div>
+        </div>
+
+        <div id="actualsStatus" style="margin-top:14px;display:none;"></div>
+        <div id="actualsPreview" style="margin-top:14px;display:none;"></div>
+      </div>
+
+      <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:14px 18px;font-size:12px;color:#166534;line-height:1.8;margin-top:12px;">
+        <strong>💡 재무포탈 내보내기 파일 안내</strong><br>
+        • 재무포탈 → 사업계획 사용예산 → <strong>월별 보기</strong> 선택 후 엑셀 내보내기<br>
+        • 파일 구조: E열=계정명, G열=구분(1.사용예산/4-1.확정실적 등), I열~=월별 금액<br>
+        • <strong>4-1.확정실적</strong> 행의 월별 값을 자동 추출하여 각 달에 바로 입력합니다<br>
+        • 파일에 포함된 달(1월, 2월…)만 업데이트되고 나머지 달은 그대로 유지됩니다<br>
+        • 매칭되지 않는 계정은 건너뛰며, 미리보기에서 확인 후 적용합니다
+      </div>
+    </div>
+  `;
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').style.borderColor = 'var(--gray-300)';
+  document.getElementById('dropZone').style.background = 'var(--gray-50)';
+  const file = e.dataTransfer.files[0];
+  if (file) processUploadedFile(file);
+}
+
+// ============================================================
+// 재무포탈 실적 가져오기
+// ============================================================
+function handleActualsDrop(e) {
+  e.preventDefault();
+  document.getElementById('actualsDropZone').style.borderColor = 'var(--gray-300)';
+  document.getElementById('actualsDropZone').style.background = 'var(--gray-50)';
+  const file = e.dataTransfer.files[0];
+  if (file) processActualsFile(file);
+}
+
+async function processActualsFile(file) {
+  if (!file) return;
+  if (!file.name.match(/\.xlsx?$/i)) { showToast('❌ xlsx 파일만 업로드 가능합니다'); return; }
+
+  const statusEl = document.getElementById('actualsStatus');
+  const previewEl = document.getElementById('actualsPreview');
+  statusEl.style.display = 'block';
+  previewEl.style.display = 'none';
+  statusEl.innerHTML = `<div style="background:var(--warning-light);border:1px solid #fcd34d;border-radius:6px;padding:12px;font-size:12px;">
+    ⏳ <strong>${file.name}</strong> 파싱 중…
+  </div>`;
+
+  try {
+    const data = await file.arrayBuffer();
+    const wb = XLSX.read(data, { type: 'array' });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+
+    if (rows.length < 2) throw new Error('파일에 데이터가 없습니다.');
+
+    // ── 헤더 행 탐지 (1월, 2월... 이 있는 행)
+    let headerRowIdx = -1;
+    let accCol = -1;     // 계정명 컬럼
+    let divCol = -1;     // 구분 컬럼 (1.사용예산, 4-1.확정실적 등)
+    let monthCols = {};  // { 0: colIdx, 1: colIdx, ... } 월인덱스 → 컬럼인덱스
+
+    for (let r = 0; r < Math.min(5, rows.length); r++) {
+      const row = rows[r];
+      let foundMonth = false;
+      for (let c = 0; c < row.length; c++) {
+        const cell = String(row[c] || '').trim();
+        const mMatch = cell.match(/^(\d{1,2})월$/);
+        if (mMatch) {
+          monthCols[parseInt(mMatch[1]) - 1] = c;
+          foundMonth = true;
+        }
+        if (cell === '계정' || (cell.includes('계정') && !cell.includes('유형') && !cell.includes('부서'))) accCol = c;
+        if (cell === '구분') divCol = c;
+      }
+      if (foundMonth) { headerRowIdx = r; break; }
+    }
+
+    if (headerRowIdx === -1 || Object.keys(monthCols).length === 0)
+      throw new Error('월별 컬럼(1월, 2월…)을 찾을 수 없습니다. 재무포탈에서 월별 보기로 내보내기 해주세요.');
+    if (accCol === -1) throw new Error('"계정" 컬럼을 찾을 수 없습니다.');
+    if (divCol === -1) throw new Error('"구분" 컬럼을 찾을 수 없습니다.');
+
+    const foundMonths = Object.keys(monthCols).map(Number).sort((a,b)=>a-b);
+
+    // ── 데이터 파싱: 계정그룹별로 묶어서 "4-1.확정실적" 행 추출
+    // 계정명은 구분="1.사용예산"인 행에만 채워져 있음
+    const parsed = []; // { name, months: {0: amt, 1: amt, ...} }
+    let currentAcc = null;
+
+    for (let r = headerRowIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      const accRaw = String(row[accCol] || '').trim();
+      const div = String(row[divCol] || '').trim().replace(/^\u3000/, ''); // 앞 공백 제거
+
+      // 새 계정 시작 (구분="1.사용예산"이고 계정명이 있거나, Level값이 있을 때)
+      if (accRaw && accRaw !== '계정') {
+        currentAcc = { name: accRaw, months: {} };
+        parsed.push(currentAcc);
+      }
+
+      // 확정실적 행 — 4-1.확정실적
+      if (currentAcc && (div === '4-1.확정실적' || div.includes('4-1') || div === '확정실적')) {
+        foundMonths.forEach(mIdx => {
+          const raw = row[monthCols[mIdx]];
+          const amt = parseFloat(String(raw || '0').replace(/,/g, '')) || 0;
+          currentAcc.months[mIdx] = amt;
+        });
+      }
+    }
+
+    // 유효한 계정만 (months 데이터 있는 것)
+    const validParsed = parsed.filter(p => Object.keys(p.months).length > 0);
+    if (validParsed.length === 0) throw new Error('"4-1.확정실적" 행 데이터를 찾을 수 없습니다. 파일 구조를 확인해주세요.');
+
+    showActualsPreview(validParsed, file.name, foundMonths);
+  } catch(err) {
+    statusEl.innerHTML = `<div style="background:var(--danger-light);border:1px solid #fca5a5;border-radius:6px;padding:12px;font-size:12px;">
+      ❌ <strong>파싱 실패:</strong> ${err.message}
+    </div>`;
+  }
+}
+
+let parsedActualsData = null;
+
+function showActualsPreview(parsed, fileName, foundMonths) {
+  const statusEl = document.getElementById('actualsStatus');
+  const previewEl = document.getElementById('actualsPreview');
+
+  // 현재 예산 계정과 매칭
+  const matched = [];
+  const unmatched = [];
+  parsed.forEach(p => {
+    const budgetAcc = ORIGINAL_BUDGET.find(a => a.name === p.name);
+    if (budgetAcc) {
+      matched.push({ name: p.name, months: p.months });
+    } else {
+      unmatched.push(p.name);
+    }
+  });
+
+  parsedActualsData = { matched, unmatched, foundMonths };
+
+  const monthLabels = foundMonths.map(m => MONTHS[m]).join(', ');
+
+  statusEl.innerHTML = `<div style="background:var(--success-light);border:1px solid #86efac;border-radius:6px;padding:12px;font-size:12px;">
+    ✅ <strong>파싱 성공!</strong> 포함 월: <strong>${monthLabels}</strong> · 계정 ${parsed.length}개 중 <strong>매칭 ${matched.length}개</strong> · 미매칭 ${unmatched.length}개
+  </div>`;
+
+  // 헤더: 계정명 + 각 월
+  const thMonths = foundMonths.map(m => `<th style="padding:7px 10px;text-align:right;font-size:11px">${MONTHS[m]}</th>`).join('');
+
+  const matchRows = matched.map(m => {
+    const tds = foundMonths.map(mi => `<td class="num" style="font-size:12px;font-weight:600;color:#059669">${fmt(m.months[mi]||0)}</td>`).join('');
+    return `<tr><td style="font-size:12px;font-weight:600;padding:7px 10px">${m.name}</td>${tds}</tr>`;
+  }).join('');
+
+  const unmatchedHtml = unmatched.length > 0
+    ? `<div style="margin-top:8px;font-size:11px;color:var(--gray-500);background:var(--gray-50);border-radius:6px;padding:8px 12px;">
+        ⚠️ 매칭 안 된 계정: ${unmatched.map(u=>`<strong>${u}</strong>`).join(', ')}
+       </div>`
+    : '';
+
+  previewEl.style.display = 'block';
+  previewEl.innerHTML = `
+    <div style="border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;">
+      <div style="background:#059669;color:white;padding:10px 14px;">
+        <span style="font-size:13px;font-weight:700">📋 월별 실적 입력 미리보기 — ${monthLabels}</span>
+      </div>
+      <div style="overflow-x:auto;max-height:320px;">
+        <table style="width:100%;border-collapse:collapse;background:white;">
+          <thead><tr style="background:#f0fdf4;font-size:11px;position:sticky;top:0;">
+            <th style="padding:7px 10px;text-align:left">계정명</th>${thMonths}
+          </tr></thead>
+          <tbody>${matchRows}</tbody>
+        </table>
+      </div>
+      ${unmatchedHtml}
+      <div style="padding:14px;background:var(--gray-50);display:flex;gap:10px;align-items:center;">
+        <div style="flex:1;font-size:12px;color:var(--gray-700)">
+          위 <strong>${matched.length}개 계정</strong>의 <strong>${monthLabels}</strong> 실적을 입력하시겠습니까?<br>
+          <span style="font-size:11px;color:var(--gray-500)">해당 달의 기존 실적은 덮어씁니다. 파일에 없는 달은 변경되지 않습니다.</span>
+        </div>
+        <button class="btn btn-secondary" onclick="parsedActualsData=null;document.getElementById('actualsPreview').style.display='none';document.getElementById('actualsStatus').style.display='none';">취소</button>
+        <button class="btn btn-success" onclick="applyActualsImport()">✅ 월별 실적 입력</button>
+      </div>
+    </div>`;
+}
+
+function applyActualsImport() {
+  if (!parsedActualsData) return;
+  const { matched, foundMonths } = parsedActualsData;
+  const monthLabels = foundMonths.map(m => MONTHS[m]).join(', ');
+  const targetYear = parseInt(document.getElementById('actualsTargetYear').value);
+
+  // 연도가 다르면 해당 연도 데이터로 전환
+  if (targetYear !== currentYear) {
+    if (!confirm(`현재 ${currentYear}년 데이터가 열려 있습니다.\n${targetYear}년 데이터로 전환 후 실적을 입력합니다.\n계속하시겠습니까?`)) return;
+    currentYear = targetYear;
+    document.getElementById('yearDisplay').textContent = targetYear;
+    loadBudgetData(targetYear);
+    refreshCategories();
+    actuals = {}; adjBudget = {}; history = [];
+    loadData();
+  }
+
+  if (!actuals) actuals = {};
+  let count = 0;
+  matched.forEach(m => {
+    if (!actuals[m.name]) {
+      actuals[m.name] = Array(12).fill(null).map(() => ({ amount: 0, note: '' }));
+    }
+    foundMonths.forEach(mIdx => {
+      actuals[m.name][mIdx].amount = m.months[mIdx] || 0;
+      if (!actuals[m.name][mIdx].note) actuals[m.name][mIdx].note = '재무포탈 자동입력';
+    });
+    count++;
+  });
+
+  saveData();
+  renderMain();
+  updateSummary();
+
+  history.push({
+    id: Date.now(),
+    type: 'actuals_import',
+    date: new Date().toLocaleDateString('ko-KR'),
+    desc: `재무포탈 실적 가져오기 — ${monthLabels} · ${count}개 계정`,
+    detail: `파일 자동입력: ${matched.map(m=>m.name).join(', ')}`
+  });
+  saveData();
+
+  showToast(`✅ ${monthLabels} 실적 ${count}개 계정 입력 완료!`);
+  parsedActualsData = null;
+  document.getElementById('actualsPreview').style.display = 'none';
+  document.getElementById('actualsStatus').innerHTML = `<div style="background:var(--success-light);border:1px solid #86efac;border-radius:6px;padding:12px;font-size:12px;">
+    ✅ <strong>${monthLabels} 실적 ${count}개 계정 입력 완료!</strong> 저장되었습니다.
+  </div>`;
+}
+
+async function processUploadedFile(file) {
+  if (!file) return;
+  if (!file.name.match(/\.xlsx?$/i)) { showToast('❌ xlsx 파일만 업로드 가능합니다'); return; }
+
+  const targetYear = parseInt(document.getElementById('uploadTargetYear').value);
+  const statusEl = document.getElementById('uploadStatus');
+  const previewEl = document.getElementById('uploadPreview');
+
+  statusEl.style.display = 'block';
+  statusEl.innerHTML = `<div style="background:var(--warning-light);border:1px solid #fcd34d;border-radius:6px;padding:12px;font-size:12px;">
+    ⏳ <strong>${file.name}</strong> 파싱 중... (${targetYear}년 데이터 검색)
+  </div>`;
+  previewEl.style.display = 'none';
+
+  try {
+    const result = await handleExcelUpload(file, targetYear);
+    parsedPreview = { year: targetYear, data: result.accounts, meta: result };
+    showUploadPreview(result, targetYear, file.name);
+  } catch(err) {
+    statusEl.innerHTML = `<div style="background:var(--danger-light);border:1px solid #fca5a5;border-radius:6px;padding:12px;font-size:12px;">
+      ❌ <strong>파싱 실패:</strong> ${err.message}
+    </div>`;
+  }
+}
+
+function showUploadPreview(result, year, fileName) {
+  const { accounts, sheetName } = result;
+  const totalAnnual = accounts.reduce((s, a) => s + a.annual, 0);
+
+  const statusEl = document.getElementById('uploadStatus');
+  statusEl.innerHTML = `<div style="background:var(--success-light);border:1px solid #86efac;border-radius:6px;padding:12px;font-size:12px;">
+    ✅ <strong>파싱 성공!</strong> 시트: "${sheetName}" · 계정 <strong>${accounts.length}개</strong> · 연간 합계 <strong>${fmtFull(totalAnnual)}</strong>
+  </div>`;
+
+  // 미리보기 테이블
+  const rows = accounts.slice(0, 15).map(a =>
+    `<tr><td style="font-size:11px">${a.category}</td><td style="font-weight:600;font-size:12px">${a.name}</td>
+     <td class="num" style="font-size:12px">${fmt(a.annual)}</td>
+     <td style="font-size:10px;color:var(--gray-500)">${a.months.filter(v=>v>0).length}개월 계획</td></tr>`
+  ).join('');
+
+  const previewEl = document.getElementById('uploadPreview');
+  previewEl.style.display = 'block';
+  previewEl.innerHTML = `
+    <div style="border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;">
+      <div style="background:#1e3a5f;color:white;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;font-weight:700">📋 파싱 결과 미리보기 (상위 15개)</span>
+        <span style="font-size:11px;opacity:0.8">${accounts.length > 15 ? `외 ${accounts.length-15}개 더` : ''}</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;background:white;">
+        <thead><tr style="background:#f0f4f8;">
+          <th style="padding:7px 10px;text-align:left;font-size:11px">카테고리</th>
+          <th style="padding:7px 10px;text-align:left;font-size:11px">계정명</th>
+          <th style="padding:7px 10px;text-align:right;font-size:11px">연간예산</th>
+          <th style="padding:7px 10px;text-align:left;font-size:11px">월별</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div style="padding:14px;background:var(--gray-50);display:flex;gap:10px;align-items:center;">
+        <div style="flex:1;font-size:12px;color:var(--gray-700)">
+          <strong>${year}년</strong> 예산 데이터로 적용하시겠습니까?<br>
+          <span style="font-size:11px;color:var(--gray-500)">기존 ${year}년 예산 데이터가 있으면 덮어씁니다. 실적/조정이력은 유지됩니다.</span>
+        </div>
+        <button class="btn btn-secondary" onclick="parsedPreview=null;document.getElementById('uploadPreview').style.display='none';document.getElementById('uploadStatus').style.display='none';">취소</button>
+        <button class="btn btn-success" onclick="applyParsedBudget()">✅ 이 데이터로 적용</button>
+      </div>
+    </div>`;
+}
+
+function applyParsedBudget() {
+  if (!parsedPreview) return;
+  const { year, data } = parsedPreview;
+
+  saveBudgetData(year, data);
+  refreshCategories();
+  parsedPreview = null;
+
+  showToast(`✅ ${year}년 예산 데이터 적용 완료! (${data.length}개 계정)`);
+
+  // 현재 연도와 같으면 바로 화면 갱신
+  if (year === currentYear) {
+    ORIGINAL_BUDGET = data;
+    refreshCategories();
+    renderMain(); updateSummary();
+  }
+  // 업로드 탭 새로고침
+  renderUpload(document.getElementById('mainContent'));
+}
+
+function switchYearAndLoad(year) {
+  if (!hasBudgetData(year)) {
+    if (!confirm(`${year}년 예산 데이터가 없습니다.\n이 연도로 전환하고 파일을 업로드하시겠습니까?`)) return;
+  }
+  currentYear = year;
+  document.getElementById('yearDisplay').textContent = year;
+  loadBudgetData(year);
+  refreshCategories();
+  actuals = {}; adjBudget = {}; history = [];
+  loadData();
+  switchMonth(new Date().getMonth());
+  updateSummary();
+  showToast(`${year}년으로 전환됨`);
+}
+
+function deleteBudgetYear(year) {
+  if (!confirm(`${year}년 예산 데이터를 삭제할까요? 실적 데이터는 유지됩니다.`)) return;
+  localStorage.removeItem(getBudgetStorageKey(year));
+  if (year === currentYear) { loadBudgetData(year); refreshCategories(); renderMain(); updateSummary(); }
+  renderUpload(document.getElementById('mainContent'));
+  showToast(`${year}년 예산 데이터 삭제됨`);
+}
+
+// ============================================================
+// Chart.js 시각화
+// ============================================================
+let chartInstances = {};
+
+function destroyCharts() {
+  Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch(e){} });
+  chartInstances = {};
+}
+
+function renderCharts(container) {
+  destroyCharts();
+
+  // ── 데이터 준비
+  const totalBudget = getTotalEffectiveAnnual();
+  let totalUsed = 0;
+  ORIGINAL_BUDGET.forEach(a => {
+    if (actuals[a.name]) actuals[a.name].forEach(m => { totalUsed += (m.amount||0); });
+  });
+  const totalRemain = totalBudget - totalUsed;
+  const overallRate = pct(totalUsed, totalBudget);
+
+  // 카테고리별 집계
+  const catData = CATEGORIES.map(cat => {
+    const accs = ORIGINAL_BUDGET.filter(a => a.category === cat);
+    const budget = accs.reduce((s,a) => s + getEffectiveBudget(a.name).annual, 0);
+    const used = accs.reduce((s,a) => s + (actuals[a.name] ? actuals[a.name].reduce((x,m)=>x+(m.amount||0),0) : 0), 0);
+    return { cat, budget, used, remain: budget-used, rate: pct(used, budget) };
+  });
+
+  // 월별 집계
+  const monthlyPlan = [], monthlyUsed = [];
+  for (let m=0; m<12; m++) {
+    let p=0, u=0;
+    ORIGINAL_BUDGET.forEach(a => {
+      p += getEffectiveBudget(a.name).months[m];
+      if (actuals[a.name]) u += (actuals[a.name][m].amount||0);
+    });
+    monthlyPlan.push(p); monthlyUsed.push(u);
+  }
+
+  // 계정별 소진율 (연간)
+  const accRates = ORIGINAL_BUDGET.map(a => {
+    const eff = getEffectiveBudget(a.name);
+    const used = actuals[a.name] ? actuals[a.name].reduce((s,m)=>s+(m.amount||0),0) : 0;
+    return { name: a.name, rate: pct(used, eff.annual), used, budget: eff.annual };
+  }).sort((a,b) => b.rate - a.rate);
+
+  // ── 색상 팔레트
+  const PALETTE = ['#2563eb','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#db2777','#ea580c','#65a30d','#0d9488'];
+  const getCatColor = (i) => PALETTE[i % PALETTE.length];
+
+  container.innerHTML = `
+    <div style="margin-bottom:16px">
+      <div class="month-title">📈 ${currentYear}년 예산 시각화 대시보드</div>
+      <div style="font-size:11px;color:var(--gray-500);margin-top:3px">실적 입력 후 자동 반영됩니다</div>
+    </div>
+
+    <!-- Row 1: 전체소진율 도넛 + 카테고리별 예산 도넛 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;">
+
+      <!-- 전체 소진율 -->
+      <div style="background:white;border-radius:10px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);text-align:center;">
+        <div style="font-size:13px;font-weight:700;color:#1e3a5f;margin-bottom:4px">전체 예산 소진율</div>
+        <div style="font-size:11px;color:var(--gray-500);margin-bottom:12px">조정예산 기준</div>
+        <div style="position:relative;width:160px;margin:0 auto;">
+          <canvas id="chartDonutOverall" width="160" height="160"></canvas>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+            <div style="font-size:22px;font-weight:900;color:${overallRate>=100?'#dc2626':overallRate>=80?'#d97706':'#16a34a'}">${overallRate}%</div>
+            <div style="font-size:10px;color:#6b7280">소진</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="color:#6b7280">조정예산</span><span style="font-weight:700">${fmt(totalBudget)}</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="color:#2563eb">사용</span><span style="font-weight:700;color:#2563eb">${fmt(totalUsed)}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:#16a34a">잔여</span><span style="font-weight:700;color:${totalRemain<0?'#dc2626':'#16a34a'}">${fmt(totalRemain)}</span></div>
+        </div>
+      </div>
+
+      <!-- 카테고리별 예산 비중 -->
+      <div style="background:white;border-radius:10px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="font-size:13px;font-weight:700;color:#1e3a5f;margin-bottom:4px">카테고리별 예산 비중</div>
+        <div style="font-size:11px;color:var(--gray-500);margin-bottom:10px">조정예산 기준</div>
+        <canvas id="chartDonutCat" height="170"></canvas>
+      </div>
+
+      <!-- 카테고리별 소진율 -->
+      <div style="background:white;border-radius:10px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="font-size:13px;font-weight:700;color:#1e3a5f;margin-bottom:4px">카테고리별 소진율</div>
+        <div style="font-size:11px;color:var(--gray-500);margin-bottom:10px">누적 실적 기준</div>
+        <canvas id="chartCatRate" height="170"></canvas>
+      </div>
+    </div>
+
+    <!-- Row 2: 월별 막대 -->
+    <div style="background:white;border-radius:10px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:700;color:#1e3a5f;margin-bottom:4px">월별 계획 vs 실적</div>
+      <div style="font-size:11px;color:var(--gray-500);margin-bottom:12px">파란색 = 계획 / 초록색 = 실적 / 빨간색 = 초과</div>
+      <canvas id="chartMonthly" height="80"></canvas>
+    </div>
+
+    <!-- Row 3: 계정별 소진율 가로 막대 -->
+    <div style="background:white;border-radius:10px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+      <div style="font-size:13px;font-weight:700;color:#1e3a5f;margin-bottom:4px">계정별 소진율 순위 (상위 20개)</div>
+      <div style="font-size:11px;color:var(--gray-500);margin-bottom:12px">빨강 = 초과, 주황 = 80%+, 초록 = 정상</div>
+      <canvas id="chartAccRate" height="200"></canvas>
+    </div>
+  `;
+
+  // ── 차트 생성 (Chart.js)
+  // 1. 전체 소진율 도넛
+  chartInstances.overall = new Chart(document.getElementById('chartDonutOverall'), {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [totalUsed, Math.max(totalRemain, 0)],
+        backgroundColor: [overallRate>=100?'#dc2626':overallRate>=80?'#d97706':'#2563eb', '#e5e7eb'],
+        borderWidth: 0
+      }]
+    },
+    options: { cutout:'72%', plugins:{ legend:{display:false}, tooltip:{enabled:false} }, animation:{duration:800} }
+  });
+
+  // 2. 카테고리별 예산 도넛
+  chartInstances.catPie = new Chart(document.getElementById('chartDonutCat'), {
+    type: 'doughnut',
+    data: {
+      labels: catData.map(c=>c.cat),
+      datasets: [{
+        data: catData.map(c=>c.budget),
+        backgroundColor: catData.map((_,i)=>getCatColor(i)),
+        borderWidth: 2, borderColor: '#fff'
+      }]
+    },
+    options: {
+      cutout: '55%',
+      plugins: {
+        legend: { position:'right', labels:{ font:{size:10}, padding:8, boxWidth:12 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)} (${Math.round(ctx.raw/totalBudget*100)}%)` } }
+      },
+      animation: { duration:800 }
+    }
+  });
+
+  // 3. 카테고리별 소진율 가로막대
+  const catRateColors = catData.map(c => c.rate>=100?'#dc2626':c.rate>=80?'#d97706':'#16a34a');
+  chartInstances.catRate = new Chart(document.getElementById('chartCatRate'), {
+    type: 'bar',
+    data: {
+      labels: catData.map(c=>c.cat),
+      datasets: [{
+        label:'소진율',
+        data: catData.map(c=>c.rate),
+        backgroundColor: catRateColors,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: { legend:{display:false}, tooltip:{ callbacks:{ label: ctx=>`${ctx.raw}%` } } },
+      scales: {
+        x: { min:0, max:Math.max(110, ...catData.map(c=>c.rate)+10),
+          ticks:{ callback: v=>v+'%', font:{size:10} },
+          grid:{ color:'#f3f4f6' }
+        },
+        y: { ticks:{ font:{size:10} }, grid:{display:false} }
+      },
+      animation:{duration:600}
+    }
+  });
+
+  // 4. 월별 계획 vs 실적 막대
+  const mUsedColors = monthlyUsed.map((u,i)=>u>monthlyPlan[i]&&monthlyPlan[i]>0?'rgba(220,38,38,0.8)':'rgba(22,163,74,0.8)');
+  chartInstances.monthly = new Chart(document.getElementById('chartMonthly'), {
+    type: 'bar',
+    data: {
+      labels: MONTHS,
+      datasets: [
+        { label:'계획', data:monthlyPlan, backgroundColor:'rgba(37,99,235,0.25)', borderColor:'#2563eb', borderWidth:2, type:'bar', borderRadius:3 },
+        { label:'실적', data:monthlyUsed, backgroundColor:mUsedColors, borderRadius:3 }
+      ]
+    },
+    options: {
+      plugins: { legend:{ labels:{font:{size:11}} }, tooltip:{ callbacks:{ label: ctx=>`${ctx.dataset.label}: ${fmt(ctx.raw)}` } } },
+      scales: {
+        x: { ticks:{font:{size:11}}, grid:{display:false} },
+        y: { ticks:{ callback:v=>fmt(v), font:{size:10} }, grid:{color:'#f3f4f6'} }
+      },
+      animation:{duration:600}
+    }
+  });
+
+  // 5. 계정별 소진율 (상위 20개)
+  const top20 = accRates.slice(0,20);
+  const accColors = top20.map(a=>a.rate>=100?'rgba(220,38,38,0.8)':a.rate>=80?'rgba(217,119,6,0.8)':'rgba(37,99,235,0.7)');
+  chartInstances.accRate = new Chart(document.getElementById('chartAccRate'), {
+    type: 'bar',
+    data: {
+      labels: top20.map(a=>a.name),
+      datasets: [{
+        label:'소진율',
+        data: top20.map(a=>a.rate),
+        backgroundColor: accColors,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: {
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: ctx=>`${ctx.raw}% (사용 ${fmt(top20[ctx.dataIndex].used)} / 예산 ${fmt(top20[ctx.dataIndex].budget)})` } }
+      },
+      scales: {
+        x: { min:0, max:Math.max(120,...top20.map(a=>a.rate)),
+          ticks:{ callback:v=>v+'%', font:{size:10} }, grid:{color:'#f3f4f6'}
+        },
+        y: { ticks:{font:{size:10}}, grid:{display:false} }
+      },
+      animation:{duration:600}
+    }
+  });
+}
+
+async function init(){
+  loadCloudCfg();
+  loadBudgetData(currentYear); // 연도별 예산 데이터 먼저 로드
+  refreshCategories();
+  loadData(); // 실적/조정이력 로드
+  const now=new Date();
+  const initM=now.getFullYear()===currentYear?now.getMonth():0;
+  currentMonth=initM;
+  document.querySelector(`.tab[data-month="${initM}"]`).classList.add('active');
+  renderMain(); updateSummary(); updateCloudUI();
+  // 자동 클라우드 로드 제거 — 🔄 버튼 눌렀을 때만 수동으로 불러오기
+}
+init();
+</script>
+</body>
+</html>
