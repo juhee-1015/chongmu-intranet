@@ -2386,7 +2386,7 @@ async function jbConnect(){
     if(!binId){
       // 새 Bin 생성
       const allData=gatherAllData();
-      const res=await fetch(JB_APIBASE,{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':master,'X-Bin-Name':'총무대백과','X-Collection-Name':'intranet'},body:JSON.stringify(allData)});
+      const res=await fetch(JB_APIBASE,{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':master,'X-Bin-Name':'chongmu-intranet'},body:JSON.stringify(allData)});
       if(!res.ok) throw new Error('Bin 생성 실패: '+res.status);
       const json=await res.json();
       binId=json.metadata.id;
