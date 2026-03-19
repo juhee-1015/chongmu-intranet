@@ -1,0 +1,812 @@
+{
+  "_version": 1,
+  "_date": "2026-03-19T05:50:00.827Z",
+  "_app": "총무대백과",
+  "vouchers": [],
+  "vendors": [
+    {
+      "cat": "사옥 및 시설관리",
+      "name": "",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "",
+      "note": "미래임차료 및 관리비"
+    },
+    {
+      "cat": "사옥 및 시설관리",
+      "name": "",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "삼환임차료 및 관리비"
+    },
+    {
+      "cat": "인테리어",
+      "name": "예림피앤에프",
+      "contact": "이재봉",
+      "title": "대표",
+      "email": "",
+      "phone": "",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "발주/견적서/세금계산서"
+    },
+    {
+      "cat": "인테리어",
+      "name": "예림피앤에프",
+      "contact": "김진호",
+      "title": "이사",
+      "email": "",
+      "phone": "",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "현장 관리/발주/견적"
+    },
+    {
+      "cat": "주차",
+      "name": "더블유스퀘어",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 600000,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "",
+      "note": "2대"
+    },
+    {
+      "cat": "주차",
+      "name": "호반메트로큐브",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 4000000,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "",
+      "note": ""
+    },
+    {
+      "cat": "주차",
+      "name": "미래에셋주차장",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 8050000,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "",
+      "note": ""
+    },
+    {
+      "cat": "정기주차변경(미래에셋)",
+      "name": "미래에셋관리실",
+      "contact": "강영숙",
+      "title": "주임",
+      "email": "swumabb@hanmail.net",
+      "phone": "031-8061-0118",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": ""
+    },
+    {
+      "cat": "조경",
+      "name": "",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 600000,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "",
+      "note": ""
+    },
+    {
+      "cat": "비데",
+      "name": "",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 700000,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "",
+      "note": ""
+    },
+    {
+      "cat": "보안관리",
+      "name": "에스원",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 1500000,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "25일",
+      "note": ""
+    },
+    {
+      "cat": "해충관리",
+      "name": "세스코",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "",
+      "note": ""
+    },
+    {
+      "cat": "침구세탁",
+      "name": "크린토피아",
+      "contact": "이광영",
+      "title": "",
+      "email": "",
+      "phone": "010-5215-7221",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "6층 미화",
+      "name": "",
+      "contact": "최정단",
+      "title": "",
+      "email": "",
+      "phone": "010-3300-2311",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "사무실 미화 관련"
+    },
+    {
+      "cat": "5층 미화",
+      "name": "",
+      "contact": "김현정",
+      "title": "",
+      "email": "",
+      "phone": "010-2507-5329",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "사무실 미화 관련"
+    },
+    {
+      "cat": "라운지 미화",
+      "name": "",
+      "contact": "이은영",
+      "title": "",
+      "email": "",
+      "phone": "010-4608-8199",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "라운지 미화 관련"
+    },
+    {
+      "cat": "라운지리스탁",
+      "name": "미라클포맨",
+      "contact": "백기원",
+      "title": "본부장",
+      "email": "bgw@m4m.co.kr",
+      "phone": "010-8645-3532",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "세금계산서",
+      "emailRecv": "서주희",
+      "issueDate": "당월 말",
+      "payDate": "익월 10일",
+      "note": "발주/거래명세서"
+    },
+    {
+      "cat": "라운지리스탁",
+      "name": "미라클포맨",
+      "contact": "김재만",
+      "title": "대표",
+      "email": "ceokjm@m4m.co.kr",
+      "phone": "070-8098-8335",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "세금계산서 발행"
+    },
+    {
+      "cat": "사무용품",
+      "name": "캐스팅엔(업무마켓9)",
+      "contact": "양승화",
+      "title": "",
+      "email": "tax@castingn.com",
+      "phone": "010-7553-3197",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "명함",
+      "name": "베어베터",
+      "contact": "김서아",
+      "title": "",
+      "email": "seoakim@bearbetter.net",
+      "phone": "010-8223-7249",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "복리후생-조식",
+      "name": "프레밀",
+      "contact": "황준상",
+      "title": "",
+      "email": "fmz2009@naver.com",
+      "phone": "010-9044-9870",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "발주/거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "복리후생-조식",
+      "name": "김&밥(홍쉐프라면)",
+      "contact": "홍경옥",
+      "title": "",
+      "email": "",
+      "phone": "010-2492-7156",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "발주/거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "복리후생-중석식",
+      "name": "식권대장",
+      "contact": "김찬휘",
+      "title": "매니저",
+      "email": "",
+      "phone": "",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "세금계산서",
+      "emailRecv": "서주희",
+      "issueDate": "당월 말",
+      "payDate": "익월 10일",
+      "note": "계약"
+    },
+    {
+      "cat": "복리후생-상비약",
+      "name": "태평양약국",
+      "contact": "운용돈",
+      "title": "",
+      "email": "Ydy5583@gmail.com",
+      "phone": "050713956300",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "세금계산서",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "발주/거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "복리후생-건강검진",
+      "name": "쏙케어",
+      "contact": "한석환",
+      "title": "본부장",
+      "email": "4healthman@4healthgo.com",
+      "phone": "010-7749-7431",
+      "fixed": 0,
+      "unit": 500000,
+      "payMethod": "세금계산서",
+      "emailRecv": "함은비",
+      "issueDate": "12월",
+      "payDate": "",
+      "note": "거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "복리후생-건강검진",
+      "name": "쏙케어",
+      "contact": "이수정",
+      "title": "",
+      "email": "4health100@kakao.com",
+      "phone": "010-9813-6947",
+      "fixed": 0,
+      "unit": 250000,
+      "payMethod": "세금계산서",
+      "emailRecv": "함은비",
+      "issueDate": "12월",
+      "payDate": "",
+      "note": "플랫폼 버그 관련"
+    },
+    {
+      "cat": "복리후생-영양제",
+      "name": "알고케어",
+      "contact": "김경희",
+      "title": "프로",
+      "email": "olive@algocarelab.com",
+      "phone": "010-8956-4495",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "세금계산서",
+      "emailRecv": "서주희",
+      "issueDate": "당월 말",
+      "payDate": "익월 10일",
+      "note": "계약, 정산, 세금계산서 발행"
+    },
+    {
+      "cat": "복리후생-안마의자",
+      "name": "",
+      "contact": "",
+      "title": "",
+      "email": "",
+      "phone": "",
+      "fixed": 50000,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "박용현",
+      "issueDate": "",
+      "payDate": "25일",
+      "note": ""
+    },
+    {
+      "cat": "복리후생-헬스장",
+      "name": "(주)스포짐",
+      "contact": "강민규",
+      "title": "지점장",
+      "email": "mingue4927@naver.com",
+      "phone": "010-6334-4927",
+      "fixed": 0,
+      "unit": 545000,
+      "payMethod": "세금계산서",
+      "emailRecv": "함은비",
+      "issueDate": "협의",
+      "payDate": "",
+      "note": "2025.03.17 계약 종료"
+    },
+    {
+      "cat": "제작물-쇼핑백 大",
+      "name": "도토리",
+      "contact": "-",
+      "title": "-",
+      "email": "dot52@daum.net",
+      "phone": "032-613-1103",
+      "fixed": 0,
+      "unit": 1450,
+      "payMethod": "세금계산서",
+      "emailRecv": "함은비",
+      "issueDate": "협의",
+      "payDate": "",
+      "note": "발주/거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "제작물-제작컵 16oz",
+      "name": "칼라컵",
+      "contact": "",
+      "title": "",
+      "email": "cup@color.co.kr",
+      "phone": "1644-2421",
+      "fixed": 0,
+      "unit": 210,
+      "payMethod": "세금계산서",
+      "emailRecv": "함은비",
+      "issueDate": "협의",
+      "payDate": "",
+      "note": "발주/거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "제작물-제작컵 12oz",
+      "name": "공컵",
+      "contact": "왕용준",
+      "title": "스탭",
+      "email": "",
+      "phone": "1544-1227",
+      "fixed": 0,
+      "unit": 138,
+      "payMethod": "세금계산서",
+      "emailRecv": "함은비",
+      "issueDate": "협의",
+      "payDate": "",
+      "note": "발주/거래명세서/세금계산서 발행"
+    },
+    {
+      "cat": "업무지원-해외출장",
+      "name": "SM C&C",
+      "contact": "정선용",
+      "title": "차장",
+      "email": "syjoung@smtown.com",
+      "phone": "02-3788-0026",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "7380카드결제"
+    },
+    {
+      "cat": "업무지원-해외출장",
+      "name": "SM C&C",
+      "contact": "박지혜",
+      "title": "대리",
+      "email": "jihye7320@smtown.com",
+      "phone": "02-3480-0025",
+      "fixed": 0,
+      "unit": 0,
+      "payMethod": "",
+      "emailRecv": "",
+      "issueDate": "",
+      "payDate": "",
+      "note": "7380카드결제"
+    }
+  ],
+  "links": [
+    {
+      "id": "l1",
+      "cat": "업무시스템",
+      "name": "총무팀 예산관리 시스템",
+      "url": "총무팀_예산관리_2026.html",
+      "desc": "연간 예산 실적 관리"
+    },
+    {
+      "id": "l2",
+      "cat": "참고사이트",
+      "name": "국세청 홈택스",
+      "url": "https://www.hometax.go.kr",
+      "desc": "세금 납부/조회"
+    },
+    {
+      "id": "l3",
+      "cat": "참고사이트",
+      "name": "근로복지공단",
+      "url": "https://www.comwel.or.kr",
+      "desc": "산재/고용보험"
+    }
+  ],
+  "notices": [],
+  "tasks": [
+    {
+      "id": "td01",
+      "title": "지출품의서 작성 (1분기)",
+      "category": "재무관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 3,
+      "dueDay": 20,
+      "memo": "1월~3월 지출품의서 기안"
+    },
+    {
+      "id": "td02",
+      "title": "지출품의서 작성 (2분기)",
+      "category": "재무관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 6,
+      "dueDay": 20,
+      "memo": "4월~6월 지출품의서 기안"
+    },
+    {
+      "id": "td03",
+      "title": "지출품의서 작성 (3분기)",
+      "category": "재무관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 9,
+      "dueDay": 20,
+      "memo": "7월~9월 + 하반기 지출품의서"
+    },
+    {
+      "id": "td04",
+      "title": "지출품의서 작성 (4분기/연말)",
+      "category": "재무관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 12,
+      "dueDay": 15,
+      "memo": "10월~12월 지출품의서 + 연말정산 자료 준비"
+    },
+    {
+      "id": "td05",
+      "title": "세금계산서 수취 확인 (라운지리스탁)",
+      "category": "재무관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "monthly",
+      "dueDay": -1,
+      "memo": "당월 말 발행 → 익월 10일 입금 (미라클포맨)"
+    },
+    {
+      "id": "td06",
+      "title": "세금계산서 수취 확인 (식권대장)",
+      "category": "재무관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "monthly",
+      "dueDay": -1,
+      "memo": "당월 말 발행 → 익월 10일 입금"
+    },
+    {
+      "id": "td07",
+      "title": "세금계산서 수취 확인 (알고케어)",
+      "category": "재무관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "monthly",
+      "dueDay": -1,
+      "memo": "당월 말 발행 → 익월 10일 입금"
+    },
+    {
+      "id": "td08",
+      "title": "법인 자동차세 2기분 납부",
+      "category": "재무관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 12,
+      "dueDay": 31,
+      "memo": ""
+    },
+    {
+      "id": "td09",
+      "title": "에스원 보안관리 납부 확인",
+      "category": "시설관리",
+      "assignees": [
+        "박용현"
+      ],
+      "recurrence": "monthly",
+      "dueDay": 25,
+      "memo": ""
+    },
+    {
+      "id": "td10",
+      "title": "안마의자 정기결제 확인",
+      "category": "시설관리",
+      "assignees": [
+        "박용현"
+      ],
+      "recurrence": "monthly",
+      "dueDay": 25,
+      "memo": ""
+    },
+    {
+      "id": "td11",
+      "title": "운행기록부 전달",
+      "category": "시설관리",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 1,
+      "dueDay": 20,
+      "memo": "법인차량 운행기록 정리 후 전달"
+    },
+    {
+      "id": "td12",
+      "title": "건강검진 오픈 준비",
+      "category": "복리후생",
+      "assignees": [
+        "함은비",
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 1,
+      "dueDay": 20,
+      "memo": "명단 정리, 쏙케어 연락, 앱 가이드 리뉴얼"
+    },
+    {
+      "id": "td13",
+      "title": "헬스장 계약 갱신 확인",
+      "category": "복리후생",
+      "assignees": [
+        "함은비"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 3,
+      "dueDay": 10,
+      "memo": "스포짐 ~3/17 만료, 갱신 또는 변경 검토"
+    },
+    {
+      "id": "td14",
+      "title": "다과 리뉴얼",
+      "category": "복리후생",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "quarterly",
+      "quarterMonths": [
+        3,
+        6,
+        9,
+        12
+      ],
+      "dueDay": 15,
+      "memo": "분기별 다과 품목 리뉴얼"
+    },
+    {
+      "id": "td15",
+      "title": "설날 상품권 수요조사",
+      "category": "경조/복지",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 1,
+      "dueDay": 10,
+      "memo": "전 임직원 수량 파악 → 복지기금 출연"
+    },
+    {
+      "id": "td16",
+      "title": "추석 상품권 수요조사",
+      "category": "경조/복지",
+      "assignees": [
+        "서주희"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 8,
+      "dueDay": 10,
+      "memo": "전 임직원 수량 파악 → 복지기금 출연"
+    },
+    {
+      "id": "td17",
+      "title": "창립기념일 기념품 제작 준비",
+      "category": "경조/복지",
+      "assignees": [
+        "서주희",
+        "함은비"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 6,
+      "dueDay": 15,
+      "memo": "전년도 피드백 반영, 시안 검토"
+    },
+    {
+      "id": "td18",
+      "title": "상반기 사무실 대청소",
+      "category": "시설관리",
+      "assignees": [
+        "서주희",
+        "박용현"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 5,
+      "dueDay": 20,
+      "memo": "전 층 대청소 일정 공지"
+    },
+    {
+      "id": "td19",
+      "title": "하반기 사무실 대청소",
+      "category": "시설관리",
+      "assignees": [
+        "서주희",
+        "박용현"
+      ],
+      "recurrence": "annual",
+      "annualMonth": 11,
+      "dueDay": 20,
+      "memo": "전 층 대청소 일정 공지"
+    }
+  ],
+  "taskCompletions": {},
+  "manuals": [],
+  "regulations": [
+    {
+      "id": "reg1773898189776",
+      "name": "구매규정",
+      "category": "슈크",
+      "history": [
+        {
+          "vid": "v1773898189776",
+          "type": "제정",
+          "date": "2024-12-09",
+          "note": "총무팀 담당",
+          "fileName": "[최종] 슈퍼크리에이티브 구매규정 제정.pdf",
+          "size": 1423571
+        }
+      ],
+      "createdAt": 1773898189782
+    },
+    {
+      "id": "reg1773898092795",
+      "name": "출장외근규정",
+      "category": "슈크",
+      "history": [
+        {
+          "vid": "v1773898092795",
+          "type": "제정",
+          "date": "2025-08-31",
+          "note": "인사팀 담당",
+          "fileName": "출장외근지침_250831 (1).pdf",
+          "size": 2262995
+        }
+      ],
+      "createdAt": 1773898092805
+    }
+  ]
+}
