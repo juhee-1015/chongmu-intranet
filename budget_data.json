@@ -1,0 +1,1562 @@
+{
+  "_version": 1,
+  "_date": "2026-03-19T07:10:25.933Z",
+  "_app": "총무예산관리",
+  "storageKey": "budgetMgr_2026",
+  "budgetData": {
+    "actuals": {
+      "지급임차-리스": [
+        {
+          "amount": 175100150,
+          "note": ""
+        },
+        {
+          "amount": 175100150,
+          "note": ""
+        },
+        {
+          "amount": 175100150,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "지급임차-단기임차": [
+        {
+          "amount": 115935793,
+          "note": ""
+        },
+        {
+          "amount": 115935793,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "지급임차-관리비": [
+        {
+          "amount": 80405812,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 81660504,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 67301848,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "임차보증금": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "건물관리-보안용역/장비": [
+        {
+          "amount": 1404000,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 1404000,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 1404000,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "건물관리-수도광열비": [
+        {
+          "amount": 4362640,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 5738512,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 4692160,
+          "note": "재무포탈 자동입력"
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "건물관리-청소용역": [
+        {
+          "amount": 9428000,
+          "note": ""
+        },
+        {
+          "amount": 8128000,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "건물관리-기타": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "보험료-법인보험": [
+        {
+          "amount": 5585810,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "차량유지비-제세공과": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "비품": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 18335000,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "소모품비-사무용품": [
+        {
+          "amount": 2662727,
+          "note": ""
+        },
+        {
+          "amount": 2731818,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "소모품비-일반": [
+        {
+          "amount": 3023537,
+          "note": ""
+        },
+        {
+          "amount": 1810773,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "소모품비-시설": [
+        {
+          "amount": 1500000,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "시설장치": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 16000000,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "복리후생-탕비": [
+        {
+          "amount": 30472906,
+          "note": ""
+        },
+        {
+          "amount": 26705904,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "복리후생-건강검진": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "복리후생-기타": [
+        {
+          "amount": 2738341,
+          "note": ""
+        },
+        {
+          "amount": 1818975,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "복리후생-사내근로복지기금출연": [
+        {
+          "amount": 92800000,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "복리후생-이벤트": [
+        {
+          "amount": 104800,
+          "note": ""
+        },
+        {
+          "amount": 352973,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "교육훈련비-행사": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "여비교통비-교통지원": [
+        {
+          "amount": 20009770,
+          "note": ""
+        },
+        {
+          "amount": 18311080,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "여비교통비-외근": [
+        {
+          "amount": 748300,
+          "note": ""
+        },
+        {
+          "amount": 348100,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "여비교통비-기타": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 7600,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "도서인쇄비-도서구입": [
+        {
+          "amount": 125100,
+          "note": ""
+        },
+        {
+          "amount": 118750,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "도서인쇄비-인쇄": [
+        {
+          "amount": 154000,
+          "note": ""
+        },
+        {
+          "amount": 98000,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "운반비-택배/퀵": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 7600,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "외주용역비-일반": [
+        {
+          "amount": 2990000,
+          "note": ""
+        },
+        {
+          "amount": 2990000,
+          "note": ""
+        },
+        {
+          "amount": 2990000,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "지급수수료-소액리스": [
+        {
+          "amount": 1351933,
+          "note": ""
+        },
+        {
+          "amount": 1351933,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "지급수수료-일반": [
+        {
+          "amount": 543546,
+          "note": ""
+        },
+        {
+          "amount": 495000,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ],
+      "접대비-기타": [
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 5849194,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        },
+        {
+          "amount": 0,
+          "note": ""
+        }
+      ]
+    },
+    "adjBudget": {},
+    "history": []
+  }
+}
