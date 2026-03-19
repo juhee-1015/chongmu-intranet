@@ -88,7 +88,10 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
   background:var(--surface);border-radius:var(--radius-lg);padding:14px 16px;
   border:1px solid var(--border);box-shadow:var(--shadow-sm);
   display:flex;align-items:center;gap:12px;
+  cursor:pointer;transition:box-shadow .15s,transform .12s,border-color .15s;
+  text-decoration:none;color:inherit;
 }
+.stat-card:hover{box-shadow:0 4px 16px rgba(79,70,229,.13);border-color:var(--primary-light);transform:translateY(-1px);}
 .stat-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .stat-info{flex:1;min-width:0;}
 .stat-label{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:2px;}
@@ -131,6 +134,29 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 .task-week{font-size:10px;font-weight:700;color:var(--primary);white-space:nowrap;padding-top:1px;}
 .task-text{font-size:11px;line-height:1.6;color:var(--text2);}
 
+/* ─────── 주차관리 ─────── */
+.parking-lot-card{border-radius:var(--radius-lg);padding:16px;border:1px solid var(--border);cursor:default;transition:box-shadow .15s;}
+.parking-lot-card:hover{box-shadow:var(--shadow-md);}
+.plc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.plc-name{font-size:14px;font-weight:700;color:var(--text);}
+.plc-badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;}
+.plc-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.plc-stat{text-align:center;}
+.plc-stat-val{font-size:18px;font-weight:800;color:var(--text);}
+.plc-stat-lbl{font-size:10px;color:var(--text3);}
+.plc-fee{font-size:11px;color:var(--text2);border-top:1px solid rgba(0,0,0,.06);padding-top:8px;display:flex;justify-content:space-between;align-items:center;}
+.plc-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s;}
+.parking-lot-card:hover .plc-actions{opacity:1;}
+.parking-table{width:100%;border-collapse:collapse;font-size:13px;}
+.parking-table th{background:var(--bg);padding:10px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--text3);border-bottom:2px solid var(--border);white-space:nowrap;}
+.parking-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.parking-table tr:hover td{background:var(--bg);}
+.park-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.park-badge.free{background:#dcfce7;color:#166534;}
+.park-badge.paid{background:#dbeafe;color:#1e40af;}
+.park-badge.cancel{background:#f1f5f9;color:#64748b;}
+.park-badge.retire{background:#fee2e2;color:#991b1b;}
+.park-badge.active{background:#f0fdf4;color:#15803d;}
 /* ─────── 공지/메모 ─────── */
 .notice-item{
   display:flex;align-items:flex-start;gap:8px;padding:8px 10px;
@@ -542,6 +568,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
     <button class="nav-btn"        id="navLinks"    onclick="showPage('links')">🔗 바로가기</button>
     <button class="nav-btn"        id="navNotice"   onclick="showPage('notice')">📌 공지/메모</button>
     <button class="nav-btn"        id="navChecklist" onclick="showPage('checklist')">✅ 업무체크</button>
+    <button class="nav-btn"        id="navParking"     onclick="showPage('parking')">🚗 주차관리</button>
     <button class="nav-btn"        id="navManual"      onclick="showPage('manual')">📖 업무매뉴얼</button>
     <button class="nav-btn"        id="navRegulation"  onclick="showPage('regulation')">📋 규정</button>
     <div class="nav-sep"></div>
@@ -572,32 +599,32 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 
   <!-- 스탯 카드 -->
   <div class="stat-grid">
-    <div class="stat-card">
+    <div class="stat-card" onclick="showPage('vendor')" title="거래처 관리 바로가기">
       <div class="stat-icon" style="background:#ede9fe;">🤝</div>
       <div class="stat-info">
         <div class="stat-label">등록 거래처</div>
         <div class="stat-value-row"><span class="stat-value" id="statVendors">-</span><span class="stat-unit">개 업체</span></div>
       </div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" onclick="showPage('voucher')" title="상품권 대장 바로가기">
       <div class="stat-icon" style="background:#fce7f3;">🎁</div>
       <div class="stat-info">
         <div class="stat-label" id="statVoucherLabel">상품권 잔액 (지급 0건)</div>
         <div class="stat-value-row"><span class="stat-value" id="statVoucherAmt" style="font-size:20px;">0원</span></div>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-icon" style="background:#dcfce7;">📌</div>
+    <div class="stat-card" onclick="window.open('https://www.sonohotelsresorts.com/','_blank')" title="소노 호텔&리조트 바로가기">
+      <div class="stat-icon" style="background:#fef3c7;">🏖️</div>
       <div class="stat-info">
-        <div class="stat-label">공지/메모</div>
-        <div class="stat-value-row"><span class="stat-value" id="statNotices">-</span><span class="stat-unit">건</span></div>
+        <div class="stat-label">휴양소 바로가기</div>
+        <div class="stat-value-row" style="margin-top:2px;"><span style="font-size:13px;font-weight:700;color:var(--primary);">소노 호텔&리조트</span></div>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-icon" style="background:#fef9c3;">🔗</div>
+    <div class="stat-card" onclick="showPage('parking')" title="주차 관리 바로가기">
+      <div class="stat-icon" style="background:#e0f2fe;">🚗</div>
       <div class="stat-info">
-        <div class="stat-label">바로가기 링크</div>
-        <div class="stat-value-row"><span class="stat-value" id="statLinks">-</span><span class="stat-unit">개</span></div>
+        <div class="stat-label">주차 관리 <span id="statParkingSub" style="font-size:11px;font-weight:400;color:var(--text3);"></span></div>
+        <div class="stat-value-row"><span class="stat-value" id="statParking">-</span><span class="stat-unit">대 등록</span></div>
       </div>
     </div>
   </div>
@@ -621,11 +648,11 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
         <a class="quick-btn" href="#" onclick="showPage('vendor');return false;">
           <div class="qicon" style="background:#ccfbf1;">🤝</div><div class="qlabel">거래처 관리</div>
         </a>
-        <a class="quick-btn" href="#" onclick="showPage('links');return false;">
-          <div class="qicon" style="background:#fef9c3;">🔗</div><div class="qlabel">바로가기 링크</div>
+        <a class="quick-btn" href="#" onclick="window.open('https://gw.smilegate.net/Front/Main','_blank');return false;">
+          <div class="qicon" style="background:#e0f2fe;">💻</div><div class="qlabel">재무포탈</div>
         </a>
-        <a class="quick-btn" href="#" onclick="showPage('notice');return false;">
-          <div class="qicon" style="background:#dcfce7;">📌</div><div class="qlabel">공지 / 메모</div>
+        <a class="quick-btn" href="#" onclick="showPage('parking');return false;">
+          <div class="qicon" style="background:#e0f2fe;">🚗</div><div class="qlabel">주차 관리</div>
         </a>
       </div>
     </div>
@@ -951,6 +978,128 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 </div>
 
 <!-- ===== 규정 관리 페이지 ===== -->
+<!-- ===== 주차관리 ===== -->
+<div class="page" id="pageParking">
+<div class="container">
+  <div class="card-header" style="margin-bottom:16px;">
+    <div class="card-title"><span class="icon" style="background:#e0f2fe;">🚗</span> 임직원 주차 관리</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" onclick="openAddLotModal()">+ 주차장 추가</button>
+      <button class="btn btn-primary" onclick="openAddEmpModal()">+ 직원 등록</button>
+    </div>
+  </div>
+
+  <!-- 주차장 Summary 카드 -->
+  <div id="parkingLotCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px;"></div>
+
+  <!-- 필터/검색 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-body" style="padding:12px 16px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <input id="parkingSearch" style="flex:1;min-width:160px;max-width:260px;padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);outline:none;" placeholder="🔍 이름·차량번호·부서 검색" oninput="renderParkingTable()">
+        <select id="parkingLotFilter" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer;" onchange="renderParkingTable()">
+          <option value="">전체 주차장</option>
+        </select>
+        <select id="parkingFeeFilter" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer;" onchange="renderParkingTable()">
+          <option value="">전체 구분</option>
+          <option value="무료주차">무료주차</option>
+          <option value="유료주차">유료주차</option>
+          <option value="차량해지">차량해지</option>
+        </select>
+        <select id="parkingStatusFilter" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer;" onchange="renderParkingTable()">
+          <option value="재직">재직중</option>
+          <option value="">전체</option>
+          <option value="퇴직">퇴직</option>
+        </select>
+        <span id="parkingCount" style="font-size:12px;color:var(--text3);margin-left:4px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 직원 테이블 -->
+  <div class="card">
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table class="parking-table" id="parkingTable">
+        <thead>
+          <tr>
+            <th>번호</th><th>주차장</th><th>소속</th><th>이름</th><th>차량번호</th><th>구분</th><th>상태</th><th>비고</th><th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="parkingTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 주차장 추가 모달 -->
+<div class="modal-overlay" id="addLotModal" onclick="if(event.target===this)closeModal('addLotModal')">
+  <div class="modal" style="max-width:440px;">
+    <h3 id="addLotTitle">🏢 주차장 추가</h3>
+    <input type="hidden" id="editLotId">
+    <div class="form-group"><label>주차장명 *</label><input type="text" id="lotName" placeholder="예: 판교테크원" required></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group"><label>무료 주차 대수</label><input type="number" id="lotFree" value="0" min="0"></div>
+      <div class="form-group"><label>유료 주차 대수</label><input type="number" id="lotPaid" value="0" min="0"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group"><label>월 주차료 (1대, 원)</label><input type="number" id="lotFee" value="0" min="0"></div>
+      <div class="form-group"><label>회사 부담액 (1대, 원)</label><input type="number" id="lotCompany" value="0" min="0"></div>
+    </div>
+    <div class="form-group"><label>담당자 / 비고</label><textarea id="lotNote" rows="2" placeholder="담당자 연락처, 정산 방식 등"></textarea></div>
+    <div class="form-group"><label>카드 색상</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="lotColor" value="#dbeafe" checked><span style="width:20px;height:20px;background:#dbeafe;border-radius:4px;border:1px solid #ccc;display:inline-block;"></span></label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="lotColor" value="#dcfce7"><span style="width:20px;height:20px;background:#dcfce7;border-radius:4px;border:1px solid #ccc;display:inline-block;"></span></label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="lotColor" value="#fef9c3"><span style="width:20px;height:20px;background:#fef9c3;border-radius:4px;border:1px solid #ccc;display:inline-block;"></span></label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="lotColor" value="#fce7f3"><span style="width:20px;height:20px;background:#fce7f3;border-radius:4px;border:1px solid #ccc;display:inline-block;"></span></label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="lotColor" value="#ede9fe"><span style="width:20px;height:20px;background:#ede9fe;border-radius:4px;border:1px solid #ccc;display:inline-block;"></span></label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="lotColor" value="#fce7e7"><span style="width:20px;height:20px;background:#fce7e7;border-radius:4px;border:1px solid #ccc;display:inline-block;"></span></label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('addLotModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveLot()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 직원 등록/수정 모달 -->
+<div class="modal-overlay" id="addEmpModal" onclick="if(event.target===this)closeModal('addEmpModal')">
+  <div class="modal" style="max-width:480px;">
+    <h3 id="empModalTitle">🚗 직원 주차 등록</h3>
+    <input type="hidden" id="editEmpId">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group"><label>이름 *</label><input type="text" id="empName" placeholder="홍길동" required></div>
+      <div class="form-group"><label>소속/부서</label><input type="text" id="empDept" placeholder="예: 총무팀"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group"><label>주차장 *</label><select id="empLot"></select></div>
+      <div class="form-group"><label>구분</label>
+        <select id="empFeeType">
+          <option value="무료주차">무료주차</option>
+          <option value="유료주차">유료주차</option>
+          <option value="차량해지">차량해지</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group"><label>차량번호</label><input type="text" id="empCarNum" placeholder="12가 3456"></div>
+      <div class="form-group"><label>상태</label>
+        <select id="empStatus">
+          <option value="재직">재직</option>
+          <option value="퇴직">퇴직</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>비고</label><input type="text" id="empNote" placeholder="차량 변경 이력, 특이사항 등"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('addEmpModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveEmp()">저장</button>
+    </div>
+  </div>
+</div>
+
 <div class="page" id="pageRegulation">
 <div class="container">
   <div class="reg-layout">
@@ -1534,7 +1683,7 @@ function showToast(msg){
 // ============================================================
 // 페이지 전환 (F5/새로고침 시 현재 탭 유지)
 // ============================================================
-const PAGES=['home','calendar','voucher','vendor','links','notice','checklist','manual','regulation'];
+const PAGES=['home','calendar','voucher','vendor','links','notice','checklist','manual','regulation','parking'];
 function showPage(name){
   PAGES.forEach(p=>{
     document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1)).classList.toggle('active',p===name);
@@ -1550,6 +1699,7 @@ function showPage(name){
   if(name==='checklist') renderChecklist();
   if(name==='manual') renderManualList();
   if(name==='regulation') renderRegulationList();
+  if(name==='parking') renderParking();
 }
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -2580,17 +2730,22 @@ function renderHomeDdayBanner(){
 function updateStatCards(){
   const vendors=loadVendors().length;
   const vouchers=loadVouchers();
-  const notices=loadNotices().length;
-  const links=loadLinks().length;
-  const vamt=vouchers.reduce((s,v)=>s+(v.totalAmt||0),0);
   const sv=document.getElementById('statVendors');if(sv)sv.textContent=vendors;
   const inAmt=vouchers.filter(v=>v.flowType==='in').reduce((s,v)=>s+(v.totalAmt||0),0);
   const outAmt=vouchers.filter(v=>v.flowType!=='in').reduce((s,v)=>s+(v.totalAmt||0),0);
   const outCnt=vouchers.filter(v=>v.flowType!=='in').length;
   const sc=document.getElementById('statVoucherLabel');if(sc)sc.textContent='상품권 잔액 (지급 '+outCnt+'건)';
   const sa=document.getElementById('statVoucherAmt');if(sa){sa.textContent=(inAmt-outAmt).toLocaleString()+'원';sa.style.color=(inAmt-outAmt)<0?'var(--danger)':'';}
-  const sn=document.getElementById('statNotices');if(sn)sn.textContent=notices;
-  const sl=document.getElementById('statLinks');if(sl)sl.textContent=links;
+
+  // 주차 현황 스탯
+  try{
+    const parkEmps=loadParkingEmps();
+    const parkLots=loadParkingLots();
+    const activeParked=parkEmps.filter(e=>e.status==='재직'&&e.lot!=='차량 해지').length;
+    const sp=document.getElementById('statParking');if(sp)sp.textContent=activeParked;
+    const spSub=document.getElementById('statParkingSub');
+    if(spSub)spSub.textContent='(주차장 '+parkLots.length+'곳 운영)';
+  }catch(e){}
 }
 
 // ============================================================
@@ -3882,7 +4037,8 @@ function gatherAllData(){
     vouchers:loadVouchers(),vendors:loadVendors(),links:loadLinks(),
     notices:loadNotices(),tasks:loadTasks(),taskCompletions:loadCompletions(),
     manuals:loadManuals(),
-    regulations:loadRegulations()};
+    regulations:loadRegulations(),
+    parkingLots:loadParkingLots(),parkingEmps:loadParkingEmps()};
 }
 function jbDisconnect(){
   if(!confirm('클라우드 연결을 해제합니다. 로컬 데이터는 유지됩니다.')) return;
@@ -3956,6 +4112,273 @@ function init(){
     showPage(savedPage);
   }
 }
+
+// ============================================================
+// 주차 관리
+// ============================================================
+const PARKING_LOTS_DEFAULT = [{"id": "mirae", "name": "미래에셋센터", "freeSlots": 16, "paidSlots": 31, "totalSlots": 47, "monthlyFee": 264000, "companyShare": 164000, "deductCount": 35, "waitCount": 2, "color": "#dbeafe", "icon": "🏢"}, {"id": "hoban", "name": "호반메트로큐브", "freeSlots": 0, "paidSlots": 14, "totalSlots": 14, "monthlyFee": 253000, "companyShare": 153000, "deductCount": 14, "waitCount": 0, "color": "#dcfce7", "icon": "🏗️"}, {"id": "samhwan", "name": "삼환하이펙스", "freeSlots": 29, "paidSlots": 0, "totalSlots": 29, "monthlyFee": 0, "companyShare": 0, "deductCount": 22, "waitCount": 0, "color": "#fef9c3", "icon": "🏛️"}, {"id": "wsq", "name": "더블유스퀘어", "freeSlots": 0, "paidSlots": 7, "totalSlots": 7, "monthlyFee": 286000, "companyShare": 186000, "deductCount": 7, "waitCount": 0, "color": "#fce7f3", "icon": "🏬"}];
+
+const PARKING_EMP_DEFAULT = [{"id": "A-01", "lot": "삼환하이펙스", "dept": "SSR 아트실", "name": "김시나", "status": "재직", "carNum": "315주4136", "note": "", "feeType": "무료주차"}, {"id": "VC-01", "lot": "차량 해지", "dept": "SSR 기획실", "name": "김찬중", "status": "재직", "carNum": "63우1391", "note": "", "feeType": "차량해지"}, {"id": "A-03", "lot": "삼환하이펙스", "dept": "SSR 아트실", "name": "김탁곤", "status": "재직", "carNum": "64고 1169", "note": "차량 변경 11노 2814 -> 64고 1169", "feeType": "무료주차"}, {"id": "A-04", "lot": "삼환하이펙스", "dept": "공동대표", "name": "김형석-1", "status": "재직", "carNum": "189서5237", "note": "", "feeType": "무료주차"}, {"id": "A-05", "lot": "삼환하이펙스", "dept": "SSR 기획실", "name": "남현민", "status": "재직", "carNum": "54거9124", "note": "254나 3609 7월 15일부로 변경", "feeType": "무료주차"}, {"id": "A-06", "lot": "삼환하이펙스", "dept": "SSR 아트실", "name": "박나래", "status": "재직", "carNum": "182호2541", "note": "", "feeType": "무료주차"}, {"id": "A-08", "lot": "삼환하이펙스", "dept": "SSR 배경원화", "name": "배제성", "status": "재직", "carNum": "169도8991", "note": "", "feeType": "무료주차"}, {"id": "A-09", "lot": "삼환하이펙스", "dept": "SSR 아트실", "name": "성시우", "status": "재직", "carNum": "42루4563", "note": "", "feeType": "무료주차"}, {"id": "A-10", "lot": "삼환하이펙스", "dept": "SSR 기획실", "name": "이창현", "status": "재직", "carNum": "22무5157", "note": "", "feeType": "무료주차"}, {"id": "A-11", "lot": "삼환하이펙스", "dept": "컨텐츠팀", "name": "최승현", "status": "재직", "carNum": "395주4148", "note": "실장급 무료 지원", "feeType": "무료주차"}, {"id": "A-12", "lot": "삼환하이펙스", "dept": "SSR 배경팀", "name": "최웅환", "status": "재직", "carNum": "128거9764", "note": "", "feeType": "무료주차"}, {"id": "A-13", "lot": "삼환하이펙스", "dept": "SSR 기획실", "name": "홍성식", "status": "재직", "carNum": "19머9766", "note": "11월 5일 퇴사 예정", "feeType": "무료주차"}, {"id": "S-01", "lot": "삼환하이펙스", "dept": "총무팀", "name": "남궁호", "status": "재직", "carNum": "36머6352", "note": "", "feeType": "무료주차"}, {"id": "S-02", "lot": "삼환하이펙스", "dept": "애니메이션팀", "name": "박준식", "status": "재직", "carNum": "334가3152", "note": "", "feeType": "무료주차"}, {"id": "S-03", "lot": "삼환하이펙스", "dept": "애니메이션팀", "name": "이재훈", "status": "재직", "carNum": "08구6801", "note": "안랩 대기 순번 1번", "feeType": "무료주차"}, {"id": "S-04", "lot": "삼환하이펙스", "dept": "PM팀", "name": "이주형", "status": "재직", "carNum": "33러3615", "note": "", "feeType": "무료주차"}, {"id": "VC-03", "lot": "차량 해지", "dept": "SSR", "name": "전수연", "status": "퇴직", "carNum": "316저1975", "note": "퇴사로인한 해지", "feeType": "차량해지"}, {"id": "S-06", "lot": "삼환하이펙스", "dept": "시스템팀", "name": "최재현", "status": "재직", "carNum": "51마8343", "note": "퇴사로 인한 해지", "feeType": "무료주차"}, {"id": "VC-04", "lot": "차량 해지", "dept": "개발지원실", "name": "박홍", "status": "재직", "carNum": "21수 9079", "note": "24년1월1일 부터 미래에셋으로 변경\n차량 변경 신청 24년 5월 16일\n기존 차량 62무 3184 -> 21수 9079\n차량 변경 신청 24년 6월 25일\n21수 9079 -> 69두 3185\n퇴사로 인한 해지", "feeType": "차량해지"}, {"id": "VC-05", "lot": "차량 해지", "dept": "애니메이션팀", "name": "윤관영", "status": "재직", "carNum": "249주 1120", "note": "25년 7월 2일 복귀로 차량 재 등록", "feeType": "차량해지"}, {"id": "VC-06", "lot": "차량 해지", "dept": "PM팀", "name": "안승찬", "status": "재직", "carNum": "111머5701", "note": "3월 29일 퇴사로 해지", "feeType": "차량해지"}, {"id": "VC-07", "lot": "차량 해지", "dept": "컷인팀", "name": "김정철", "status": "재직", "carNum": "06조2195", "note": "6월 5일 퇴사", "feeType": "차량해지"}, {"id": "M-45", "lot": "미래에셋센터", "dept": "프로그램실", "name": "강주영", "status": "재직", "carNum": "368저6850", "note": "24년1월1일 부터 미래에셋으로 변경", "feeType": "유료주차"}, {"id": "H-07", "lot": "호반메트로큐브", "dept": "캐릭터원화팀", "name": "강은표", "status": "재직", "carNum": "54나6104", "note": "", "feeType": "유료주차"}, {"id": "H-08", "lot": "호반메트로큐브", "dept": "코어팀", "name": "이동윤", "status": "재직", "carNum": "139너8533", "note": "", "feeType": "유료주차"}, {"id": "C-11", "lot": "더블유스퀘어", "dept": "컨텐츠팀", "name": "원종영", "status": "재직", "carNum": "51모 9032", "note": "7월 31일 퇴사로 인한 해지", "feeType": "유료주차"}, {"id": "H-10", "lot": "호반메트로큐브", "dept": "시스템팀", "name": "조현진", "status": "재직", "carNum": "10가6359", "note": "육아휴직으로 6월1일부로 해지", "feeType": "유료주차"}, {"id": "H-11", "lot": "호반메트로큐브", "dept": "이펙트팀", "name": "윤준영", "status": "재직", "carNum": "43부0609", "note": "", "feeType": "유료주차"}, {"id": "H-12", "lot": "호반메트로큐브", "dept": "캐릭터원화팀", "name": "김준성", "status": "재직", "carNum": "67버0870", "note": "", "feeType": "유료주차"}, {"id": "VC-10", "lot": "차량 해지", "dept": "총무팀", "name": "이현재", "status": "퇴직", "carNum": "103가2404", "note": "퇴사로인한 해지", "feeType": "차량해지"}, {"id": "VC-11", "lot": "차량 해지", "dept": "전투팀", "name": "이정희", "status": "재직", "carNum": "53버2813", "note": "5월 23일자로 해지", "feeType": "차량해지"}, {"id": "M-46", "lot": "미래에셋센터", "dept": "리소스원화팀", "name": "이은비", "status": "재직", "carNum": "65러7258", "note": "육아휴직 복귀 9월 9일", "feeType": "유료주차"}, {"id": "H-16", "lot": "호반메트로큐브", "dept": "이펙트팀", "name": "이민재", "status": "재직", "carNum": "396저8475", "note": "출산휴가로 2025년 7월 14일부터 8월 8일까지 해지", "feeType": "유료주차"}, {"id": "H-17", "lot": "호반메트로큐브", "dept": "포트애니팀", "name": "권두환", "status": "재직", "carNum": "50나9851", "note": "", "feeType": "유료주차"}, {"id": "VC-12", "lot": "차량 해지", "dept": "기획2팀", "name": "지상준", "status": "재직", "carNum": "41수6292", "note": "육아휴직으로 인한 해지", "feeType": "차량해지"}, {"id": "M-01", "lot": "미래에셋센터", "dept": "공동대표", "name": "강기현-1", "status": "재직", "carNum": "12서 2843", "note": "59고 8426 → 12서 2843 차량 변경", "feeType": "무료주차"}, {"id": "VC-14", "lot": "차량 해지", "dept": "공동대표", "name": "김형석", "status": "재직", "carNum": "189서5237", "note": "요청으로 인한 해지", "feeType": "차량해지"}, {"id": "M-03", "lot": "미래에셋센터", "dept": "프로그램실", "name": "김혁진", "status": "재직", "carNum": "04라9275", "note": "", "feeType": "무료주차"}, {"id": "M-04", "lot": "미래에셋센터", "dept": "애니메이션팀", "name": "이윤수", "status": "재직", "carNum": "209로9274", "note": "", "feeType": "무료주차"}, {"id": "M-05", "lot": "미래에셋센터", "dept": "공동대표", "name": "김형석-3", "status": "재직", "carNum": "307무9419", "note": "지속", "feeType": "무료주차"}, {"id": "M-06", "lot": "미래에셋센터", "dept": "프로그램실", "name": "하동익", "status": "재직", "carNum": "63조 5207", "note": "1월 8일 부로 차량 변경\n차량 변경 전 68주 4753 -> 126소 2697 ->63조 5207", "feeType": "유료주차"}, {"id": "M-07", "lot": "미래에셋센터", "dept": "비주얼아트실", "name": "류한경", "status": "재직", "carNum": "256모3889", "note": "C레벨 지원", "feeType": "무료주차"}, {"id": "M-08", "lot": "미래에셋센터", "dept": "프로그램실", "name": "배현준", "status": "재직", "carNum": "371모3836", "note": "차량변경 371모3836\n변경차량 157하7829\n변경차량 371모3836", "feeType": "무료주차"}, {"id": "VC-15", "lot": "차량 해지", "dept": "코어팀", "name": "문택승", "status": "재직", "carNum": "34보2648", "note": "11월 1일 퇴사로 2일 해지 진행", "feeType": "차량해지"}, {"id": "M-10", "lot": "미래에셋센터", "dept": "캐릭터원화팀", "name": "조성빈", "status": "재직", "carNum": "20수6964", "note": "", "feeType": "유료주차"}, {"id": "VC-16", "lot": "차량 해지", "dept": "전투팀", "name": "고진영", "status": "재직", "carNum": "18러9765", "note": "24년 1월 2일 더블유스퀘어로 변경\n2024년 10월 16일 퇴사로 인하여 해지", "feeType": "차량해지"}, {"id": "VC-17", "lot": "차량 해지", "dept": "SSR 기획실", "name": "이창현", "status": "재직", "carNum": "22무5157", "note": "안랩 근무로 인한 해지", "feeType": "차량해지"}, {"id": "VC-18", "lot": "차량 해지", "dept": "경영지원실", "name": "이혜영", "status": "퇴직", "carNum": "104루9103", "note": "", "feeType": "차량해지"}, {"id": "M-14", "lot": "미래에셋센터", "dept": "공동대표", "name": "강기현-2", "status": "재직", "carNum": "228누8294", "note": "C레벨 지원", "feeType": "유료주차"}, {"id": "VC-19", "lot": "차량 해지", "dept": "경영지원실", "name": "정제균", "status": "재직", "carNum": "64도3042", "note": "C레벨 지원", "feeType": "차량해지"}, {"id": "M-16", "lot": "미래에셋센터", "dept": "PM팀", "name": "김원학", "status": "재직", "carNum": "283더 6468", "note": "", "feeType": "유료주차"}, {"id": "VC-20", "lot": "차량 해지", "dept": "경영지원실", "name": "권기병", "status": "재직", "carNum": "356무2967", "note": "C레벨 지원", "feeType": "차량해지"}, {"id": "M-18", "lot": "미래에셋센터", "dept": "TD", "name": "최호준", "status": "재직", "carNum": "49나6197", "note": "C레벨 지원", "feeType": "무료주차"}, {"id": "C-19", "lot": "더블유스퀘어", "dept": "전략기획팀", "name": "유상용", "status": "재직", "carNum": "30너3948", "note": "26년 3월 1일 더블유스퀘어 주차장", "feeType": "유료주차"}, {"id": "M-20", "lot": "미래에셋센터", "dept": "애니메이션팀", "name": "김종학", "status": "재직", "carNum": "66가9102", "note": "", "feeType": "무료주차"}, {"id": "M-21", "lot": "미래에셋센터", "dept": "캐릭터원화팀", "name": "서연주", "status": "재직", "carNum": "257로8213", "note": "25년 3월 5일부터 28일까지 병가이나 정기주차 유지", "feeType": "무료주차"}, {"id": "M-22", "lot": "미래에셋센터", "dept": "애니메이션팀", "name": "김재형", "status": "재직", "carNum": "148너2033", "note": "", "feeType": "무료주차"}, {"id": "M-23", "lot": "미래에셋센터", "dept": "프로그램실", "name": "박성진", "status": "재직", "carNum": "65거 4423", "note": "차량변경 24부 7086 -> 65거 4423", "feeType": "무료주차"}, {"id": "M-24", "lot": "미래에셋센터", "dept": "CM", "name": "유별라", "status": "재직", "carNum": "211주1933", "note": "", "feeType": "무료주차"}, {"id": "M-25", "lot": "미래에셋센터", "dept": "이펙트팀", "name": "박경수", "status": "재직", "carNum": "05조5241", "note": "24년 3월 휴직 주차 해지\n24년 9월 2일 재 등록", "feeType": "유료주차"}, {"id": "M-26", "lot": "미래에셋센터", "dept": "경영지원실", "name": "신현섭", "status": "재직", "carNum": "12무3103", "note": "3월 1일부터 해지", "feeType": "유료주차"}, {"id": "M-27", "lot": "미래에셋센터", "dept": "총무팀", "name": "함은비", "status": "재직", "carNum": "290노7513", "note": "", "feeType": "유료주차"}, {"id": "M-28", "lot": "미래에셋센터", "dept": "컷인팀", "name": "김신혜", "status": "재직", "carNum": "45너6060", "note": "", "feeType": "유료주차"}, {"id": "M-29", "lot": "미래에셋센터", "dept": "총무팀", "name": "법인차량", "status": "재직", "carNum": "57루4197", "note": "법인차량 / 삼환하이펙스 추가 등록", "feeType": "유료주차"}, {"id": "VC-21", "lot": "차량 해지", "dept": "기획1실", "name": "김윤하", "status": "재직", "carNum": "179조9291", "note": "C레벨 지원", "feeType": "차량해지"}, {"id": "M-31", "lot": "미래에셋센터", "dept": "프로그램실", "name": "박진곤", "status": "재직", "carNum": "26라4190", "note": "", "feeType": "유료주차"}, {"id": "M-32", "lot": "미래에셋센터", "dept": "캐릭터원화팀", "name": "오승재", "status": "재직", "carNum": "108어8080", "note": "", "feeType": "유료주차"}, {"id": "M-33", "lot": "미래에셋센터", "dept": "애니메이션팀", "name": "조성해", "status": "재직", "carNum": "340거2380", "note": "", "feeType": "유료주차"}, {"id": "M-34", "lot": "미래에셋센터", "dept": "인사팀", "name": "최종성", "status": "재직", "carNum": "212소5152", "note": "", "feeType": "유료주차"}, {"id": "VC-22", "lot": "차량 해지", "dept": "전략기획팀", "name": "홍성근", "status": "재직", "carNum": "59오0139", "note": "6월 30일까지만 사용 후 7월 1일부터 해지", "feeType": "차량해지"}, {"id": "VC-23", "lot": "차량 해지", "dept": "총무팀", "name": "법인차량", "status": "퇴직", "carNum": "307나2868", "note": "법인차량(12월 1일 매각완료)", "feeType": "차량해지"}, {"id": "VC-24", "lot": "차량 해지", "dept": "총무팀", "name": "법인차량", "status": "재직", "carNum": "19두7216", "note": "법인차량 매각으로 인한 주차 해지 4월 1일", "feeType": "차량해지"}, {"id": "M-38", "lot": "미래에셋센터", "dept": "프로그램실", "name": "조화평", "status": "재직", "carNum": "37오6601", "note": "", "feeType": "유료주차"}, {"id": "VC-25", "lot": "차량 해지", "dept": "SSR", "name": "전수연", "status": "퇴직", "carNum": "316저1975", "note": "퇴사로인한 해지", "feeType": "차량해지"}, {"id": "VC-26", "lot": "차량 해지", "dept": "총무팀", "name": "이현재", "status": "재직", "carNum": "268너5240", "note": "최호준님 법인차량 해지 4월 1일", "feeType": "차량해지"}, {"id": "M-41", "lot": "미래에셋센터", "dept": "총무팀", "name": "최정효", "status": "재직", "carNum": "226조6990", "note": "", "feeType": "유료주차"}, {"id": "VC-27", "lot": "차량 해지", "dept": "인사팀", "name": "서보경", "status": "퇴직", "carNum": "167라9425", "note": "12월 8일 퇴사", "feeType": "차량해지"}, {"id": "S-07", "lot": "삼환하이펙스", "dept": "프로그램실", "name": "김준범", "status": "재직", "carNum": "07오3802", "note": "삼환으로 변경", "feeType": "무료주차"}, {"id": "VC-28", "lot": "차량 해지", "dept": "프로그램실", "name": "김세형", "status": "재직", "carNum": "28더 1123", "note": "안랩 대기 순번 2번\n12월 1일자로 호반 우선 사용\n2월 15일 해지", "feeType": "차량해지"}, {"id": "VC-29", "lot": "차량 해지", "dept": "포트레이트 애니팀", "name": "김유라", "status": "재직", "carNum": "397소8125", "note": "8월 21일 해지", "feeType": "차량해지"}, {"id": "VC-30", "lot": "차량 해지", "dept": "시나리오팀", "name": "권은서", "status": "퇴직", "carNum": "246고 6330", "note": "퇴사로인한 해지", "feeType": "차량해지"}, {"id": "VC-31", "lot": "차량 해지", "dept": "재무회계팀", "name": "박연옥", "status": "재직", "carNum": "116버8644", "note": "3월 1일자로 등록\n 육아휴직으로 인한 해지", "feeType": "차량해지"}, {"id": "M-71", "lot": "미래에셋센터", "dept": "UI팀", "name": "이명준", "status": "재직", "carNum": "225우8669", "note": "자차 사용하지 않아 2024년 1월 16일부터 해지", "feeType": "유료주차"}, {"id": "C-10", "lot": "더블유스퀘어", "dept": "TD", "name": "이용준", "status": "재직", "carNum": "57누4790", "note": "3월 12일자로 등록\n4월 8일 호반메트로로 변경\n8월 1일 미래에셋센터로 변경", "feeType": "유료주차"}, {"id": "M-51", "lot": "미래에셋센터", "dept": "레벨팀", "name": "허대균", "status": "재직", "carNum": "348보8475", "note": "4월 1일자로 등록", "feeType": "무료주차"}, {"id": "M-52", "lot": "미래에셋센터", "dept": "아트PM팀", "name": "전병성", "status": "재직", "carNum": "243더6491", "note": "미래에셋 센터 5월 1일자로 등록", "feeType": "유료주차"}, {"id": "M-53", "lot": "미래에셋센터", "dept": "경영지원실", "name": "서형택", "status": "재직", "carNum": "46더 4628", "note": "미래에셋 센터 5월 1일자로 등록", "feeType": "무료주차"}, {"id": "VC-44", "lot": "차량 해지", "dept": "기획실", "name": "이승민", "status": "재직", "carNum": "58조2037", "note": "미래에셋센터 6월 1일자로 등록", "feeType": "차량해지"}, {"id": "C-56", "lot": "더블유스퀘어", "dept": "아트실", "name": "박동연", "status": "재직", "carNum": "12어 9514", "note": "미래에셋센터 7월 1일자로 등록", "feeType": "유료주차"}, {"id": "VC-36", "lot": "차량 해지", "dept": "전투컨텐츠팀", "name": "노용균", "status": "재직", "carNum": "327마 4949", "note": "미래에셋센터 7월 1일자로 등록", "feeType": "차량해지"}, {"id": "M-58", "lot": "미래에셋센터", "dept": "시스템팀", "name": "류혜령", "status": "재직", "carNum": "33가 1128", "note": "미래에셋센터 8월 1일자로 등록", "feeType": "유료주차"}, {"id": "M-59", "lot": "미래에셋센터", "dept": "재무회계실", "name": "조혜진", "status": "재직", "carNum": "125노 9328", "note": "미래에셋센터 8월 5일자로 등록", "feeType": "무료주차"}, {"id": "S-9", "lot": "삼환하이펙스", "dept": "SSR 배경원화", "name": "배지환", "status": "재직", "carNum": "11저 4759", "note": "삼환하이펙스 8월 23일자로 등록", "feeType": "무료주차"}, {"id": "VC-37", "lot": "차량 해지", "dept": "SSR 배경원화", "name": "함다예", "status": "재직", "carNum": "48무 1053", "note": "삼환하이펙스 9월 1일자로 등록", "feeType": "차량해지"}, {"id": "H-24", "lot": "호반메트로큐브", "dept": "포트레이트애니팀", "name": "정지현", "status": "재직", "carNum": "153모 7217", "note": "미래에셋센터 9월 7일자로 등록\n호반메트로큐브로 10월 1일자로 변경", "feeType": "유료주차"}, {"id": "H-22", "lot": "호반메트로큐브", "dept": "애니메이션팀", "name": "김민경B", "status": "재직", "carNum": "55무 9725", "note": "호반메트로큐브 9월 4일자로 등록", "feeType": "유료주차"}, {"id": "H-35", "lot": "호반메트로큐브", "dept": "포트레이트애니팀", "name": "임보라", "status": "재직", "carNum": "101우 3669", "note": "호반메트로큐브 10월 1일자로 등록", "feeType": "유료주차"}, {"id": "S-11", "lot": "삼환하이펙스", "dept": "SSR 콘티팀", "name": "이수경", "status": "재직", "carNum": "17저 7385", "note": "삼환하이펙스 10월 14일자로 등록", "feeType": "무료주차"}, {"id": "S-12", "lot": "삼환하이펙스", "dept": "SSR UI팀", "name": "김다은", "status": "재직", "carNum": "291조 6777", "note": "삼환하이펙스 11월 1일자로 등록", "feeType": "무료주차"}, {"id": "H-25", "lot": "호반메트로큐브", "dept": "시나리오팀", "name": "최영현", "status": "재직", "carNum": "63두 5386", "note": "호반메트로큐브 11월 13일 등록", "feeType": "유료주차"}, {"id": "VC-39", "lot": "차량 해지", "dept": "시나리오팀", "name": "천경준", "status": "재직", "carNum": "24보 5020", "note": "삼환하이펙스 12월 1일 등록", "feeType": "차량해지"}, {"id": "S-14", "lot": "삼환하이펙스", "dept": "SSR PM팀", "name": "김소라", "status": "재직", "carNum": "241가 4021", "note": "삼환하이펙스 25년 1월 1일 등록\n삼환하이펙스 25년 2월 1일부터 사용하는 것으로 변경", "feeType": "무료주차"}, {"id": "VC-40", "lot": "차량 해지", "dept": "SSR 시나리오팀", "name": "이민혁", "status": "재직", "carNum": "32두 8714", "note": "삼환하이펙스 25년 1월 1일 등록", "feeType": "차량해지"}, {"id": "H-26", "lot": "호반메트로큐브", "dept": "아트PM팀", "name": "김세은", "status": "재직", "carNum": "48마 2932", "note": "호반메트로큐브 주차장 25년 1월 9일 등록", "feeType": "유료주차"}, {"id": "W-02", "lot": "대기자", "dept": "개발PM팀", "name": "주건영", "status": "재직", "carNum": "04노 4886", "note": "미래에셋센터 25년 1월 16일 등록", "feeType": "유료주차"}, {"id": "M-61", "lot": "미래에셋센터", "dept": "인사팀", "name": "박예령", "status": "재직", "carNum": "25나 0563", "note": "3월 1일부터 미래에셋센터 주차장으로 사용 진행", "feeType": "유료주차"}, {"id": "H-27", "lot": "호반메트로큐브", "dept": "애니메이션팀", "name": "김기윤", "status": "재직", "carNum": "136로 6976", "note": "호반메트로큐브 주차장 25년 3월 1일", "feeType": "유료주차"}, {"id": "H-28", "lot": "호반메트로큐브", "dept": "시나리오팀", "name": "고지혜", "status": "재직", "carNum": "281너 5250", "note": "호반메트로큐브 주차장 25년 4월 1일", "feeType": "유료주차"}, {"id": "H-29", "lot": "호반메트로큐브", "dept": "QA팀", "name": "김동훈", "status": "재직", "carNum": "65모 2634", "note": "호반메트로큐브 주차장 25년 4월 14일", "feeType": "유료주차"}, {"id": "VC-42", "lot": "차량 해지", "dept": "SSR 기획실", "name": "함선우", "status": "재직", "carNum": "64마 6791", "note": "삼환하이펙스 25년 4월 4일", "feeType": "차량해지"}, {"id": "S-17", "lot": "삼환하이펙스", "dept": "프로그램1팀", "name": "이준수", "status": "재직", "carNum": "220두 9502", "note": "삼환하이펙스 주차장으로 이동 6월 12일", "feeType": "무료주차"}, {"id": "S-18", "lot": "삼환하이펙스", "dept": "SSR 컨텐츠팀", "name": "이진원", "status": "재직", "carNum": "312두 5448", "note": "더블유스퀘어 주차장 25년 5월 1일\n삼환하이펙스 주차장으로 이동 9월 29일", "feeType": "무료주차"}, {"id": "S-19", "lot": "삼환하이펙스", "dept": "SSR 프로그램2팀", "name": "박예슬", "status": "재직", "carNum": "57수 5568", "note": "호반메트로큐브 주차장 25년 5월 1일\n더블유스퀘어 25년 6월 1일\n삼환하이펙스 25년 11월 6일", "feeType": "무료주차"}, {"id": "M-62", "lot": "미래에셋센터", "dept": "컷인팀", "name": "김서을", "status": "재직", "carNum": "39나 6033", "note": "미래에셋센터 주차장 25년 5월 1일", "feeType": "유료주차"}, {"id": "S-20", "lot": "삼환하이펙스", "dept": "SSR 시스템팀", "name": "김찬우", "status": "재직", "carNum": "385다8949", "note": "삼환하이펙스 12월 8일 이동", "feeType": "무료주차"}, {"id": "VC-41", "lot": "차량 해지", "dept": "개발 PM팀", "name": "신서아", "status": "재직", "carNum": "53루 4240", "note": "호반메트로큐브 주차장 25년 6월 1일", "feeType": "차량해지"}, {"id": "C-04", "lot": "더블유스퀘어", "dept": "SSR 전투팀", "name": "공지환", "status": "재직", "carNum": "53마 9253", "note": "더블유스퀘어 25년 7월 1일", "feeType": "유료주차"}, {"id": "M-63", "lot": "미래에셋센터", "dept": "코어시스템팀", "name": "이병연", "status": "재직", "carNum": "102수 5611", "note": "미래에셋센터 25년 7월 1일", "feeType": "유료주차"}, {"id": "C-05", "lot": "더블유스퀘어", "dept": "SSR 시스템팀", "name": "차재현", "status": "재직", "carNum": "32더 5848", "note": "미래에셋센터 25년 7월 1일\n더블유스퀘어 25년 8월 1일", "feeType": "유료주차"}, {"id": "VC-45", "lot": "차량 해지", "dept": "총무팀", "name": "조성훈", "status": "재직", "carNum": "13너 9018", "note": "미래에셋센터 25년 7월 1일", "feeType": "차량해지"}, {"id": "M-66", "lot": "미래에셋센터", "dept": "컷인팀", "name": "김화영", "status": "재직", "carNum": "285가 2525", "note": "미래에셋센터 25년 9월 1일", "feeType": "유료주차"}, {"id": "M-67", "lot": "미래에셋센터", "dept": "인사팀", "name": "이민재B", "status": "재직", "carNum": "46주 4700", "note": "미래에셋센터 25년 9월 15일", "feeType": "유료주차"}, {"id": "C-06", "lot": "더블유스퀘어", "dept": "애니메이션팀", "name": "엄지손", "status": "재직", "carNum": "160누 9548", "note": "더블유스퀘어 25년 10월 1일", "feeType": "유료주차"}, {"id": "C-07", "lot": "더블유스퀘어", "dept": "SSR PM팀", "name": "탁다운", "status": "재직", "carNum": "330무 5423", "note": "호반메트로큐브 25년 10월 1일\n더블유스퀘어 25년 11월 1일", "feeType": "유료주차"}, {"id": "M-68", "lot": "미래에셋센터", "dept": "기획실", "name": "탁광진", "status": "재직", "carNum": "384라 6937", "note": "미래에셋센터 25년 10월 1일", "feeType": "무료주차"}, {"id": "H-34", "lot": "호반메트로큐브", "dept": "배경원화팀", "name": "이지은", "status": "재직", "carNum": "28로 4047", "note": "호반메트로큐브 25년 11월 1일", "feeType": "유료주차"}, {"id": "C-08", "lot": "더블유스퀘어", "dept": "SSR 애니메이션팀", "name": "민성호", "status": "재직", "carNum": "109소 5005", "note": "더블유스퀘어 12월 9일 이동", "feeType": "유료주차"}, {"id": "M-69", "lot": "미래에셋센터", "dept": "총무팀", "name": "박용현", "status": "재직", "carNum": "15러 1904", "note": "미래에셋센터 26년 1월 1일", "feeType": "유료주차"}, {"id": "C-09", "lot": "더블유스퀘어", "dept": "시나리오 TF", "name": "권나현", "status": "재직", "carNum": "52로 5930", "note": "더블유스퀘어  26년 2월 1일", "feeType": "유료주차"}, {"id": "M-70", "lot": "미래에셋센터", "dept": "인사팀", "name": "장지아", "status": "재직", "carNum": "134누 1997", "note": "미래에셋센터 26년 2월 2일", "feeType": "유료주차"}, {"id": "H-36", "lot": "호반메트로큐브", "dept": "영웅팀", "name": "박건호", "status": "재직", "carNum": "379로 2625", "note": "호반메트로큐브 26년 3월 1일", "feeType": "유료주차"}, {"id": "W-01", "lot": "대기자", "dept": "SSR PM팀", "name": "고병호", "status": "재직", "carNum": "327무 1364", "note": "더블유스퀘어  26년 4월 1일", "feeType": "유료주차"}, {"id": "25년 예산 반영을 위한 데이터 정리", "lot": "", "dept": "", "name": "", "status": "", "carNum": "", "note": "", "feeType": "유료주차"}, {"id": "25년 실제 비용", "lot": "1월", "dept": "2월", "name": "3월", "status": "6월", "carNum": "8월", "note": "9월", "feeType": "유료주차"}, {"id": "주차비 회사부담분", "lot": "5243346", "dept": "5217558", "name": "5008408", "status": "5298191", "carNum": "5339815", "note": "5638502", "feeType": "유료주차"}, {"id": "주차비 직원부담분", "lot": "6919354", "dept": "6274192", "name": "6632142", "status": "7343009", "carNum": "7341935", "note": "7299998", "feeType": "유료주차"}, {"id": "총 금액", "lot": "12162700", "dept": "11491750", "name": "11640550", "status": "12641200", "carNum": "12681750", "note": "12938500", "feeType": "유료주차"}, {"id": "총 주차 수", "lot": "85", "dept": "84", "name": "84", "status": "93", "carNum": "94", "note": "93", "feeType": "유료주차"}, {"id": "유료 주차 수", "lot": "40", "dept": "39", "name": "39", "status": "48", "carNum": "49", "note": "48", "feeType": "유료주차"}, {"id": "26년 인력계획", "lot": "301", "dept": "307", "name": "315", "status": "330", "carNum": "337", "note": "337", "feeType": "유료주차"}, {"id": "26년도", "lot": "1월", "dept": "2월", "name": "3월", "status": "6월", "carNum": "8월", "note": "9월", "feeType": "유료주차"}, {"id": "회사 부담금", "lot": "8800000", "dept": "9000000", "name": "9200000", "status": "9800000", "carNum": "11400000", "note": "11600000", "feeType": "유료주차"}, {"id": "임직원 부담금", "lot": "8000000", "dept": "8100000", "name": "8200000", "status": "8500000", "carNum": "8700000", "note": "8800000", "feeType": "유료주차"}, {"id": "미래에셋 유료 주차 수", "lot": "33", "dept": "33", "name": "33", "status": "34", "carNum": "38", "note": "39", "feeType": "유료주차"}, {"id": "호반 유료 주차 수", "lot": "16", "dept": "16", "name": "17", "status": "19", "carNum": "20", "note": "20", "feeType": "유료주차"}, {"id": "더블유스퀘어 유료 주차 수", "lot": "5", "dept": "6", "name": "6", "status": "6", "carNum": "7", "note": "7", "feeType": "유료주차"}, {"id": "총 유료 주차 대수", "lot": "54", "dept": "55", "name": "56", "status": "59", "carNum": "65", "note": "66", "feeType": "유료주차"}, {"id": "무료주차 인원 중 임직원 부담 인원", "lot": "30", "dept": "30", "name": "30", "status": "30", "carNum": "30", "note": "30", "feeType": "유료주차"}];
+
+const PARKING_LOT_KEY='intra_parking_lots';
+const PARKING_EMP_KEY='intra_parking_emp';
+
+function loadParkingLots(){
+  const saved=LS.get(PARKING_LOT_KEY);
+  if(saved&&saved.length) return saved;
+  // 첫 로드 시 기본 데이터 저장
+  LS.set(PARKING_LOT_KEY, PARKING_LOTS_DEFAULT);
+  return PARKING_LOTS_DEFAULT;
+}
+function saveParkingLots(data){LS.set(PARKING_LOT_KEY,data);}
+function loadParkingEmps(){
+  const saved=LS.get(PARKING_EMP_KEY);
+  if(saved&&saved.length) return saved;
+  LS.set(PARKING_EMP_KEY, PARKING_EMP_DEFAULT);
+  return PARKING_EMP_DEFAULT;
+}
+function saveParkingEmps(data){LS.set(PARKING_EMP_KEY,data);}
+
+// ─ 주차장 카드 렌더 ─
+function renderParkingLotCards(){
+  const lots=loadParkingLots();
+  const emps=loadParkingEmps();
+  const el=document.getElementById('parkingLotCards');
+  if(!el)return;
+  
+  // 필터 셀렉트도 갱신
+  const sel=document.getElementById('parkingLotFilter');
+  if(sel){
+    const cur=sel.value;
+    sel.innerHTML='<option value="">전체 주차장</option>'+lots.map(l=>`<option value="${l.name}" ${l.name===cur?'selected':''}>${l.name}</option>`).join('');
+    sel.value=cur;
+  }
+  // 직원 모달 주차장 셀렉트
+  const sel2=document.getElementById('empLot');
+  if(sel2){
+    const cur2=sel2.value;
+    sel2.innerHTML=lots.map(l=>`<option value="${l.name}">${l.name}</option>`).join('');
+    if(cur2)sel2.value=cur2;
+  }
+
+  // 각 주차장 현재 등록 인원 계산
+  const totals={};
+  lots.forEach(l=>{ totals[l.name]={free:0,paid:0,cancel:0}; });
+  emps.filter(e=>e.status==='재직').forEach(e=>{
+    const key=e.lot;
+    if(!totals[key])return;
+    if(e.feeType==='무료주차') totals[key].free++;
+    else if(e.feeType==='유료주차') totals[key].paid++;
+    else totals[key].cancel++;
+  });
+
+  let html='';
+  lots.forEach(lot=>{
+    const t=totals[lot.name]||{free:0,paid:0,cancel:0};
+    const registered=t.free+t.paid;
+    const feeText=lot.monthlyFee>0?lot.monthlyFee.toLocaleString()+'원/대':' 무료';
+    const compText=lot.companyShare>0?'회사 '+lot.companyShare.toLocaleString()+'원':' 전액무료';
+    html+=`<div class="parking-lot-card" style="background:${lot.color||'#f8fafc'};border-color:${lot.color||'#e2e8f0'}">
+      <div class="plc-head">
+        <span class="plc-name">${lot.icon||'🏢'} ${lot.name}</span>
+        <div class="plc-actions">
+          <button class="btn btn-xs btn-ghost" onclick="openEditLotModal('${lot.id}')">✏️</button>
+          <button class="btn btn-xs btn-danger" onclick="deleteLot('${lot.id}')">🗑️</button>
+        </div>
+      </div>
+      <div class="plc-stats">
+        <div class="plc-stat"><div class="plc-stat-val">${lot.totalSlots}</div><div class="plc-stat-lbl">총 주차 대수</div></div>
+        <div class="plc-stat"><div class="plc-stat-val" style="color:var(--primary)">${registered}</div><div class="plc-stat-lbl">현재 등록 인원</div></div>
+        <div class="plc-stat"><div class="plc-stat-val">${lot.freeSlots}</div><div class="plc-stat-lbl">무료</div></div>
+        <div class="plc-stat"><div class="plc-stat-val">${lot.paidSlots}</div><div class="plc-stat-lbl">유료</div></div>
+      </div>
+      <div class="plc-fee">
+        <span>${feeText}</span><span style="color:var(--primary);font-weight:600;">${compText}</span>
+      </div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+// ─ 직원 테이블 렌더 ─
+function renderParkingTable(){
+  const emps=loadParkingEmps();
+  const lots=loadParkingLots();
+  const q=(document.getElementById('parkingSearch')||{}).value||'';
+  const lotF=(document.getElementById('parkingLotFilter')||{}).value||'';
+  const feeF=(document.getElementById('parkingFeeFilter')||{}).value||'';
+  const statF=(document.getElementById('parkingStatusFilter')||{}).value||'';
+  
+  let filtered=emps.filter(e=>{
+    if(statF&&e.status!==statF) return false;
+    if(lotF&&e.lot!==lotF) return false;
+    if(feeF&&e.feeType!==feeF) return false;
+    if(q){
+      const lq=q.toLowerCase();
+      if(!(e.name.toLowerCase().includes(lq)||e.carNum.toLowerCase().includes(lq)||(e.dept||'').toLowerCase().includes(lq))) return false;
+    }
+    return true;
+  });
+
+  const cnt=document.getElementById('parkingCount');
+  if(cnt)cnt.textContent=filtered.length+'명';
+
+  const tbody=document.getElementById('parkingTbody');
+  if(!tbody)return;
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text3);">조회된 직원이 없습니다</td></tr>';return;}
+
+  const feeClass={'무료주차':'free','유료주차':'paid','차량해지':'cancel'};
+  const statClass={'재직':'active','퇴직':'retire'};
+  
+  tbody.innerHTML=filtered.map((e,i)=>`<tr>
+    <td style="font-size:11px;color:var(--text3);font-family:monospace;">${i+1}</td>
+    <td>${e.lot||'-'}</td>
+    <td style="font-size:12px;">${e.dept||'-'}</td>
+    <td style="font-weight:600;">${e.name}</td>
+    <td style="font-family:monospace;font-size:12px;">${e.carNum||'-'}</td>
+    <td><span class="park-badge ${feeClass[e.feeType]||''}">${e.feeType||'-'}</span></td>
+    <td><span class="park-badge ${statClass[e.status]||''}">${e.status||'-'}</span></td>
+    <td style="font-size:12px;color:var(--text3);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${e.note||''}">${e.note||''}</td>
+    <td style="white-space:nowrap;">
+      <button class="btn btn-xs btn-ghost" onclick="openEditEmpModal('${e.id}')">수정</button>
+      <button class="btn btn-xs btn-danger" onclick="deleteEmp('${e.id}')">삭제</button>
+    </td>
+  </tr>`).join('');
+}
+
+// ─ 주차장 CRUD ─
+function openAddLotModal(){
+  document.getElementById('editLotId').value='';
+  document.getElementById('lotName').value='';
+  document.getElementById('lotFree').value=0;
+  document.getElementById('lotPaid').value=0;
+  document.getElementById('lotFee').value=0;
+  document.getElementById('lotCompany').value=0;
+  document.getElementById('lotNote').value='';
+  document.querySelector('input[name="lotColor"]').checked=true;
+  document.getElementById('addLotModal').querySelector('h3').textContent='🏢 주차장 추가';
+  openModal('addLotModal');
+}
+function openEditLotModal(id){
+  const lots=loadParkingLots();
+  const lot=lots.find(l=>l.id===id);
+  if(!lot)return;
+  document.getElementById('editLotId').value=id;
+  document.getElementById('lotName').value=lot.name||'';
+  document.getElementById('lotFree').value=lot.freeSlots||0;
+  document.getElementById('lotPaid').value=lot.paidSlots||0;
+  document.getElementById('lotFee').value=lot.monthlyFee||0;
+  document.getElementById('lotCompany').value=lot.companyShare||0;
+  document.getElementById('lotNote').value=lot.note||'';
+  const colorR=document.querySelector(`input[name="lotColor"][value="${lot.color||'#dbeafe'}"]`);
+  if(colorR)colorR.checked=true;
+  document.getElementById('addLotModal').querySelector('h3').textContent='✏️ 주차장 수정';
+  openModal('addLotModal');
+}
+function saveLot(){
+  const name=document.getElementById('lotName').value.trim();
+  if(!name){alert('주차장명을 입력하세요');return;}
+  const color=(document.querySelector('input[name="lotColor"]:checked')||{}).value||'#dbeafe';
+  const lots=loadParkingLots();
+  const editId=document.getElementById('editLotId').value;
+  if(editId){
+    const idx=lots.findIndex(l=>l.id===editId);
+    if(idx>=0){
+      lots[idx]={...lots[idx],name,freeSlots:+document.getElementById('lotFree').value,paidSlots:+document.getElementById('lotPaid').value,totalSlots:+document.getElementById('lotFree').value+(+document.getElementById('lotPaid').value),monthlyFee:+document.getElementById('lotFee').value,companyShare:+document.getElementById('lotCompany').value,note:document.getElementById('lotNote').value,color};
+    }
+  } else {
+    lots.push({id:'lot_'+Date.now(),name,freeSlots:+document.getElementById('lotFree').value,paidSlots:+document.getElementById('lotPaid').value,totalSlots:+document.getElementById('lotFree').value+(+document.getElementById('lotPaid').value),monthlyFee:+document.getElementById('lotFee').value,companyShare:+document.getElementById('lotCompany').value,note:document.getElementById('lotNote').value,color,icon:'🏢'});
+  }
+  saveParkingLots(lots);
+  closeModal('addLotModal');
+  renderParkingLotCards();
+  renderParkingTable();
+  updateStatCards();
+  showToast('주차장이 저장되었습니다');
+}
+function deleteLot(id){
+  if(!confirm('주차장을 삭제하면 해당 직원 데이터가 주차장 없음 상태가 됩니다. 계속할까요?'))return;
+  saveParkingLots(loadParkingLots().filter(l=>l.id!==id));
+  renderParkingLotCards();
+  renderParkingTable();
+  updateStatCards();
+  showToast('주차장이 삭제되었습니다');
+}
+
+// ─ 직원 CRUD ─
+function openAddEmpModal(){
+  document.getElementById('editEmpId').value='';
+  document.getElementById('empModalTitle').textContent='🚗 직원 주차 등록';
+  document.getElementById('empName').value='';
+  document.getElementById('empDept').value='';
+  document.getElementById('empCarNum').value='';
+  document.getElementById('empNote').value='';
+  document.getElementById('empFeeType').value='유료주차';
+  document.getElementById('empStatus').value='재직';
+  // 주차장 목록 갱신
+  const sel=document.getElementById('empLot');
+  sel.innerHTML=loadParkingLots().map(l=>`<option value="${l.name}">${l.name}</option>`).join('');
+  openModal('addEmpModal');
+}
+function openEditEmpModal(id){
+  const emps=loadParkingEmps();
+  const emp=emps.find(e=>e.id===id);
+  if(!emp)return;
+  document.getElementById('editEmpId').value=id;
+  document.getElementById('empModalTitle').textContent='✏️ 주차 정보 수정';
+  document.getElementById('empName').value=emp.name||'';
+  document.getElementById('empDept').value=emp.dept||'';
+  document.getElementById('empCarNum').value=emp.carNum||'';
+  document.getElementById('empNote').value=emp.note||'';
+  document.getElementById('empFeeType').value=emp.feeType||'유료주차';
+  document.getElementById('empStatus').value=emp.status||'재직';
+  const sel=document.getElementById('empLot');
+  sel.innerHTML=loadParkingLots().map(l=>`<option value="${l.name}" ${l.name===emp.lot?'selected':''}>${l.name}</option>`).join('');
+  sel.value=emp.lot||'';
+  openModal('addEmpModal');
+}
+function saveEmp(){
+  const name=document.getElementById('empName').value.trim();
+  if(!name){alert('이름을 입력하세요');return;}
+  const emps=loadParkingEmps();
+  const editId=document.getElementById('editEmpId').value;
+  const entry={
+    id:editId||'E_'+Date.now(),
+    name,
+    dept:document.getElementById('empDept').value.trim(),
+    lot:document.getElementById('empLot').value,
+    feeType:document.getElementById('empFeeType').value,
+    carNum:document.getElementById('empCarNum').value.trim(),
+    status:document.getElementById('empStatus').value,
+    note:document.getElementById('empNote').value.trim()
+  };
+  if(editId){
+    const idx=emps.findIndex(e=>e.id===editId);
+    if(idx>=0) emps[idx]=entry;
+  } else {
+    emps.push(entry);
+  }
+  saveParkingEmps(emps);
+  closeModal('addEmpModal');
+  renderParkingLotCards();
+  renderParkingTable();
+  updateStatCards();
+  showToast('저장되었습니다');
+}
+function deleteEmp(id){
+  if(!confirm('이 직원의 주차 정보를 삭제할까요?'))return;
+  saveParkingEmps(loadParkingEmps().filter(e=>e.id!==id));
+  renderParkingLotCards();
+  renderParkingTable();
+  updateStatCards();
+  showToast('삭제되었습니다');
+}
+
+function renderParking(){
+  renderParkingLotCards();
+  renderParkingTable();
+}
+
 window.onload=init;
 </script>
 </body>
