@@ -471,7 +471,6 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard','Malgun Gothic
 .ft-btn:hover{background:rgba(255,255,255,.15);}
 .ft-sep2{width:1px;height:16px;background:rgba(255,255,255,.2);margin:0 2px;align-self:center;}
 /* Emoji picker */
-#emojiPicker{position:fixed;background:var(--surface);border:1px solid var(--border2);border-radius:10px;box-shadow:var(--shadow-lg);z-index:1002;width:274px;padding:8px;display:none;}
 .emoji-cats{display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap;}
 .emoji-cat-btn{padding:2px 8px;border-radius:10px;border:1px solid var(--border2);background:none;font-size:11px;cursor:pointer;color:var(--text2);}
 .emoji-cat-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
@@ -2074,11 +2073,8 @@ function renderLinks(){
     links.filter(l=>l.cat===cat).forEach(l=>{
       const idx=links.indexOf(l);
       const icon=l.emoji||(l.url&&l.url.startsWith('http')?'🌐':'📁');
-      // icon 배경색 - 이모지 있으면 밝은 배경, 없으면 그라데이션
-      const iconBg=l.emoji?'background:#f1f5f9;':'background:linear-gradient(135deg,var(--primary),var(--purple));';
-      const iconColor=l.emoji?'':'';
       html+=`<div class="link-card">
-        <div class="link-card-icon" style="${iconBg}font-size:18px;">${icon}</div>
+        <div class="link-card-icon" style="background:linear-gradient(135deg,var(--primary),var(--purple));font-size:18px;">${icon}</div>
         <div style="flex:1;min-width:0;">
           <a href="${l.url||'#'}" target="_blank" style="text-decoration:none;" class="link-card-name">${l.name}</a>
           <div class="link-card-desc">${l.desc||''}</div>
