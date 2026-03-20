@@ -51,7 +51,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 /* ─────── 레이아웃 ─────── */
 .container{max-width:1440px;margin:0 auto;padding:20px 24px;}
 .page{display:none;} .page.active{display:block;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
 
 /* ─────── 카드 ─────── */
@@ -658,73 +658,73 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
       <div class="card-title"><span class="icon icon-blue">⚡</span> 빠른 바로가기</div>
     </div>
     <div class="card-body">
-      <div class="quick-grid" style="grid-template-columns:repeat(7,1fr);">
-        <a class="quick-btn" href="총무팀_예산관리_2026.html">
-          <div class="qicon" style="background:#ede9fe;">💰</div><div class="qlabel">예산관리 시스템</div>
-        </a>
-        <a class="quick-btn" href="#" onclick="showPage('calendar');return false;">
-          <div class="qicon" style="background:#dbeafe;">📅</div><div class="qlabel">업무 캘린더</div>
-        </a>
-        <a class="quick-btn" href="#" onclick="showPage('sateak');return false;">
-          <div class="qicon" style="background:#ede9fe;">🏠</div><div class="qlabel">사택 현황</div>
-        </a>
-        <a class="quick-btn" href="#" onclick="showPage('health');return false;">
-          <div class="qicon" style="background:#dcfce7;">🏥</div><div class="qlabel">건강검진</div>
-        </a>
-        <a class="quick-btn" href="#" onclick="showPage('voucher');return false;">
-          <div class="qicon" style="background:#fef9c3;">🎁</div><div class="qlabel">상품권 관리</div>
+      <div class="quick-grid" style="grid-template-columns:repeat(5,1fr);">
+        <a class="quick-btn" href="#" onclick="window.open('https://office-map-bay.vercel.app/','_blank');return false;">
+          <div class="qicon" style="background:#dbeafe;">🗺️</div><div class="qlabel">좌석배치도</div>
         </a>
         <a class="quick-btn" href="#" onclick="window.open('https://gw.smilegate.net/Front/Main','_blank');return false;">
           <div class="qicon" style="background:#e0f2fe;">💻</div><div class="qlabel">재무포탈</div>
         </a>
         <a class="quick-btn" href="#" onclick="showPage('manual');return false;">
-          <div class="qicon" style="background:#fef3c7;">📖</div><div class="qlabel">업무 매뉴얼</div>
+          <div class="qicon" style="background:#fef3c7;">📖</div><div class="qlabel">업무매뉴얼</div>
+        </a>
+        <a class="quick-btn" href="#" onclick="showPage('regulation');return false;">
+          <div class="qicon" style="background:#ede9fe;">📜</div><div class="qlabel">사내규정</div>
+        </a>
+        <a class="quick-btn" href="#" onclick="showPage('vendor');return false;">
+          <div class="qicon" style="background:#dcfce7;">🤝</div><div class="qlabel">거래처관리</div>
         </a>
       </div>
     </div>
   </div>
 
-  <div class="grid-2">
-    <!-- 이번달 업무 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="icon icon-blue">📋</span> 이번달 총무팀 주요 업무</div>
-        <span id="thisMonthLabel" style="font-size:11px;color:var(--text3);"></span>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+    <!-- 왼쪽: 이번달 업무 + 다가오는 일정 -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon icon-blue">📋</span> 이번달 총무팀 주요 업무</div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span id="thisMonthLabel" style="font-size:11px;color:var(--text3);"></span>
+            <button class="btn btn-ghost btn-sm" onclick="openMonthlyReport()" title="월별 보고서 생성">📊 보고서</button>
+          </div>
+        </div>
+        <div class="card-body" id="thisMonthTasks" style="max-height:200px;overflow-y:auto;"></div>
       </div>
-      <div class="card-body" id="thisMonthTasks" style="max-height:200px;overflow-y:auto;"></div>
+      <div class="card" style="flex:1;">
+        <div class="card-header">
+          <div class="card-title"><span class="icon icon-blue">📆</span> 다가오는 일정 (30일 이내)</div>
+          <button class="btn btn-ghost btn-sm" onclick="showPage('calendar')">캘린더</button>
+        </div>
+        <div class="card-body" id="upcomingEvents" style="min-height:80px;max-height:230px;overflow-y:auto;"></div>
+      </div>
     </div>
 
-    <!-- 최근 공지 + 상품권 프리뷰 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="icon icon-yellow">📌</span> 최근 공지 / 메모</div>
-        <button class="btn btn-ghost btn-sm" onclick="showPage('notice')">전체보기</button>
+    <!-- 오른쪽: D-day 현황 + 최근 상품권 + 최근 공지/메모 -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <!-- D-day 현황 요약 위젯 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon" style="background:#fee2e2;">⏰</span> D-day 현황</div>
+          <button class="btn btn-ghost btn-sm" onclick="renderHomeDdaySummary()">새로고침</button>
+        </div>
+        <div class="card-body" id="homeDdaySummary" style="min-height:60px;max-height:200px;overflow-y:auto;padding:12px 16px;"></div>
       </div>
-      <div class="card-body" id="noticePreview" style="max-height:200px;overflow-y:auto;"></div>
-    </div>
-  </div>
-
-  <!-- ───────────── 하단 섹션 ───────────── -->
-  <div class="grid-2" style="margin-top:16px;">
-
-    <!-- 최근 상품권 지급 내역 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="icon icon-yellow">🎁</span> 최근 상품권 지급</div>
-        <button class="btn btn-ghost btn-sm" onclick="showPage('voucher')">전체보기</button>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon icon-yellow">🎁</span> 최근 상품권 지급</div>
+          <button class="btn btn-ghost btn-sm" onclick="showPage('voucher')">전체보기</button>
+        </div>
+        <div class="card-body" id="voucherPreview" style="min-height:80px;"></div>
       </div>
-      <div class="card-body" id="voucherPreview" style="min-height:80px;"></div>
-    </div>
-
-    <!-- 다가오는 D-day 일정 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="icon icon-blue">📆</span> 다가오는 일정 (30일 이내)</div>
-        <button class="btn btn-ghost btn-sm" onclick="showPage('calendar')">캘린더</button>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon icon-yellow">📌</span> 최근 공지 / 메모</div>
+          <button class="btn btn-ghost btn-sm" onclick="showPage('notice')">전체보기</button>
+        </div>
+        <div class="card-body" id="noticePreview" style="max-height:200px;overflow-y:auto;"></div>
       </div>
-      <div class="card-body" id="upcomingEvents" style="min-height:80px;"></div>
     </div>
-
   </div>
 
 </div>
@@ -765,6 +765,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 
   <!-- 계약 만료 알림 -->
   <div id="sateakExpiryAlert" style="display:none;margin-bottom:16px;"></div>
+  <!-- 규정 준수 알림 -->
+  <div id="sateakComplianceAlert" style="margin-bottom:16px;"></div>
 
   <!-- 요약 카드 -->
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px;" id="sateakSummaryCards"></div>
@@ -783,17 +785,17 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
       </div>
     </div>
     <div class="card-body" style="padding:0;overflow-x:auto;">
-      <table class="parking-table" style="min-width:900px;" id="sateakTable">
+      <table class="parking-table" style="min-width:960px;table-layout:fixed;" id="sateakTable">
         <thead><tr>
-          <th style="width:40px;">#</th>
-          <th>사택명</th>
-          <th style="min-width:200px;">계약기간</th>
-          <th>입주자</th>
-          <th>소속</th>
-          <th style="text-align:right;">보증금</th>
-          <th style="text-align:right;">입주예치금</th>
-          <th style="width:70px;">상태</th>
-          <th style="width:80px;">관리</th>
+          <th style="width:36px;text-align:center;">#</th>
+          <th style="width:160px;">사택명</th>
+          <th style="width:220px;">계약기간 / 입주기간</th>
+          <th style="width:80px;text-align:center;">입주자</th>
+          <th style="width:130px;">소속</th>
+          <th style="width:110px;text-align:right;">보증금</th>
+          <th style="width:110px;text-align:right;">입주예치금</th>
+          <th style="width:64px;text-align:center;">상태</th>
+          <th style="width:130px;text-align:center;">관리</th>
         </tr></thead>
         <tbody id="sateakTbody"></tbody>
       </table>
@@ -808,6 +810,21 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 
   <!-- 요약 카드 -->
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px;" id="healthSummaryCards"></div>
+
+  <!-- 예산 트래킹 카드 -->
+  <div class="card" style="margin-bottom:16px;" id="healthBudgetCard">
+    <div class="card-header" style="cursor:pointer;" onclick="toggleHealthBudgetCard()">
+      <div class="card-title"><span class="icon" style="background:#fef3c7;">💰</span> 건강검진 예산 현황</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openHealthBudgetModal()">예산 설정</button>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openUncheckModal()">📋 미수검자 추출</button>
+        <span id="healthBudgetChevron" style="font-size:13px;color:var(--text3);">▼</span>
+      </div>
+    </div>
+    <div id="healthBudgetBody" style="display:none;">
+      <div class="card-body" id="healthBudgetContent" style="padding:16px;"></div>
+    </div>
+  </div>
 
   <!-- 필터/검색 -->
   <div class="card" style="margin-bottom:16px;">
@@ -847,7 +864,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
   <!-- 테이블 -->
   <div class="card">
     <div class="card-body" style="padding:0;overflow-x:auto;">
-      <table class="parking-table" style="min-width:860px;" id="healthTable">
+      <table class="parking-table" style="min-width:900px;" id="healthTable">
         <thead id="healthThead"></thead>
         <tbody id="healthTbody"></tbody>
       </table>
@@ -892,11 +909,53 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     <!-- 연도별 수검 현황 (동적) -->
     <div id="editHealthYearFields" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
     <div class="modal-actions" style="justify-content:space-between;">
-      <div><button class="btn btn-danger btn-sm" id="editHealthDeleteBtn" style="display:none;" onclick="deleteHealthEmp(document.getElementById('editHealthId').value)">삭제</button></div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-danger btn-sm" id="editHealthDeleteBtn" style="display:none;" onclick="deleteHealthEmp(document.getElementById('editHealthId').value)">삭제</button>
+        <button class="btn btn-sm" id="editHealthActivateBtn" style="display:none;background:#fef9c3;border:1px solid #f59e0b;color:#92400e;" onclick="activateHealthEmp()">🔔 대상자 활성화</button>
+        <button class="btn btn-sm" id="editHealthRetireBtn" style="display:none;background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;" onclick="openRetireModal('health')">🚪 퇴직 처리</button>
+      </div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-ghost" onclick="closeModal('editHealthModal')">취소</button>
         <button class="btn btn-primary" onclick="saveHealthEdit()">저장</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 사택 계약 연장 모달 ===== -->
+<div class="modal-overlay" id="sateakRenewModal" onclick="if(event.target===this)closeModal('sateakRenewModal')">
+  <div class="modal" style="max-width:420px;">
+    <h3>🔄 계약 연장</h3>
+    <input type="hidden" id="renewSateakId">
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;" id="renewSateakName"></div>
+    <div class="form-row">
+      <div class="form-group"><label>연장 시작일 *</label><input type="date" id="renewStartDate"></div>
+      <div class="form-group"><label>연장 종료일 *</label><input type="date" id="renewEndDate"></div>
+    </div>
+    <div class="form-group"><label>비고 (사유)</label><input type="text" id="renewNote" placeholder="계약 연장 사유 등"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('sateakRenewModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveSateakRenewal()">연장 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 사택 계약 히스토리 모달 ===== -->
+<div class="modal-overlay" id="sateakHistoryModal" onclick="if(event.target===this)closeModal('sateakHistoryModal')">
+  <div class="modal" style="max-width:560px;">
+    <h3>📋 계약 이력</h3>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;" id="histSateakName"></div>
+    <table class="parking-table" style="width:100%;">
+      <thead><tr>
+        <th style="width:40px;">#</th>
+        <th>계약기간</th>
+        <th>비고</th>
+        <th style="width:80px;">연장일</th>
+      </tr></thead>
+      <tbody id="histSateakTbody"></tbody>
+    </table>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="closeModal('sateakHistoryModal')">닫기</button>
     </div>
   </div>
 </div>
@@ -909,7 +968,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     <div class="form-row">
       <div class="form-group"><label>사택명 *</label><input type="text" id="sateakName" placeholder="예: 트레벨 820호"></div>
       <div class="form-group" style="max-width:130px;"><label>상태</label>
-        <select id="sateakStatus"><option value="입주중">입주중</option><option value="퇴거">퇴거</option></select>
+        <select id="sateakStatus" onchange="document.getElementById('sateakMoveOutDiv').style.display=this.value==='퇴거'?'':' none'"><option value="입주중">입주중</option><option value="퇴거">퇴거</option></select>
       </div>
     </div>
     <div class="form-row">
@@ -952,6 +1011,22 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
       <div style="margin-top:8px;font-size:12px;font-weight:600;" id="sateakInstSummary"></div>
     </div>
     <div class="form-group"><label>비고</label><input type="text" id="sateakNote" placeholder="메모"></div>
+    <!-- 실제 입주일 / 퇴거일 -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>실제 입주일 <span style="font-size:10px;color:var(--text3);">(3년 만료 기산일)</span></label>
+        <input type="date" id="sateakMoveInDate">
+      </div>
+      <div class="form-group" id="sateakMoveOutDiv">
+        <label>실제 퇴거일 <span style="font-size:10px;color:var(--text3);">(예치금 반환 기산일)</span></label>
+        <input type="date" id="sateakMoveOutDate">
+      </div>
+    </div>
+    <!-- 규정 안내 (읽기전용) -->
+    <div id="sateakComplianceInfo" style="display:none;background:#f8fafc;border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:11px;margin-bottom:8px;">
+      <div style="font-weight:600;color:var(--text2);margin-bottom:6px;">📋 규정 준수 체크</div>
+      <div id="sateakComplianceItems"></div>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('addSateakModal')">취소</button>
       <button class="btn btn-primary" onclick="saveSateak()">저장</button>
@@ -1099,11 +1174,14 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button class="btn btn-ghost" onclick="openAddLotModal()">+ 주차장 추가</button>
       <button class="btn btn-primary" onclick="openAddEmpModal()">+ 직원 등록</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportParkingCSV()">⬇ CSV</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importParkingFile').click()">⬆ CSV</button>
+      <input type="file" id="importParkingFile" accept=".csv" style="display:none" onchange="importParkingCSV(this)">
     </div>
   </div>
 
   <!-- 주차장 Summary 카드 -->
-  <div id="parkingLotCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px;"></div>
+  <div id="parkingLotCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:12px;margin-bottom:20px;"></div>
 
   <!-- 필터/검색 -->
   <div class="card" style="margin-bottom:16px;">
@@ -1135,7 +1213,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
       <table class="parking-table" id="parkingTable">
         <thead>
           <tr>
-            <th style="width:40px;">번호</th><th>주차장</th><th>소속</th><th>이름</th><th>차량번호</th><th>구분</th><th>상태</th><th style="width:90px;text-align:center;">등록일</th><th style="width:90px;text-align:center;">해지일</th><th>비고</th><th style="width:90px;">관리</th>
+            <th style="width:40px;text-align:center;">번호</th><th>주차장</th><th>소속</th><th>이름</th><th>차량번호</th><th style="text-align:center;">구분</th><th style="text-align:center;">상태</th><th style="width:90px;text-align:center;">등록일</th><th style="width:90px;text-align:center;">해지일</th><th>비고</th><th style="width:90px;text-align:center;">관리</th>
           </tr>
         </thead>
         <tbody id="parkingTbody"></tbody>
@@ -2084,7 +2162,7 @@ function showPage(name){
   if(history.state?.page!==name){
     history.pushState({page:name},'',window.location.pathname+'#'+name);
   }
-  if(name==='home'){refreshVoucherPreview();renderUpcomingEvents();}
+  if(name==='home'){refreshVoucherPreview();renderUpcomingEvents();renderHomeDdaySummary();}
   if(name==='calendar') renderCalendar();
   if(name==='sateak') renderSateak();
   if(name==='health') renderHealth();
@@ -2861,20 +2939,30 @@ function getDdayStr(dueDate){
   return {label:'D-'+diff,cls:'dp-gray',diff};
 }
 
-// 이번달 선택 컨트롤 초기화
+// 이번달 선택 컨트롤 초기화 (연도별 폴더링)
 function buildClMonthSelect(){
   const sel=document.getElementById('clMonth');
   if(!sel) return;
   const now=new Date();
+  const curY=now.getFullYear(),curM=now.getMonth()+1;
+  const curVal=curY+'-'+(curM<10?'0':'')+curM;
+  // 2024년부터 현재+2년까지 표시
+  const startYear=2024;
+  const endYear=now.getFullYear()+2;
   let html='';
-  for(let i=-2;i<=6;i++){
-    const d=new Date(now.getFullYear(),now.getMonth()+i,1);
-    const y=d.getFullYear(),m=d.getMonth()+1;
-    const val=y+'-'+(m<10?'0':'')+m;
-    const label=y+'년 '+m+'월';
-    html+=`<option value="${val}"${i===0?' selected':''}>${label}</option>`;
+  let hasSelected=false;
+  for(let y=startYear;y<=endYear;y++){
+    html+=`<optgroup label="${y}년">`;
+    for(let m=1;m<=12;m++){
+      const val=y+'-'+(m<10?'0':'')+m;
+      const sel2=(val===curVal);
+      if(sel2)hasSelected=true;
+      html+=`<option value="${val}"${sel2?' selected':''}>${m}월</option>`;
+    }
+    html+='</optgroup>';
   }
   sel.innerHTML=html;
+  if(!hasSelected)sel.value=curVal;
 }
 
 // 담당자 필터 업데이트
@@ -2992,6 +3080,9 @@ function renderChecklist(){
     const {task,due,comp,ck}=item;
     const dd=getDdayStr(due);
     const recurLabel={once:'일회성',monthly:'매월',quarterly:'매분기',annual:'연간'}[task.recurrence]||'';
+    const recurHl=task.recurrence==='once'
+      ?'background:#fef9c3;color:#78350f;font-weight:700;'  // 일회성 = 노란 형광펜
+      :'background:#dbeafe;color:#1e40af;font-weight:700;'; // 루틴 = 파란 형광펜
     const dueDateStr=due.toLocaleDateString('ko-KR',{month:'short',day:'numeric'});
     const assigneeHtml=(task.assignees||[]).map(a=>
       `<span class="assignee-dot ${getAssigneeColor(a)}" title="${a}">${a[0]}</span><span style="font-size:10px;color:var(--text3);">${a}</span>`
@@ -3003,7 +3094,7 @@ function renderChecklist(){
         <div class="task-meta">
           <span style="width:8px;height:8px;border-radius:50%;background:${catColor(task.category)};display:inline-block;"></span>
           <span style="font-size:10px;color:var(--text3);">${task.category||'기타'}</span>
-          <span class="recur-tag">${recurLabel}</span>
+          ${recurLabel?`<span class="recur-tag" style="${recurHl}border-radius:3px;padding:1px 6px;font-size:10px;">${recurLabel}</span>`:''}
           <span style="font-size:10px;color:var(--text3);">📅 ${dueDateStr}</span>
           ${assigneeHtml}
         </div>
@@ -3154,6 +3245,69 @@ function deleteTask(){
 }
 
 // 홈 D-day 배너 (마감 3일 내 업무)
+function renderHomeDdaySummary(){
+  const el=document.getElementById('homeDdaySummary');if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  let items=[];
+
+  // 사택 만료 D-60 이내
+  try{
+    const sateaks=loadSateaks();
+    sateaks.filter(s=>s.status==='입주중').forEach(s=>{
+      const endStr=s.endDate||(s.contract||'').split('~')[1]?.trim()||'';
+      const endD=parseSateakDate(endStr.trim());
+      if(!endD)return;
+      const diff=Math.floor((endD-today)/(1000*60*60*24));
+      if(diff<=60&&diff>=-7){
+        items.push({
+          type:'sateak',
+          icon:'🏠',
+          label:s.name+(s.tenant?' ('+s.tenant+')':''),
+          diff,
+          color:diff<0?'#b91c1c':diff<=14?'#b91c1c':diff<=30?'#d97706':'#78350f',
+          bg:diff<0?'#fee2e2':diff<=14?'#fef2f2':diff<=30?'#fff7ed':'#fef9c3',
+          linkPage:'sateak'
+        });
+      }
+    });
+  }catch(e){}
+
+  // 수습 종료 D-30 이내
+  try{
+    const healths=loadHealths();
+    const today2=new Date();today2.setHours(0,0,0,0);
+    healths.filter(h=>h.probEndDate).forEach(h=>{
+      const probD=new Date(h.probEndDate);probD.setHours(0,0,0,0);
+      const diff=Math.floor((probD-today2)/(1000*60*60*24));
+      if(diff<=30&&diff>=-3){
+        items.push({
+          type:'prob',
+          icon:'🔰',
+          label:h.name+' 수습 종료',
+          diff,
+          color:diff<0?'#6b7280':diff<=7?'#2563eb':'#0891b2',
+          bg:diff<0?'#f3f4f6':diff<=7?'#dbeafe':'#e0f2fe',
+          linkPage:'health'
+        });
+      }
+    });
+  }catch(e){}
+
+  if(!items.length){
+    el.innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px 0;">⚡ 현재 임박한 일정 없음</div>';
+    return;
+  }
+  items.sort((a,b)=>a.diff-b.diff);
+  el.innerHTML=items.slice(0,6).map(it=>{
+    const dstr=it.diff<0?`D+${Math.abs(it.diff)}`:it.diff===0?'D-day':`D-${it.diff}`;
+    return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2);cursor:pointer;" onclick="showPage('${it.linkPage}')">
+      <span style="font-size:14px;">${it.icon}</span>
+      <span style="flex:1;font-size:11px;color:var(--text);">${it.label}</span>
+      <span style="font-size:11px;font-weight:700;background:${it.bg};color:${it.color};border-radius:8px;padding:2px 8px;">${dstr}</span>
+    </div>`;
+  }).join('');
+}
+
 function renderHomeDdayBanner(){
   const el=document.getElementById('homeDdayBanner');if(!el) return;
   const today=new Date();today.setHours(0,0,0,0);
@@ -4564,6 +4718,7 @@ function init(){
   renderNotices(true);
   refreshVoucherPreview();
   renderUpcomingEvents();
+  renderHomeDdaySummary();
   updateStatCards();
   const today=new Date().toISOString().slice(0,10);
   if(document.getElementById('vDate')) document.getElementById('vDate').value=today;
@@ -4600,8 +4755,157 @@ function saveSateaks(d){LS.set(SATEAK_KEY,d);}
 
 function renderSateak(){
   renderSateakExpiryAlert();
+  renderSateakComplianceAlert();
   renderSateakSummary();
   renderSateakTable();
+}
+
+// 사택 규정 준수 알림 카드 (페이지 상단)
+function renderSateakComplianceAlert(){
+  const el=document.getElementById('sateakComplianceAlert');if(!el)return;
+  const all=loadSateaks();
+  const today=new Date();today.setHours(0,0,0,0);
+  const alerts=[];
+
+  all.forEach(s=>{
+    // 날짜 파싱
+    let startStr=s.startDate||'',endStr=s.endDate||'';
+    if(!startStr&&!endStr&&s.contract){const ex=extractSateakDates(s.contract);startStr=ex.start;endStr=ex.end;}
+    const startD=parseSateakDate(startStr);
+    const endD=parseSateakDate(endStr);
+
+    // 1) 3년 도래 (입주중인 경우) - 실제입주일 우선, 없으면 계약시작일
+    const _baseD3=s.moveInDate?parseSateakDate(s.moveInDate):startD;
+    if(s.status==='입주중'&&_baseD3){
+      const startD=_baseD3;
+      const max3yr=new Date(startD);max3yr.setFullYear(max3yr.getFullYear()+3);
+      const diffMax=Math.floor((max3yr-today)/(1000*60*60*24));
+      if(diffMax<=180){
+        alerts.push({
+          icon:'⏳',level:diffMax<=60?'danger':diffMax<=90?'warn':'info',
+          label:`[${s.name}] ${s.tenant} 최장 거주 만료`,
+          detail:`${fmtSateakDate(max3yr.toISOString().slice(0,10))} (3년 도래)`,
+          diff:diffMax,page:'sateak'
+        });
+      }
+    }
+
+    // 2) 계약 3개월 전 고지 의무 (입주중 & 입주자+우리측 모두)
+    if(s.status==='입주중'&&endD){
+      const notify90=new Date(endD);notify90.setDate(notify90.getDate()-90);
+      const diffNotify=Math.floor((notify90-today)/(1000*60*60*24));
+      if(diffNotify<=30){
+        const passedStr=diffNotify<0?`<span style="color:#b91c1c;">${Math.abs(diffNotify)}일 지남</span>`:`D-${diffNotify}`;
+        alerts.push({
+          icon:'📢',level:diffNotify<=0?'danger':diffNotify<=14?'warn':'info',
+          label:`[${s.name}호] ${s.tenant} — 고지 마감 D-${diffNotify<0?0:diffNotify}`,
+          detail:`계약종료 3개월 전(${fmtSateakDate(notify90.toISOString().slice(0,10))})까지 입주자·슈크 양측 고지 필요`,
+          diff:diffNotify,page:'sateak'
+        });
+      }
+    }
+
+    // 3) 예치금 반환 마감 (퇴거이고 실제퇴거일 있는 경우)
+    if(s.status==='퇴거'&&s.moveOutDate){
+      const moveD=parseSateakDate(s.moveOutDate);
+      if(moveD){
+        const refund=new Date(moveD);refund.setMonth(refund.getMonth()+2);
+        const diffRef=Math.floor((refund-today)/(1000*60*60*24));
+        if(diffRef<=60&&diffRef>=-30){
+          alerts.push({
+            icon:'💰',level:diffRef<0?'danger':diffRef<=14?'warn':'info',
+            label:`[${s.name}] ${s.tenant} 예치금 반환 마감`,
+            detail:`퇴거 후 2개월 이내 반환 (${fmtSateakDate(refund.toISOString().slice(0,10))})`,
+            diff:diffRef,page:'sateak'
+          });
+        }
+      }
+    }
+  });
+
+  if(!alerts.length){el.innerHTML='';return;}
+  alerts.sort((a,b)=>a.diff-b.diff);
+
+  const _compKey='intra_compliance_open';
+  const _isOpen=localStorage.getItem(_compKey)!=='0';
+  const colorMap={danger:{bg:'#fee2e2',border:'#fca5a5',text:'#b91c1c'},warn:{bg:'#fff7ed',border:'#fdba74',text:'#c2410c'},info:{bg:'#eff6ff',border:'#93c5fd',text:'#1d4ed8'}};
+  el.innerHTML=`<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--border2);">
+    <div style="background:#1e293b;color:#fff;padding:10px 16px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;" onclick="toggleSateakComplianceAlert(this)">
+      📋 사택 규정 준수 알림 (${alerts.length}건)
+      <span style="font-size:10px;font-weight:400;opacity:0.7;">· 3년 도래 · 고지 의무 · 예치금 반환</span>
+      <span style="margin-left:auto;font-size:13px;" id="sateakComplianceChevron">${_isOpen?'▲':'▼'}</span>
+    </div>
+    <div id="sateakComplianceBody" style="display:${_isOpen?'block':'none'};">
+    ${alerts.map(a=>{
+      const c=colorMap[a.level]||colorMap.info;
+      const dstr=a.diff<0?`D+${Math.abs(a.diff)}`:a.diff===0?'D-day':`D-${a.diff}`;
+      return`<div style="background:${c.bg};border-bottom:1px solid ${c.border};padding:8px 16px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:16px;">${a.icon}</span>
+        <div style="flex:1;">
+          <div style="font-size:12px;font-weight:600;color:${c.text};">${a.label}</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:1px;">${a.detail}</div>
+        </div>
+        <span style="font-weight:800;font-size:11px;background:#fff;border:1px solid ${c.border};color:${c.text};border-radius:8px;padding:2px 10px;">${dstr}</span>
+      </div>`;
+    }).join('')}
+    </div>
+  </div>`;
+}
+
+function toggleSateakComplianceAlert(hdr){
+  const body=document.getElementById('sateakComplianceBody');
+  const chev=document.getElementById('sateakComplianceChevron');
+  if(!body)return;
+  const nowOpen=body.style.display!=='none';
+  body.style.display=nowOpen?'none':'block';
+  if(chev)chev.textContent=nowOpen?'▼':'▲';
+  localStorage.setItem('intra_compliance_open',nowOpen?'0':'1');
+}
+
+// 수정 모달 내 규정 안내 렌더
+function _renderSateakComplianceModal(s){
+  const el=document.getElementById('sateakComplianceInfo');
+  const itEl=document.getElementById('sateakComplianceItems');
+  if(!el||!itEl)return;
+  let startStr=s.startDate||'',endStr=s.endDate||'';
+  if(!startStr&&!endStr&&s.contract){const ex=extractSateakDates(s.contract);startStr=ex.start;endStr=ex.end;}
+  const startD=parseSateakDate(startStr);
+  const endD=parseSateakDate(endStr);
+  const today=new Date();today.setHours(0,0,0,0);
+  const items=[];
+
+  if(startD){
+    const max3=new Date(startD);max3.setFullYear(max3.getFullYear()+3);
+    const d3=Math.floor((max3-today)/(1000*60*60*24));
+    const c3=d3<0?'#b91c1c':d3<=90?'#d97706':'#166534';
+    items.push(`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed var(--border2);">
+      <span>⏳ 최장 거주 만료일 (입주일+3년)</span>
+      <span style="font-weight:700;color:${c3};">${fmtSateakDate(max3.toISOString().slice(0,10))} ${d3<0?'(만료)':'D-'+d3}</span>
+    </div>`);
+  }
+  if(endD){
+    const notify=new Date(endD);notify.setDate(notify.getDate()-90);
+    const dn=Math.floor((notify-today)/(1000*60*60*24));
+    const cn=dn<0?'#b91c1c':dn<=14?'#d97706':'#166534';
+    items.push(`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed var(--border2);">
+      <span>📢 입주자/슈크 고지 마감 (계약종료 3개월 전)</span>
+      <span style="font-weight:700;color:${cn};">${fmtSateakDate(notify.toISOString().slice(0,10))} ${dn<0?'(지남)':'D-'+dn}</span>
+    </div>`);
+  }
+  if(s.moveOutDate){
+    const mD=parseSateakDate(s.moveOutDate);
+    if(mD){
+      const refund=new Date(mD);refund.setMonth(refund.getMonth()+2);
+      const dr=Math.floor((refund-today)/(1000*60*60*24));
+      const cr=dr<0?'#b91c1c':dr<=14?'#d97706':'#166534';
+      items.push(`<div style="display:flex;justify-content:space-between;padding:3px 0;">
+        <span>💰 예치금 반환 마감 (퇴거 후 2개월)</span>
+        <span style="font-weight:700;color:${cr};">${fmtSateakDate(refund.toISOString().slice(0,10))} ${dr<0?'(지남)':'D-'+dr}</span>
+      </div>`);
+    }
+  }
+  if(items.length){el.style.display='';itEl.innerHTML=items.join('');}
+  else{el.style.display='none';}
 }
 
 // 날짜 문자열 파싱 (ISO / yyyy.mm.dd / yyyy. mm. dd 등 → Date)
@@ -4677,17 +4981,24 @@ function renderSateakSummary(){
   const el=document.getElementById('sateakSummaryCards');
   if(!el)return;
   const cards=[
-    {label:'총 사택 수',val:all.length+'개',sub:'(입주중 '+active.length+'개)',bg:'#ede9fe',icon:'🏠'},
-    {label:'보증금 합계',val:(totalDeposit/100000000).toFixed(1)+'억',sub:totalDeposit.toLocaleString()+'원',bg:'#dbeafe',icon:'💰'},
-    {label:'입주예치금 합계',val:(totalAdvance/10000).toLocaleString()+'만원',sub:totalAdvance.toLocaleString()+'원',bg:'#dcfce7',icon:'🔐'},
-    {label:'퇴거',val:all.filter(s=>s.status==='퇴거').length+'개',sub:'',bg:'#fee2e2',icon:'📦'},
+    {label:'총 사택 수',val:all.length+'개',sub:'(입주중 '+active.length+'개)',bg:'#ede9fe',icon:'🏠',filter:''},
+    {label:'보증금 합계',val:(totalDeposit/100000000).toFixed(1)+'억',sub:totalDeposit.toLocaleString()+'원',bg:'#dbeafe',icon:'💰',filter:null},
+    {label:'입주예치금 합계',val:(totalAdvance/10000).toLocaleString()+'만원',sub:totalAdvance.toLocaleString()+'원',bg:'#dcfce7',icon:'🔐',filter:null},
+    {label:'퇴거',val:all.filter(s=>s.status==='퇴거').length+'개',sub:'',bg:'#fee2e2',icon:'📦',filter:'퇴거'},
   ];
-  el.innerHTML=cards.map(c=>`<div class="parking-lot-card" style="background:${c.bg}20;border-color:${c.bg};">
+  el.innerHTML=cards.map(c=>`<div class="parking-lot-card" style="background:${c.bg}20;border-color:${c.bg};${c.filter!==null?'cursor:pointer;':''}transition:transform 0.1s;" onclick="_filterSateakByCard('${c.filter}')" title="${c.filter!==null?'클릭하여 필터':''}">
     <div class="plc-head"><span style="font-size:22px;">${c.icon}</span></div>
     <div class="plc-stat-val">${c.val}</div>
     <div class="plc-stat-lbl">${c.label}</div>
     ${c.sub?`<div style="font-size:10px;color:var(--text3);margin-top:2px;">${c.sub}</div>`:''}
   </div>`).join('');
+}
+
+function _filterSateakByCard(filter){
+  const sel=document.getElementById('sateakStatusFilter');
+  if(!sel||filter===null||filter==='null')return;
+  sel.value=filter;
+  renderSateakTable();
 }
 
 function renderSateakTable(){
@@ -4725,21 +5036,30 @@ function renderSateakTable(){
       }
     }
     return`<tr>
-    <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
-    <td style="font-weight:600;">${s.name}${expiryBadge}</td>
-    <td style="font-size:11px;color:var(--text2);white-space:nowrap;">${contractDisplay}</td>
-    <td style="font-weight:600;text-align:center;">${s.tenant||'-'}</td>
-    <td style="font-size:12px;">${s.dept||'-'}</td>
-    <td style="text-align:right;font-variant-numeric:tabular-nums;font-size:12px;">${s.deposit>0?s.deposit.toLocaleString()+'원':'-'}</td>
-    <td style="text-align:right;font-variant-numeric:tabular-nums;font-size:12px;">${
+    <td style="font-size:11px;color:var(--text3);text-align:center;padding:8px 4px;">${i+1}</td>
+    <td style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:8px 10px;">${s.name}${expiryBadge}</td>
+    <td style="font-size:11px;padding:8px 10px;">
+      <div style="color:var(--text2);white-space:nowrap;">${contractDisplay}</div>
+      ${(s.moveInDate||s.moveOutDate)
+        ?`<div style="color:#6366f1;font-size:10px;margin-top:3px;white-space:nowrap;">🚪 ${s.moveInDate?fmtSateakDate(s.moveInDate):'?'} ~ ${s.moveOutDate?fmtSateakDate(s.moveOutDate):'거주중'}</div>`
+        :'<div style="font-size:10px;color:#cbd5e1;margin-top:3px;">입주일 미입력</div>'}
+    </td>
+    <td style="font-weight:600;text-align:center;padding:8px 6px;">${s.tenant||'-'}</td>
+    <td style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:8px 10px;" title="${s.dept||''}">${s.dept||'-'}</td>
+    <td style="text-align:right;font-variant-numeric:tabular-nums;font-size:12px;padding:8px 12px;">${s.deposit>0?s.deposit.toLocaleString()+'원':'-'}</td>
+    <td style="text-align:right;font-variant-numeric:tabular-nums;font-size:12px;padding:8px 12px;">${
       s.payType==='분할'
-        ? `<span style="font-size:11px;">${(s.instPaid||[]).length}/${s.instMonths||7}개월<br><span style="color:var(--primary);">${s.advance>0?s.advance.toLocaleString()+'원':'0원'}</span></span>`
-        : (s.advance>0?s.advance.toLocaleString()+'원':'-')
+        ?`<div style="font-size:11px;">${(s.instPaid||[]).length}/${s.instMonths||7}개월</div><div style="color:var(--primary);font-size:11px;">${s.advance>0?s.advance.toLocaleString()+'원':'0원'}</div>`
+        :(s.advance>0?s.advance.toLocaleString()+'원':'-')
     }</td>
-    <td style="text-align:center;">${statusBadge[s.status]||s.status}</td>
-    <td style="white-space:nowrap;text-align:center;">
-      <button class="btn btn-xs btn-ghost" onclick="openEditSateakModal('${s.id}')">수정</button>
-      <button class="btn btn-xs btn-danger" onclick="deleteSateak('${s.id}')">삭제</button>
+    <td style="text-align:center;padding:8px 4px;">${statusBadge[s.status]||s.status}</td>
+    <td style="text-align:center;padding:8px 4px;">
+      <div style="display:flex;gap:3px;justify-content:center;flex-wrap:nowrap;">
+        <button class="btn btn-xs btn-ghost" onclick="openEditSateakModal('${s.id}')">수정</button>
+        ${s.status==='입주중'?`<button class="btn btn-xs" style="background:#dcfce7;color:#166534;border:1px solid #86efac;white-space:nowrap;" onclick="openSateakRenewModal('${s.id}')">연장</button>`:''}
+        <button class="btn btn-xs btn-ghost" onclick="openSateakHistoryModal('${s.id}')" title="계약 이력">📋</button>
+        <button class="btn btn-xs btn-danger" onclick="deleteSateak('${s.id}')">삭제</button>
+      </div>
     </td>
   </tr>`;
   }).join('');
@@ -4755,6 +5075,9 @@ function openAddSateakModal(){
   document.getElementById('sateakDeposit').value='';
   document.getElementById('sateakAdvance').value='';
   document.getElementById('sateakNote').value='';
+  document.getElementById('sateakMoveInDate').value='';
+  document.getElementById('sateakMoveOutDate').value='';
+  document.getElementById('sateakComplianceInfo').style.display='none';
   document.getElementById('sateakStatus').value='입주중';
   document.getElementById('sateakPayType').value='일시불';
   toggleSateakPayFields();
@@ -4779,6 +5102,10 @@ function openEditSateakModal(id){
   document.getElementById('sateakDept').value=s.dept||'';
   document.getElementById('sateakDeposit').value=s.deposit||'';
   document.getElementById('sateakNote').value=s.note||'';
+  document.getElementById('sateakMoveInDate').value=s.moveInDate||'';
+  document.getElementById('sateakMoveOutDate').value=s.moveOutDate||'';
+  // 규정 안내 계산
+  _renderSateakComplianceModal(s);
   document.getElementById('sateakStatus').value=s.status||'입주중';
   const pt=s.payType||'일시불';
   document.getElementById('sateakPayType').value=pt;
@@ -4849,6 +5176,7 @@ function saveSateak(){
   const startDate=document.getElementById('sateakStartDate').value;
   const endDate=document.getElementById('sateakEndDate').value;
   const contract=(startDate||endDate)?(fmtSateakDate(startDate)+' ~ '+fmtSateakDate(endDate)):'';
+  const _sStatus=document.getElementById('sateakStatus').value;
   const obj={
     id:id||'S-'+(Date.now()),
     name,
@@ -4857,15 +5185,23 @@ function saveSateak(){
     dept:document.getElementById('sateakDept').value.trim(),
     deposit:parseInt(document.getElementById('sateakDeposit').value)||0,
     advance,
-    status:document.getElementById('sateakStatus').value,
+    status:_sStatus,
+    moveInDate:document.getElementById('sateakMoveInDate').value||'',
+    moveOutDate:document.getElementById('sateakMoveOutDate').value||'',
     note:document.getElementById('sateakNote').value.trim(),
     payType,
     instMonths:payType==='분할'?instMonths:undefined,
     instAmt:payType==='분할'?instAmt:undefined,
     instPaid:payType==='분할'?instPaid:undefined
   };
-  if(id){const idx=all.findIndex(x=>x.id===id);if(idx>=0)all[idx]=obj;else all.push(obj);}
-  else{all.push(obj);}
+  if(id){
+    const idx=all.findIndex(x=>x.id===id);
+    if(idx>=0){
+      // 기존 contractHistory 보존
+      obj.contractHistory=all[idx].contractHistory||[];
+      all[idx]=obj;
+    }else all.push(obj);
+  }else{obj.contractHistory=[];all.push(obj);}
   saveSateaks(all);closeModal('addSateakModal');renderSateak();updateStatCards();showToast('저장되었습니다');
 }
 function deleteSateak(id){
@@ -4874,9 +5210,90 @@ function deleteSateak(id){
   saveSateaks(all);renderSateak();updateStatCards();showToast('삭제되었습니다');
 }
 
+// ── 사택 계약 연장 모달 열기 ──
+function openSateakRenewModal(id){
+  const all=loadSateaks();
+  const s=all.find(x=>x.id===id);if(!s)return;
+  document.getElementById('renewSateakId').value=id;
+  document.getElementById('renewSateakName').textContent=s.name+' ('+s.tenant+')';
+  // 현재 계약 종료일 다음날부터 자동 채우기
+  let nextStart='';
+  const endStr=s.endDate||(s.contract||'').split('~')[1]?.trim()||'';
+  const endD=parseSateakDate(endStr.trim());
+  if(endD){
+    const ns=new Date(endD);ns.setDate(ns.getDate()+1);
+    nextStart=ns.getFullYear()+'-'+String(ns.getMonth()+1).padStart(2,'0')+'-'+String(ns.getDate()).padStart(2,'0');
+  }
+  document.getElementById('renewStartDate').value=nextStart;
+  document.getElementById('renewEndDate').value='';
+  document.getElementById('renewNote').value='';
+  openModal('sateakRenewModal');
+}
+
+function saveSateakRenewal(){
+  const id=document.getElementById('renewSateakId').value;
+  const all=loadSateaks();
+  const idx=all.findIndex(x=>x.id===id);if(idx<0)return;
+  const s=all[idx];
+  const newStart=document.getElementById('renewStartDate').value;
+  const newEnd=document.getElementById('renewEndDate').value;
+  const note=document.getElementById('renewNote').value.trim();
+  if(!newStart||!newEnd){showToast('연장 시작일과 종료일을 입력하세요','error');return;}
+  // 기존 계약을 히스토리에 저장
+  if(!s.contractHistory)s.contractHistory=[];
+  s.contractHistory.push({
+    startDate:s.startDate||'',
+    endDate:s.endDate||'',
+    contract:s.contract||'',
+    note:note||'계약 연장',
+    renewedAt:new Date().toISOString().slice(0,10)
+  });
+  // 새 계약 반영
+  s.startDate=newStart;
+  s.endDate=newEnd;
+  s.contract=fmtSateakDate(newStart)+' ~ '+fmtSateakDate(newEnd);
+  all[idx]=s;
+  saveSateaks(all);
+  closeModal('sateakRenewModal');
+  renderSateak();
+  showToast('계약이 연장되었습니다 (이력 저장 완료)');
+}
+
+// ── 사택 계약 히스토리 모달 열기 ──
+function openSateakHistoryModal(id){
+  const all=loadSateaks();
+  const s=all.find(x=>x.id===id);if(!s)return;
+  document.getElementById('histSateakName').textContent=s.name+' ('+s.tenant+')';
+  const hist=s.contractHistory||[];
+  const tbody=document.getElementById('histSateakTbody');
+  if(!tbody)return;
+  if(!hist.length){
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text3);">계약 연장 이력이 없습니다</td></tr>';
+  } else {
+    tbody.innerHTML=[...hist].reverse().map((h,i)=>`<tr>
+      <td style="text-align:center;font-size:11px;color:var(--text3);">${hist.length-i}</td>
+      <td style="font-size:12px;white-space:nowrap;">${fmtSateakDate(h.startDate)} ~ ${fmtSateakDate(h.endDate)}</td>
+      <td style="font-size:11px;color:var(--text2);">${h.note||'-'}</td>
+      <td style="font-size:10px;color:var(--text3);">${h.renewedAt||''}</td>
+    </tr>`).join('');
+  }
+  openModal('sateakHistoryModal');
+}
+
 // ============================================================
 // 건강검진 현황
 // ============================================================
+
+// ============================================================
+// 건강검진 기본 데이터 (localStorage 비었을 때 사용)
+// ============================================================
+const HEALTH_DEFAULT = [
+  {id:'H001',name:'홍길동',project:'E7',dept:'기획실',team:'PM팀',joinDate:'2020-03-02',probEndDate:'2020-06-02',checkPattern:'25만원',eligible:true,eligibleFrom:'2021',y23:'25만원',y24:'25만원',y25:'25만원'},
+  {id:'H002',name:'김철수',project:'SSR',dept:'아트실',team:'배경팀',joinDate:'2021-05-10',probEndDate:'2021-08-10',checkPattern:'격년50만원',eligible:true,eligibleFrom:'2022',y23:'50만원',y24:'미대상',y25:'50만원'},
+  {id:'H003',name:'이영희',project:'E7',dept:'기획실',team:'UI팀',joinDate:'2022-01-03',probEndDate:'2022-04-03',checkPattern:'25만원',eligible:true,eligibleFrom:'2023',y23:'25만원',y24:'25만원',y25:'25만원'},
+  {id:'H004',name:'박민준',project:'SSR',dept:'기획실',team:'기획팀',joinDate:'2024-11-01',probEndDate:'2025-02-01',checkPattern:'25만원',eligible:true,eligibleFrom:'2025',y23:'미대상',y24:'미대상',y25:'25만원'},
+  {id:'H005',name:'최수진',project:'공통',dept:'경영지원실',team:'총무팀',joinDate:'2025-09-01',probEndDate:'2025-12-01',checkPattern:'25만원',eligible:false,eligibleFrom:'2026',y23:'',y24:'',y25:'수습중'},
+];
 const HEALTH_KEY='intra_health';
 const HEALTH_YEARS_KEY='intra_health_years';
 const HEALTH_PLAN_YEAR_KEY='intra_health_plan_yr';
@@ -4913,14 +5330,56 @@ function renderHealthYearMgmt(){
 }
 
 function loadHealths(){
-  const s=LS.get(HEALTH_KEY);
-  if(s&&s.length)return s;
+  let s=LS.get(HEALTH_KEY);
+  if(s&&s.length){
+    // 구버전 데이터 마이그레이션 (plan26/amt26 → y26 형식)
+    let migrated=false;
+    s=s.map(h=>{
+      if(h.plan26!==undefined||h.amt26!==undefined){
+        // 구버전 → 신버전 변환
+        const yrs=['23','24','25','26'];
+        yrs.forEach(yr=>{
+          if(h['y'+yr]===undefined){
+            const planKey='plan'+yr, amtKey='amt'+yr;
+            if(h[amtKey]==='Y')h['y'+yr]='25만원';
+            else if(h[amtKey]==='50')h['y'+yr]='50만원';
+            else if(h[planKey]==='N'||h[amtKey]==='N')h['y'+yr]='미수검';
+            else h['y'+yr]='';
+            delete h[planKey];delete h[amtKey];
+          }
+        });
+        if(h.eligible===undefined)h.eligible=true;
+        if(h.eligibleFrom===undefined)h.eligibleFrom='2023';
+        migrated=true;
+      }
+      if(h.eligible===undefined){
+        if(h.probEndDate){
+          const _pd=new Date(h.probEndDate);_pd.setHours(0,0,0,0);
+          const _td=new Date();_td.setHours(0,0,0,0);
+          h.eligible=(_pd<_td); // 종료일이 어제 이전이면 eligible
+          if(!h.eligible&&!h.eligibleFrom)h.eligibleFrom=String(_pd.getFullYear()+1);
+        } else {
+          h.eligible=true;
+        }
+      }
+      return h;
+    });
+    if(migrated)LS.set(HEALTH_KEY,s);
+    return s;
+  }
   LS.set(HEALTH_KEY,JSON.parse(JSON.stringify(HEALTH_DEFAULT)));
   return JSON.parse(JSON.stringify(HEALTH_DEFAULT));
 }
 
 // 패턴 기반 올해 수검 예측
 function predictForYear(h, yr, yrs){
+  // eligible 미설정 or 대상자 아닌 경우
+  if(h.eligible===false){
+    // eligibleFrom 연도 이후에만 대상
+    const fromYr=parseInt(h.eligibleFrom||'9999');
+    const thisYr=parseInt('20'+yr);
+    if(thisYr<fromYr)return'미대상';
+  }
   // 수습중이면 미대상
   if(h.probEndDate){
     const probD=new Date(h.probEndDate);probD.setHours(0,0,0,0);
@@ -4987,25 +5446,42 @@ function renderHealthSummary(){
   },0);
   const el=document.getElementById('healthSummaryCards');if(!el)return;
   const cards=[
-    {label:'전체 임직원',val:all.length+'명',bg:'#dbeafe',icon:'👥'},
-    {label:currYr+'년 수검 완료',val:doneCount+'명',bg:'#dcfce7',icon:'✅'},
-    {label:currYr+'년 미수검',val:noCount+'명',bg:'#fee2e2',icon:'❌'},
-    {label:'수습중(미해당)',val:probCount+'명',bg:'#f3f4f6',icon:'🔰'},
-    {label:currYr+'년 지급액 합계',val:(totalAmt/10000).toLocaleString()+'만원',bg:'#fef3c7',icon:'💰'},
+    {label:'전체 임직원',val:all.length+'명',bg:'#dbeafe',icon:'👥',filter:''},
+    {label:currYr+'년 수검 완료',val:doneCount+'명',bg:'#dcfce7',icon:'✅',filter:'done'},
+    {label:currYr+'년 미수검',val:noCount+'명',bg:'#fee2e2',icon:'❌',filter:'미수검'},
+    {label:'수습중(미해당)',val:probCount+'명',bg:'#f3f4f6',icon:'🔰',filter:'수습중'},
+    {label:currYr+'년 지급액 합계',val:(totalAmt/10000).toLocaleString()+'만원',bg:'#fef3c7',icon:'💰',filter:''},
   ];
   // 과거 연도별 통계
   const yrCards=yrs.filter(yr=>yr!==currYr).slice(-3).map(yr=>{
     const c25=all.filter(h=>{const v=h['y'+yr];return v==='25만원'||v==='Y';}).length;
     const c50=all.filter(h=>h['y'+yr]==='50만원').length;
     const cNo=all.filter(h=>h['y'+yr]==='미수검'||h['y'+yr]==='N').length;
-    return{label:yr+'년 수검',val:(c25+c50)+'명',sub:'25만:'+c25+' / 50만:'+c50+' / 미수검:'+cNo,bg:'#ede9fe',icon:'🏥'};
+    return{label:yr+'년 수검',val:(c25+c50)+'명',sub:'25만:'+c25+' / 50만:'+c50+' / 미수검:'+cNo,bg:'#ede9fe',icon:'🏥',filter:''};
   });
-  el.innerHTML=[...cards,...yrCards].map(c=>`<div class="parking-lot-card" style="background:${c.bg}20;border-color:${c.bg};">
+  el.innerHTML=[...cards,...yrCards].map(c=>`<div class="parking-lot-card" style="background:${c.bg}20;border-color:${c.bg};${c.filter!==undefined?'cursor:pointer;':''}transition:transform 0.1s;box-shadow:0 1px 4px rgba(0,0,0,0.06);" onclick="_filterHealthByCard('${c.filter}')" title="${c.filter?'클릭하여 필터 적용':''}">
     <div class="plc-head"><span style="font-size:22px;">${c.icon}</span></div>
     <div class="plc-stat-val">${c.val}</div>
     <div class="plc-stat-lbl">${c.label}</div>
     ${c.sub?`<div style="font-size:10px;color:var(--text3);margin-top:2px;">${c.sub}</div>`:''}
   </div>`).join('');
+}
+
+function _filterHealthByCard(filter){
+  const sel=document.getElementById('healthPlanFilter');
+  if(!sel)return;
+  if(filter==='done'){
+    // 수검완료 = 25만원 필터 (일단 25만원으로)
+    sel.value='25만원';
+  } else if(filter==='수습중'){
+    sel.value='수습중';
+  } else if(filter==='미수검'){
+    sel.value='미수검';
+  } else {
+    sel.value='';
+  }
+  renderHealthTable();
+  document.getElementById('healthSummaryCards').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function renderHealthTable(){
@@ -5033,18 +5509,18 @@ function renderHealthTable(){
   const thead=document.getElementById('healthThead');
   if(thead){
     thead.innerHTML='<tr>'
-      +'<th style="width:40px;">#</th>'
+      +'<th style="width:32px;text-align:center;">#</th>'
       +'<th style="width:60px;">사번</th>'
-      +'<th style="width:80px;">성명</th>'
-      +'<th style="width:55px;">프로젝트</th>'
-      +'<th>실</th>'
-      +'<th>팀</th>'
-      +'<th style="width:70px;">패턴</th>'
+      +'<th style="width:70px;">성명</th>'
+      +'<th style="width:60px;text-align:center;">소속</th>'
+      +'<th style="width:100px;max-width:100px;">실</th>'
+      +'<th style="width:110px;max-width:110px;">팀</th>'
+      +'<th style="width:70px;text-align:center;">패턴</th>'
       +yrs.map(yr=>{
         const isNow=(yr===currYr);
-        return`<th style="width:90px;text-align:center;${isNow?'background:#fef9c3;color:#92400e;':''}">${yr}년${isNow?'<br><span style="font-size:9px;background:#f59e0b;color:#fff;border-radius:6px;padding:0 4px;font-weight:normal;">올해</span>':''}</th>`;
+        return`<th style="width:76px;text-align:center;${isNow?'background:#fef9c3;color:#92400e;':''}">${yr}년${isNow?'<br><span style="font-size:9px;background:#f59e0b;color:#fff;border-radius:6px;padding:0 4px;font-weight:normal;">올해</span>':''}</th>`;
       }).join('')
-      +'<th style="width:50px;">관리</th>'
+      +'<th style="width:54px;text-align:center;">관리</th>'
       +'</tr>';
   }
   const tbody=document.getElementById('healthTbody');
@@ -5060,7 +5536,7 @@ function renderHealthTable(){
       if(isNow){
         const pred=predictForYear(h,yr,yrs);
         const predColor=pred==='수습중'?'#6b7280':pred==='미대상'?'#94a3b8':pred==='50만원'?'#7c3aed':'#2563eb';
-        return`<span style="color:${predColor};font-size:10px;opacity:0.65;">${pred}<br><span style="font-size:9px;">(예정)</span></span>`;
+        return`<span style="color:${predColor};font-size:10px;opacity:0.65;white-space:nowrap;">${pred}<span style="font-size:9px;">(예정)</span></span>`;
       }
       return'<span style="color:#94a3b8;">-</span>';
     }
@@ -5075,18 +5551,20 @@ function renderHealthTable(){
   const today=new Date();today.setHours(0,0,0,0);
 
   tbody.innerHTML=filtered.map((h,i)=>`<tr>
-    <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
-    <td style="font-family:monospace;font-size:11px;color:var(--text3);">${h.id}</td>
-    <td style="font-weight:600;">${h.name}${h.probEndDate&&new Date(h.probEndDate)>today?'<span style="font-size:9px;background:#e2e8f0;color:#64748b;border-radius:6px;padding:0 4px;margin-left:3px;">수습</span>':''}</td>
-    <td><span class="park-badge ${h.project==='E7'?'paid':h.project==='SSR'?'free':'active'}" style="font-size:10px;">${h.project||'-'}</span></td>
-    <td style="font-size:12px;">${h.dept||'-'}</td>
-    <td style="font-size:11px;color:var(--text2);">${h.team||'-'}</td>
+    <td style="font-size:11px;color:var(--text3);text-align:center;padding:6px 4px;">${i+1}</td>
+    <td style="font-family:monospace;font-size:11px;color:var(--text3);padding:6px 8px;">${h.id}</td>
+    <td style="font-weight:600;white-space:nowrap;">
+      <span>${h.name}</span>${h.probEndDate&&new Date(h.probEndDate)>today?' <span style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 5px;font-weight:600;vertical-align:middle;">수습</span>':''}
+    </td>
+    <td style="text-align:center;"><span class="park-badge ${h.project==='E7'?'paid':h.project==='SSR'?'free':'active'}" style="font-size:10px;">${h.project||'-'}</span></td>
+    <td style="font-size:11px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${h.dept||''}">${h.dept||'-'}</td>
+    <td style="font-size:11px;color:var(--text2);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${h.team||''}">${h.team||'-'}</td>
     <td style="text-align:center;">${patBadge[h.checkPattern||'25만원']||''}</td>
     ${yrs.map(yr=>{
       const isNow=(yr===currYr);
       return`<td style="text-align:center;${isNow?'background:#fefce8;':''}">${yCell(h['y'+yr],yr,h,isNow)}</td>`;
     }).join('')}
-    <td style="text-align:center;white-space:nowrap;">
+    <td style="text-align:center;white-space:nowrap;min-width:54px;">
       <button class="btn btn-xs btn-ghost" onclick="openEditHealthModal('${h.id}')">수정</button>
     </td>
   </tr>`).join('');
@@ -5107,6 +5585,7 @@ function openAddHealthEmpModal(){
   document.getElementById('editHealthProbEnd').value='';
   document.getElementById('editHealthPattern').value='25만원';
   document.getElementById('editHealthDeleteBtn').style.display='none';
+  const _ab=document.getElementById('editHealthActivateBtn');if(_ab)_ab.style.display='none';
   _renderEditHealthYearFields(null);
   openModal('editHealthModal');
 }
@@ -5122,6 +5601,19 @@ function openEditHealthModal(id){
   document.getElementById('editHealthProbEnd').value=h.probEndDate||'';
   document.getElementById('editHealthPattern').value=h.checkPattern||'25만원';
   document.getElementById('editHealthDeleteBtn').style.display='';
+  // 퇴직처리 버튼: 수정 모달 열릴 때 항상 표시
+  const retBtn=document.getElementById('editHealthRetireBtn');
+  if(retBtn)retBtn.style.display='';
+  // 대상자 활성화 버튼: eligible이 true가 아니고 수습종료일이 오늘 이하인 경우 표시
+  const activBtn=document.getElementById('editHealthActivateBtn');
+  if(activBtn){
+    const notEligible=(h.eligible!==true);
+    const probD2=h.probEndDate?new Date(h.probEndDate):null;
+    if(probD2)probD2.setHours(0,0,0,0);
+    const todayD2=new Date();todayD2.setHours(0,0,0,0);
+    const probPast=probD2&&probD2<=todayD2;
+    activBtn.style.display=(notEligible&&probPast)?'':'none';
+  }
   _renderEditHealthYearFields(h);
   openModal('editHealthModal');
 }
@@ -5173,14 +5665,20 @@ function saveHealthEdit(){
     const empName=document.getElementById('editHealthEmpName').value.trim();
     if(!empId||!empName){showToast('사번과 성명을 입력하세요','error');return;}
     if(all.find(h=>h.id===empId)){showToast('이미 존재하는 사번입니다','error');return;}
+    const _probEnd=document.getElementById('editHealthProbEnd').value;
+    const _probD=_probEnd?new Date(_probEnd):null;
+    const _today=new Date();_today.setHours(0,0,0,0);
+    const _hasFutureProb=_probD&&_probD>_today;
     const entry={
       id:empId,name:empName,
       project:document.getElementById('editHealthProject').value,
       dept:document.getElementById('editHealthDept').value.trim(),
       team:document.getElementById('editHealthTeam').value.trim(),
       joinDate:document.getElementById('editHealthJoinDate').value,
-      probEndDate:document.getElementById('editHealthProbEnd').value,
+      probEndDate:_probEnd,
       checkPattern:document.getElementById('editHealthPattern').value,
+      eligible:_hasFutureProb?false:true,
+      eligibleFrom:_hasFutureProb&&_probD?String(_probD.getFullYear()+1):'',
     };
     yrs.forEach(yr=>{const sel=document.getElementById('editHealthY'+yr);if(sel)entry['y'+yr]=sel.value;});
     all.push(entry);
@@ -5206,6 +5704,28 @@ function deleteHealthEmp(id){
   LS.set(HEALTH_KEY,all.filter(x=>x.id!==id));
   closeModal('editHealthModal');
   renderHealth();updateStatCards();showToast('삭제되었습니다');
+}
+
+function activateHealthEmp(){
+  const id=document.getElementById('editHealthId').value;
+  if(!id)return;
+  const all=loadHealths();
+  const h=all.find(x=>x.id===id);
+  if(!h)return;
+  // eligibleFrom = 수습종료 익년
+  let eligibleFrom='';
+  if(h.probEndDate){
+    const pEnd=new Date(h.probEndDate);
+    eligibleFrom=String(pEnd.getFullYear()+1);
+  } else {
+    eligibleFrom=String(new Date().getFullYear()+1);
+  }
+  h.eligible=true;
+  h.eligibleFrom=eligibleFrom;
+  LS.set(HEALTH_KEY,all);
+  closeModal('editHealthModal');
+  renderHealth();updateStatCards();
+  showToast(h.name+'님이 대상자로 활성화되었습니다. ('+eligibleFrom+'년부터 예약 가능)');
 }
 
 function exportHealthCSV(){
@@ -5277,6 +5797,62 @@ function loadParkingEmps(){
 }
 function saveParkingEmps(data){LS.set(PARKING_EMP_KEY,data);}
 
+function exportParkingCSV(){
+  const emps=loadParkingEmps();
+  const header='ID,주차장,소속,이름,차량번호,구분,상태,등록일,해지일,비고\n';
+  const rows=emps.map(e=>[
+    e.id||'',e.lot||'',e.dept||'',e.name||'',e.carNum||'',
+    e.feeType||'',e.status||'',e.regDate||'',e.endDate||'',e.note||''
+  ].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+header+rows],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='주차관리_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  showToast('주차 CSV 내보내기 완료');
+}
+
+function importParkingCSV(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const lines=e.target.result.replace(/^\uFEFF/,'').split('\n').filter(l=>l.trim());
+      if(lines.length<2){showToast('데이터가 없습니다','error');return;}
+      const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+      const existing=loadParkingEmps();
+      const map={};existing.forEach(e=>{map[e.id]=e;});
+      let cnt=0;
+      lines.slice(1).forEach(line=>{
+        // CSV 파싱 (따옴표 처리)
+        const cols=[];let cur='',inQ=false;
+        for(let i=0;i<line.length;i++){
+          const ch=line[i];
+          if(ch==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+          else if(ch===','&&!inQ){cols.push(cur);cur='';}
+          else cur+=ch;
+        }
+        cols.push(cur);
+        const get=(key)=>{const ci=headers.indexOf(key);return ci>=0?(cols[ci]||'').trim():''};
+        const id=get('ID');if(!id)return;
+        if(!map[id])map[id]={id};
+        map[id].lot=get('주차장');
+        map[id].dept=get('소속');
+        map[id].name=get('이름');
+        map[id].carNum=get('차량번호');
+        map[id].feeType=get('구분');
+        map[id].status=get('상태');
+        map[id].regDate=get('등록일');
+        map[id].endDate=get('해지일');
+        map[id].note=get('비고');
+        cnt++;
+      });
+      saveParkingEmps(Object.values(map));
+      input.value='';renderParking();
+      showToast(cnt+'명 주차 데이터 불러오기 완료');
+    }catch(err){showToast('파일 오류: '+err.message,'error');}
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
 // ─ 주차장 카드 렌더 ─
 function renderParkingLotCards(){
   const lots=loadParkingLots();
@@ -5310,13 +5886,36 @@ function renderParkingLotCards(){
     else totals[key].cancel++;
   });
 
-  let html='';
+  // 전체 현황 카드 계산
+  const allActive=emps.filter(e=>e.status==='재직');
+  const totalFree=allActive.filter(e=>e.feeType==='무료주차').length;
+  const totalPaid=allActive.filter(e=>e.feeType==='유료주차').length;
+  const totalCancel=allActive.filter(e=>e.feeType==='차량해지').length;
+  const totalSlots=lots.reduce((s,l)=>s+l.totalSlots,0);
+  const totalMonthly=lots.reduce((s,l)=>s+(l.companyShare||0)*l.paidSlots,0);
+
+  let html=`<div class="parking-lot-card" style="background:linear-gradient(135deg,#dbeafe,#ede9fe);border-color:#a5b4fc;cursor:pointer;" onclick="_filterParkingByCard('')" title="전체 보기">
+    <div class="plc-head">
+      <span class="plc-name">📊 전체 현황</span>
+    </div>
+    <div class="plc-stats">
+      <div class="plc-stat"><div class="plc-stat-val">${totalSlots}</div><div class="plc-stat-lbl">총 주차 대수</div></div>
+      <div class="plc-stat"><div class="plc-stat-val" style="color:var(--primary);cursor:pointer;" onclick="event.stopPropagation();_filterParkingByCard('','all')">${allActive.length}</div><div class="plc-stat-lbl">전체 등록</div></div>
+      <div class="plc-stat"><div class="plc-stat-val" style="cursor:pointer;" onclick="event.stopPropagation();_filterParkingByCard('','무료주차')">${totalFree}</div><div class="plc-stat-lbl">무료</div></div>
+      <div class="plc-stat"><div class="plc-stat-val" style="cursor:pointer;" onclick="event.stopPropagation();_filterParkingByCard('','유료주차')">${totalPaid}</div><div class="plc-stat-lbl">유료</div></div>
+    </div>
+    <div class="plc-fee">
+      <span>해지 ${totalCancel}명</span>
+      <span style="color:var(--primary);font-weight:600;">月 ${(totalMonthly/10000).toFixed(0)}만원</span>
+    </div>
+  </div>`;
+
   lots.forEach(lot=>{
     const t=totals[lot.name]||{free:0,paid:0,cancel:0};
     const registered=t.free+t.paid;
     const feeText=lot.monthlyFee>0?lot.monthlyFee.toLocaleString()+'원/대':' 무료';
     const compText=lot.companyShare>0?'회사 '+lot.companyShare.toLocaleString()+'원':' 전액무료';
-    html+=`<div class="parking-lot-card" style="background:${lot.color||'#f8fafc'};border-color:${lot.color||'#e2e8f0'}">
+    html+=`<div class="parking-lot-card" style="background:${lot.color||'#f8fafc'};border-color:${lot.color||'#e2e8f0'};cursor:pointer;" onclick="_filterParkingByCard('${lot.name}')" title="${lot.name} 필터">
       <div class="plc-head">
         <span class="plc-name">${lot.icon||'🏢'} ${lot.name}</span>
         <div class="plc-actions">
@@ -5336,6 +5935,17 @@ function renderParkingLotCards(){
     </div>`;
   });
   el.innerHTML=html;
+}
+
+function _filterParkingByCard(lotName, feeType){
+  const lotSel=document.getElementById('parkingLotFilter');
+  const feeSel=document.getElementById('parkingFeeFilter');
+  if(lotSel)lotSel.value=lotName||'';
+  if(feeSel&&feeType&&feeType!=='all')feeSel.value=feeType;
+  else if(feeSel)feeSel.value='';
+  renderParkingTable();
+  const tbl=document.getElementById('parkingTableWrap')||document.querySelector('.parking-table');
+  if(tbl)tbl.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 // ─ 직원 테이블 렌더 ─
@@ -5604,6 +6214,576 @@ window.addEventListener('popstate',(e)=>{
   if(PAGES.includes(page))showPage(page);
 });
 window.onload=init;
+
+// ============================================================
+// 건강검진 예산 트래킹
+// ============================================================
+const HEALTH_BUDGET_KEY='intra_health_budget'; // [{year:'26',budget:75000000}]
+
+function loadHealthBudgets(){return LS.get(HEALTH_BUDGET_KEY)||[];}
+function saveHealthBudgets(d){LS.set(HEALTH_BUDGET_KEY,d);}
+
+function toggleHealthBudgetCard(){
+  const body=document.getElementById('healthBudgetBody');
+  const chev=document.getElementById('healthBudgetChevron');
+  if(!body)return;
+  const open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  if(chev)chev.textContent=open?'▼':'▲';
+  if(!open)renderHealthBudgetContent();
+}
+
+function openHealthBudgetModal(){
+  const yr=new Date().getFullYear().toString().slice(-2);
+  document.getElementById('budgetYear').value='20'+yr;
+  const budgets=loadHealthBudgets();
+  const existing=budgets.find(b=>b.year===yr);
+  document.getElementById('budgetTotal').value=existing?existing.budget:'';
+  openModal('healthBudgetModal');
+}
+
+function saveHealthBudget(){
+  const yr=(document.getElementById('budgetYear').value||'').slice(-2);
+  const total=parseInt(document.getElementById('budgetTotal').value)||0;
+  if(!yr||!total){showToast('연도와 예산을 입력하세요','error');return;}
+  const budgets=loadHealthBudgets();
+  const idx=budgets.findIndex(b=>b.year===yr);
+  if(idx>=0)budgets[idx].budget=total;
+  else budgets.push({year:yr,budget:total});
+  saveHealthBudgets(budgets);
+  closeModal('healthBudgetModal');
+  renderHealthBudgetContent();
+  showToast('예산이 저장되었습니다');
+}
+
+function renderHealthBudgetContent(){
+  const el=document.getElementById('healthBudgetContent');if(!el)return;
+  const all=loadHealths();
+  const budgets=loadHealthBudgets();
+  const yrs=getHealthYears();
+  const currYr=new Date().getFullYear().toString().slice(-2);
+
+  const rows=yrs.map(yr=>{
+    const b=budgets.find(x=>x.year===yr);
+    const budget=b?b.budget:0;
+    const spent=all.reduce((s,h)=>{
+      const v=h['y'+yr]||'';
+      if(v==='25만원')return s+250000;
+      if(v==='50만원')return s+500000;
+      return s;
+    },0);
+    const pct=budget>0?Math.min(Math.round(spent/budget*100),100):0;
+    const isOver=budget>0&&spent>budget;
+    const barColor=isOver?'#ef4444':pct>80?'#f59e0b':'#22c55e';
+    const isNow=(yr===currYr);
+    return{yr,budget,spent,pct,isOver,barColor,isNow};
+  });
+
+  el.innerHTML=`<div style="display:flex;flex-direction:column;gap:12px;">
+    ${rows.map(r=>`
+    <div style="background:${r.isNow?'#fefce8':'var(--bg2)'};border:1px solid ${r.isNow?'#fde68a':'var(--border2)'};border-radius:8px;padding:12px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:13px;font-weight:700;color:var(--text);">20${r.yr}년 ${r.isNow?'<span style="font-size:10px;background:#f59e0b;color:#fff;border-radius:4px;padding:1px 6px;margin-left:4px;">올해</span>':''}</span>
+        <div style="display:flex;gap:16px;align-items:center;">
+          <span style="font-size:12px;color:var(--text2);">실지급: <b style="color:var(--text);">${(r.spent/10000).toLocaleString()}만원</b></span>
+          <span style="font-size:12px;color:var(--text2);">예산: <b style="color:${r.budget?'var(--text)':'#cbd5e1'};">${r.budget?(r.budget/10000).toLocaleString()+'만원':'미설정'}</b></span>
+          ${r.budget?`<span style="font-size:13px;font-weight:800;color:${r.isOver?'#ef4444':r.pct>80?'#d97706':'#16a34a'};">${r.pct}%${r.isOver?' ⚠️초과':''}</span>`:''}
+        </div>
+      </div>
+      ${r.budget?`<div style="background:#e2e8f0;border-radius:999px;height:8px;overflow:hidden;">
+        <div style="width:${r.pct}%;background:${r.barColor};height:100%;border-radius:999px;transition:width 0.4s;"></div>
+      </div>`:'<div style="font-size:11px;color:#94a3b8;">예산 미설정 — 우측 상단 [예산 설정] 버튼으로 입력하세요</div>'}
+    </div>`).join('')}
+  </div>`;
+}
+
+// ============================================================
+// 미수검자 추출
+// ============================================================
+function openUncheckModal(){
+  const sel=document.getElementById('uncheckYear');
+  const yrs=getHealthYears();
+  const currYr=new Date().getFullYear().toString().slice(-2);
+  sel.innerHTML=yrs.map(yr=>`<option value="${yr}" ${yr===currYr?'selected':''}>${20+yr}년</option>`).join('');
+  renderUncheckList();
+  openModal('uncheckModal');
+}
+
+function renderUncheckList(){
+  const yr=(document.getElementById('uncheckYear')||{}).value||'';
+  const all=loadHealths();
+  const today=new Date();today.setHours(0,0,0,0);
+  // 미수검자: 해당 연도 값이 '미수검' 또는 빈값이고, 수습중/미대상이 아닌 사람
+  const uncheck=all.filter(h=>{
+    const v=h['y'+yr]||'';
+    if(v==='수습중'||v==='미대상'||v==='25만원'||v==='50만원')return false;
+    if(h.probEndDate){
+      const pd=new Date(h.probEndDate);pd.setHours(0,0,0,0);
+      if(pd>today)return false; // 아직 수습중
+    }
+    if(h.eligible===false){
+      const fromYr=parseInt(h.eligibleFrom||'9999');
+      if(parseInt('20'+yr)<fromYr)return false;
+    }
+    return true;
+  });
+  const cnt=document.getElementById('uncheckCount');
+  if(cnt)cnt.textContent=`총 ${uncheck.length}명 미수검`;
+  const el=document.getElementById('uncheckList');
+  if(!el)return;
+  if(!uncheck.length){
+    el.innerHTML='<div style="text-align:center;padding:24px;color:var(--text3);">미수검자가 없습니다 🎉</div>';
+    _updateEmailDraft([],yr);return;
+  }
+  el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px;">
+    <thead><tr style="background:var(--bg2);">
+      <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border2);">#</th>
+      <th style="padding:6px 10px;text-align:left;">성명</th>
+      <th style="padding:6px 10px;text-align:left;">소속</th>
+      <th style="padding:6px 10px;text-align:left;">팀</th>
+      <th style="padding:6px 10px;text-align:center;">패턴</th>
+      <th style="padding:6px 10px;text-align:center;">20${yr}년</th>
+    </tr></thead>
+    <tbody>
+    ${uncheck.map((h,i)=>`<tr style="border-bottom:1px solid var(--border2);">
+      <td style="padding:6px 10px;color:var(--text3);">${i+1}</td>
+      <td style="padding:6px 10px;font-weight:600;">${h.name}</td>
+      <td style="padding:6px 10px;color:var(--text2);">${h.dept||'-'}</td>
+      <td style="padding:6px 10px;color:var(--text2);">${h.team||'-'}</td>
+      <td style="padding:6px 10px;text-align:center;">${h.checkPattern||'25만원'}</td>
+      <td style="padding:6px 10px;text-align:center;"><span style="background:#fee2e2;color:#b91c1c;border-radius:4px;padding:1px 6px;">${h['y'+yr]||'미수검'}</span></td>
+    </tr>`).join('')}
+    </tbody>
+  </table>`;
+  _updateEmailDraft(uncheck,yr);
+}
+
+function _updateEmailDraft(list,yr){
+  const el=document.getElementById('uncheckEmailDraft');if(!el)return;
+  const today=new Date();
+  const dateStr=today.getFullYear()+'년 '+(today.getMonth()+1)+'월 '+today.getDate()+'일';
+  if(!list.length){el.value='(미수검자 없음)';return;}
+  const names=list.map(h=>h.dept?h.dept+' '+h.name:h.name).join(', ');
+  el.value=`제목: [건강검진] 20${yr}년 건강검진 미수검 안내
+
+안녕하세요, 총무팀입니다.
+
+${dateStr} 기준, 20${yr}년 건강검진 미수검 대상자(${list.length}명)를 안내드립니다.
+
+대상자: ${names}
+
+건강검진은 임직원 복리후생의 일환으로, 연내 반드시 수검 완료 부탁드립니다.
+수검 완료 후 총무팀으로 영수증 및 결과지를 제출해 주세요.
+
+감사합니다.
+총무팀 드림`;
+}
+
+function copyUncheckEmail(){
+  const el=document.getElementById('uncheckEmailDraft');if(!el)return;
+  navigator.clipboard.writeText(el.value).then(()=>showToast('이메일 초안이 복사되었습니다')).catch(()=>{el.select();document.execCommand('copy');showToast('이메일 초안이 복사되었습니다');});
+}
+
+function exportUncheckCSV(){
+  const yr=(document.getElementById('uncheckYear')||{}).value||'';
+  const all=loadHealths();
+  const today=new Date();today.setHours(0,0,0,0);
+  const uncheck=all.filter(h=>{
+    const v=h['y'+yr]||'';
+    if(v==='수습중'||v==='미대상'||v==='25만원'||v==='50만원')return false;
+    if(h.probEndDate&&new Date(h.probEndDate)>today)return false;
+    if(h.eligible===false&&parseInt('20'+yr)<parseInt(h.eligibleFrom||'9999'))return false;
+    return true;
+  });
+  const hdr='사번,성명,소속,팀,패턴,'+yr+'년 상태';
+  const rows=uncheck.map(h=>[h.id,h.name,h.dept||'',h.team||'',h.checkPattern||'25만원',h['y'+yr]||'미수검'].join(','));
+  dl('\uFEFF'+[hdr,...rows].join('\n'),'text/csv','미수검자_'+yr+'년_'+new Date().toISOString().slice(0,10)+'.csv');
+}
+
+// ============================================================
+// 퇴직자 자동처리
+// ============================================================
+let _retireEmpId=null;
+let _retireSource=null; // 'health'
+
+function openRetireModal(source){
+  _retireSource=source;
+  const id=document.getElementById('editHealthId').value;
+  _retireEmpId=id;
+  const all=loadHealths();
+  const h=all.find(x=>x.id===id);if(!h)return;
+  _retireEmpId=id;
+  const infoEl=document.getElementById('retireEmpInfo');
+  if(infoEl)infoEl.innerHTML=`👤 <b>${h.name}</b> &nbsp;|&nbsp; ${h.project} / ${h.dept} ${h.team}`;
+  document.getElementById('retireDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('retireChkHealth').checked=true;
+  document.getElementById('retireChkParking').checked=true;
+  document.getElementById('retireChkSateak').checked=true;
+  const res=document.getElementById('retireResult');if(res)res.style.display='none';
+  if(source==='health')closeModal('editHealthModal');
+  openModal('retireModal');
+}
+
+function executeRetire(){
+  const id=_retireEmpId;if(!id){showToast('처리할 임직원이 없습니다','error');return;}
+  const retireDate=document.getElementById('retireDate').value||new Date().toISOString().slice(0,10);
+  const doHealth=document.getElementById('retireChkHealth').checked;
+  const doParking=document.getElementById('retireChkParking').checked;
+  const doSateak=document.getElementById('retireChkSateak').checked;
+
+  const results=[];
+  let empName='';
+
+  // 1) 건강검진 처리
+  if(doHealth){
+    const healths=loadHealths();
+    const h=healths.find(x=>x.id===id);
+    if(h){
+      empName=h.name;
+      const currYr=new Date().getFullYear().toString().slice(-2);
+      h.eligible=false;
+      h.eligibleFrom='9999'; // 사실상 영구 비대상
+      // 올해 수검 안했으면 미대상 처리
+      const yrs=getHealthYears();
+      yrs.forEach(yr=>{
+        if(!h['y'+yr]||h['y'+yr]==='')h['y'+yr]='미대상';
+        if(h['y'+yr]==='수습중')h['y'+yr]='미대상';
+      });
+      LS.set(HEALTH_KEY,healths);
+      results.push('✅ 건강검진: 수검 대상 제외 처리 완료');
+    }else{results.push('⚠️ 건강검진: 해당 임직원 없음');}
+  }
+
+  // 2) 주차장 처리
+  if(doParking){
+    const emps=loadParkingEmps();
+    // 이름으로 매칭 (사번 없으면)
+    const healths=loadHealths();
+    const h=healths.find(x=>x.id===id);
+    const name=h?h.name:empName;
+    const matched=emps.filter(e=>e.name===name||e.empId===id);
+    if(matched.length>0){
+      matched.forEach(e=>{e.status='퇴직';e.endDate=retireDate;});
+      saveParkingEmps(emps);
+      results.push(`✅ 주차장: ${matched.length}건 퇴직 처리 완료`);
+    }else{results.push('⚠️ 주차장: 등록 내역 없음');}
+  }
+
+  // 3) 사택 처리
+  if(doSateak){
+    const sateaks=loadSateaks();
+    const healths=loadHealths();
+    const h=healths.find(x=>x.id===id);
+    const name=h?h.name:empName;
+    const matched=sateaks.filter(s=>s.tenant===name&&s.status==='입주중');
+    if(matched.length>0){
+      matched.forEach(s=>{s.status='퇴거';s.moveOutDate=s.moveOutDate||retireDate;});
+      saveSateaks(sateaks);
+      results.push(`✅ 사택: ${matched.length}건 퇴거 처리 완료`);
+    }else{results.push('⚠️ 사택: 입주중 내역 없음');}
+  }
+
+  const resEl=document.getElementById('retireResult');
+  if(resEl){
+    resEl.style.display='';
+    resEl.innerHTML='<div style="font-weight:600;margin-bottom:6px;">처리 결과</div>'+results.map(r=>`<div style="margin:2px 0;">${r}</div>`).join('');
+    resEl.style.background=results.every(r=>r.startsWith('✅'))?'#dcfce7':'#fff7ed';
+    resEl.style.border='1px solid '+(results.every(r=>r.startsWith('✅'))?'#86efac':'#fdba74');
+  }
+
+  renderHealth();renderSateak();renderParkingLotCards();renderParkingTable();updateStatCards();
+  showToast((empName||'임직원')+'님 퇴직 처리가 완료되었습니다');
+}
+
+// ============================================================
+// 월별 업무 현황 보고서
+// ============================================================
+function openMonthlyReport(){
+  const now=new Date();
+  const ySel=document.getElementById('reportYear');
+  const mSel=document.getElementById('reportMonth');
+  if(ySel){
+    let yHtml='';
+    for(let y=now.getFullYear();y>=2024;y--)yHtml+=`<option value="${y}" ${y===now.getFullYear()?'selected':''}>${y}년</option>`;
+    ySel.innerHTML=yHtml;
+  }
+  if(mSel){
+    let mHtml='';
+    for(let m=1;m<=12;m++)mHtml+=`<option value="${m}" ${m===(now.getMonth()+1)?'selected':''}>${m}월</option>`;
+    mSel.innerHTML=mHtml;
+  }
+  openModal('monthlyReportModal');
+  renderMonthlyReport();
+}
+
+function renderMonthlyReport(){
+  const el=document.getElementById('monthlyReportContent');if(!el)return;
+  const yr=parseInt((document.getElementById('reportYear')||{}).value||new Date().getFullYear());
+  const mo=parseInt((document.getElementById('reportMonth')||{}).value||(new Date().getMonth()+1));
+  const yrStr=String(yr).slice(-2);
+  const moStr=String(mo).padStart(2,'0');
+  const today=new Date();
+
+  // 사택 현황
+  const sateaks=loadSateaks();
+  const activeSateak=sateaks.filter(s=>s.status==='입주중').length;
+  const retireSateak=sateaks.filter(s=>s.status==='퇴거').length;
+
+  // 건강검진 현황
+  const healths=loadHealths();
+  const hDone=healths.filter(h=>h['y'+yrStr]==='25만원'||h['y'+yrStr]==='50만원').length;
+  const hNo=healths.filter(h=>h['y'+yrStr]==='미수검').length;
+  const hAmt=healths.reduce((s,h)=>{
+    const v=h['y'+yrStr]||'';
+    if(v==='25만원')return s+250000;
+    if(v==='50만원')return s+500000;
+    return s;
+  },0);
+
+  // 주차장 현황
+  const parkEmps=loadParkingEmps();
+  const activePark=parkEmps.filter(e=>e.status==='재직').length;
+  const freePark=parkEmps.filter(e=>e.status==='재직'&&e.feeType==='무료주차').length;
+  const paidPark=parkEmps.filter(e=>e.status==='재직'&&e.feeType==='유료주차').length;
+  const lots=loadParkingLots();
+  const monthlyFee=lots.reduce((s,l)=>s+(l.companyShare||0)*l.paidSlots,0);
+
+  // 상품권 현황 (해당 월)
+  const vouchers=loadVouchers();
+  const moVouchers=vouchers.filter(v=>v.flowType==='out'&&v.date&&v.date.startsWith(yr+'-'+moStr));
+  const moVoucherAmt=moVouchers.reduce((s,v)=>s+(v.totalAmt||0),0);
+
+  el.innerHTML=`<div id="printableReport" style="font-family:'Noto Sans KR',sans-serif;padding:0;">
+    <div style="border:2px solid #1e293b;border-radius:12px;overflow:hidden;">
+      <!-- 헤더 -->
+      <div style="background:#1e293b;color:#fff;padding:20px 24px;">
+        <div style="font-size:18px;font-weight:800;margin-bottom:4px;">총무팀 업무 현황 보고서</div>
+        <div style="font-size:13px;opacity:0.7;">${yr}년 ${mo}월 기준 &nbsp;·&nbsp; 작성일: ${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}.</div>
+      </div>
+
+      <!-- 4개 요약 카드 -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid #e2e8f0;">
+        <div style="padding:16px 18px;border-right:1px solid #e2e8f0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:6px;">🏠 사택 현황</div>
+          <div style="font-size:24px;font-weight:800;color:#1e293b;">${activeSateak}<span style="font-size:13px;font-weight:400;">개</span></div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;">입주중 / 퇴거 ${retireSateak}개</div>
+        </div>
+        <div style="padding:16px 18px;border-right:1px solid #e2e8f0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:6px;">🏥 건강검진 (${yr}년)</div>
+          <div style="font-size:24px;font-weight:800;color:#16a34a;">${hDone}<span style="font-size:13px;font-weight:400;">명</span></div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;">수검완료 / 미수검 ${hNo}명 / ${(hAmt/10000).toLocaleString()}만원</div>
+        </div>
+        <div style="padding:16px 18px;border-right:1px solid #e2e8f0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:6px;">🚗 주차 현황</div>
+          <div style="font-size:24px;font-weight:800;color:#2563eb;">${activePark}<span style="font-size:13px;font-weight:400;">명</span></div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;">무료 ${freePark} / 유료 ${paidPark} / 월 ${(monthlyFee/10000).toFixed(0)}만원</div>
+        </div>
+        <div style="padding:16px 18px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:6px;">🎁 이번 달 상품권</div>
+          <div style="font-size:24px;font-weight:800;color:#d97706;">${moVouchers.length}<span style="font-size:13px;font-weight:400;">건</span></div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;">${(moVoucherAmt/10000).toLocaleString()}만원 지급</div>
+        </div>
+      </div>
+
+      <!-- 사택 상세 -->
+      <div style="padding:16px 24px;border-bottom:1px solid #e2e8f0;">
+        <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:10px;">🏠 사택 입주 현황 (입주중 ${activeSateak}개)</div>
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead><tr style="background:#f8fafc;">
+            <th style="padding:5px 8px;text-align:left;border:1px solid #e2e8f0;">#</th>
+            <th style="padding:5px 8px;text-align:left;border:1px solid #e2e8f0;">사택명</th>
+            <th style="padding:5px 8px;text-align:left;border:1px solid #e2e8f0;">입주자</th>
+            <th style="padding:5px 8px;text-align:left;border:1px solid #e2e8f0;">소속</th>
+            <th style="padding:5px 8px;text-align:left;border:1px solid #e2e8f0;">계약기간</th>
+            <th style="padding:5px 8px;text-align:right;border:1px solid #e2e8f0;">보증금</th>
+          </tr></thead>
+          <tbody>
+          ${sateaks.filter(s=>s.status==='입주중').map((s,i)=>`
+          <tr><td style="padding:4px 8px;border:1px solid #e2e8f0;">${i+1}</td>
+          <td style="padding:4px 8px;border:1px solid #e2e8f0;font-weight:600;">${s.name}</td>
+          <td style="padding:4px 8px;border:1px solid #e2e8f0;">${s.tenant||'-'}</td>
+          <td style="padding:4px 8px;border:1px solid #e2e8f0;">${s.dept||'-'}</td>
+          <td style="padding:4px 8px;border:1px solid #e2e8f0;">${s.contract||'-'}</td>
+          <td style="padding:4px 8px;border:1px solid #e2e8f0;text-align:right;">${s.deposit>0?s.deposit.toLocaleString()+'원':'-'}</td>
+          </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 건강검진 예산 현황 -->
+      <div style="padding:16px 24px;border-bottom:1px solid #e2e8f0;">
+        <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:10px;">🏥 건강검진 예산 현황 (${yr}년)</div>
+        ${(()=>{
+          const budgets=loadHealthBudgets();
+          const b=budgets.find(x=>x.year===yrStr);
+          const budget=b?b.budget:0;
+          const pct=budget>0?Math.min(Math.round(hAmt/budget*100),100):0;
+          const barColor=pct>100?'#ef4444':pct>80?'#f59e0b':'#22c55e';
+          return `<div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:12px;">실지급: <b>${(hAmt/10000).toLocaleString()}만원</b></span>
+            <span style="font-size:12px;">예산: <b>${budget?(budget/10000).toLocaleString()+'만원':'미설정'}</b></span>
+            ${budget?`<span style="font-size:12px;font-weight:700;color:${barColor};">${pct}% 소진</span>`:''}
+          </div>
+          ${budget?`<div style="background:#e2e8f0;border-radius:999px;height:10px;overflow:hidden;"><div style="width:${pct}%;background:${barColor};height:100%;border-radius:999px;"></div></div>`:''}
+          <div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:#64748b;">
+            <span>수검완료: <b>${hDone}명</b></span><span>미수검: <b>${hNo}명</b></span><span>총인원: <b>${healths.length}명</b></span>
+          </div>`;
+        })()}
+      </div>
+
+      <!-- 이번 달 상품권 -->
+      ${moVouchers.length?`<div style="padding:16px 24px;">
+        <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:10px;">🎁 ${mo}월 상품권 지급 내역 (${moVouchers.length}건)</div>
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead><tr style="background:#f8fafc;">
+            <th style="padding:5px 8px;border:1px solid #e2e8f0;">날짜</th>
+            <th style="padding:5px 8px;border:1px solid #e2e8f0;">종류</th>
+            <th style="padding:5px 8px;border:1px solid #e2e8f0;">목적</th>
+            <th style="padding:5px 8px;border:1px solid #e2e8f0;">수령인</th>
+            <th style="padding:5px 8px;text-align:right;border:1px solid #e2e8f0;">금액</th>
+          </tr></thead>
+          <tbody>${moVouchers.map(v=>`<tr>
+            <td style="padding:4px 8px;border:1px solid #e2e8f0;">${v.date}</td>
+            <td style="padding:4px 8px;border:1px solid #e2e8f0;">${v.vtype}</td>
+            <td style="padding:4px 8px;border:1px solid #e2e8f0;">${v.purpose||'-'}</td>
+            <td style="padding:4px 8px;border:1px solid #e2e8f0;">${v.recipient||'-'}</td>
+            <td style="padding:4px 8px;text-align:right;border:1px solid #e2e8f0;">${(v.totalAmt||0).toLocaleString()}원</td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>`:'<div style="padding:12px 24px;font-size:12px;color:#94a3b8;">(이번 달 상품권 지급 내역 없음)</div>'}
+    </div>
+  </div>`;
+}
+
+function printMonthlyReport(){
+  const content=document.getElementById('printableReport');
+  if(!content)return;
+  const w=window.open('','_blank');
+  w.document.write('<html><head><title>총무팀 업무 현황 보고서</title><meta charset="utf-8"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"Noto Sans KR",sans-serif;padding:20px;}@media print{body{padding:0;}button{display:none;}}</style></head><body>');
+  w.document.write(content.outerHTML);
+  w.document.write('</body></html>');
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+// 건강검진 퇴직처리 버튼 표시 조건 추가 (editHealthRetireBtn)
+const _origOpenEditHealthModal=openEditHealthModal;
+function openEditHealthModal(id){
+  _origOpenEditHealthModal(id);
+  const retBtn=document.getElementById('editHealthRetireBtn');
+  if(retBtn)retBtn.style.display=''; // 항상 표시
+}
+
 </script>
+
+<!-- ===== 퇴직자 처리 모달 ===== -->
+<div class="modal-overlay" id="retireModal" style="display:none;" onclick="if(event.target===this)closeModal('retireModal')">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-header">
+      <div class="modal-title">🚪 퇴직자 일괄 처리</div>
+      <button class="modal-close" onclick="closeModal('retireModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:12px;margin-bottom:16px;font-size:12px;color:#92400e;">
+        ⚠️ 아래 항목들을 일괄 처리합니다. 되돌릴 수 없으니 신중하게 진행하세요.
+      </div>
+      <div id="retireEmpInfo" style="font-size:14px;font-weight:600;margin-bottom:16px;padding:10px;background:var(--bg2);border-radius:8px;"></div>
+      <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">퇴직일</div>
+      <input type="date" id="retireDate" style="width:100%;padding:8px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">처리 항목 선택</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+          <input type="checkbox" id="retireChkHealth" checked> <span>건강검진 — 수검 대상에서 제외 (미대상 처리)</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+          <input type="checkbox" id="retireChkParking" checked> <span>주차장 — 등록 상태 '퇴직'으로 변경</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+          <input type="checkbox" id="retireChkSateak" checked> <span>사택 — 입주중인 경우 퇴거 상태로 변경</span>
+        </label>
+      </div>
+      <div id="retireResult" style="display:none;background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:12px;font-size:12px;"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('retireModal')">취소</button>
+      <button class="btn btn-danger" onclick="executeRetire()">🚪 퇴직 처리 실행</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 미수검자 추출 모달 ===== -->
+<div class="modal-overlay" id="uncheckModal" style="display:none;" onclick="if(event.target===this)closeModal('uncheckModal')">
+  <div class="modal-box" style="max-width:680px;max-height:90vh;">
+    <div class="modal-header">
+      <div class="modal-title">📋 미수검자 추출</div>
+      <button class="modal-close" onclick="closeModal('uncheckModal')">✕</button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto;">
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
+        <select id="uncheckYear" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;" onchange="renderUncheckList()">
+        </select>
+        <span id="uncheckCount" style="font-size:12px;color:var(--text3);"></span>
+        <div style="margin-left:auto;display:flex;gap:6px;">
+          <button class="btn btn-ghost btn-sm" onclick="exportUncheckCSV()">⬇ CSV</button>
+          <button class="btn btn-primary btn-sm" onclick="copyUncheckEmail()">📧 이메일 초안 복사</button>
+        </div>
+      </div>
+      <div id="uncheckList" style="max-height:400px;overflow-y:auto;"></div>
+      <div style="margin-top:12px;border-top:1px solid var(--border2);padding-top:12px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;">📧 이메일 초안</div>
+        <textarea id="uncheckEmailDraft" readonly style="width:100%;height:120px;font-size:11px;padding:8px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg2);resize:none;line-height:1.6;"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('uncheckModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 건강검진 예산 설정 모달 ===== -->
+<div class="modal-overlay" id="healthBudgetModal" style="display:none;" onclick="if(event.target===this)closeModal('healthBudgetModal')">
+  <div class="modal-box" style="max-width:380px;">
+    <div class="modal-header">
+      <div class="modal-title">💰 건강검진 예산 설정</div>
+      <button class="modal-close" onclick="closeModal('healthBudgetModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>연도</label>
+        <input type="number" id="budgetYear" value="" style="width:100%;padding:8px;border:1px solid var(--border2);border-radius:var(--radius-sm);">
+      </div>
+      <div class="form-group">
+        <label>총 예산 (원)</label>
+        <input type="number" id="budgetTotal" placeholder="예: 75000000" style="width:100%;padding:8px;border:1px solid var(--border2);border-radius:var(--radius-sm);">
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">입력 예: 25만원×300명 = 75,000,000</div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('healthBudgetModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveHealthBudget()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 월별 업무 보고서 모달 ===== -->
+<div class="modal-overlay" id="monthlyReportModal" style="display:none;" onclick="if(event.target===this)closeModal('monthlyReportModal')">
+  <div class="modal-box" style="max-width:760px;max-height:90vh;">
+    <div class="modal-header">
+      <div class="modal-title">📊 총무팀 월별 업무 현황 보고서</div>
+      <button class="modal-close" onclick="closeModal('monthlyReportModal')">✕</button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto;">
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">
+        <select id="reportYear" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;" onchange="renderMonthlyReport()"></select>
+        <select id="reportMonth" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;" onchange="renderMonthlyReport()"></select>
+        <button class="btn btn-primary btn-sm" onclick="printMonthlyReport()">🖨️ 인쇄 / PDF 저장</button>
+      </div>
+      <div id="monthlyReportContent"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('monthlyReportModal')">닫기</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
