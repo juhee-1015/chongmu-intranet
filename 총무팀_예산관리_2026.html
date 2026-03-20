@@ -1444,9 +1444,9 @@ function renderMonth(container, m) {
       const origPlanHint = adj && origMonthPlan!==monthPlan
         ? `<span class="orig-val">${fmt(origMonthPlan)}</span>` : '';
 
-      const prevMonthAmt = m>1 ? (actuals[acc.name]?.[m-1]?.amount||0) : 0;
-      const copyBtn = (m>1 && prevMonthAmt>0)
-        ? `<button class="copy-prev-btn" onclick="copyPrevMonth('${acc.name}',${m})" title="${m-1}월 실적(${prevMonthAmt.toLocaleString()}원) 복사">↩${m-1}월</button>`
+      const prevMonthAmt = m>0 ? (actuals[acc.name]?.[m-1]?.amount||0) : 0;
+      const copyBtn = (m>0 && prevMonthAmt>0)
+        ? `<button class="copy-prev-btn" onclick="copyPrevMonth('${acc.name}',${m})" title="${m}월 실적(${prevMonthAmt.toLocaleString()}원) 복사">↩${m}월</button>`
         : '';
       rows += `<tr class="${monthUsed>0?'row-filled':''}">
         <td><span class="account-name">${acc.name}</span>${adjTag}</td>
@@ -2067,7 +2067,7 @@ function copyPrevMonth(accName,m){
   if(prevAmt===0){showToast('이전 월 실적이 없습니다');return;}
   actuals[accName][m].amount=prevAmt;
   saveData(); updateSummary(); renderMain();
-  showToast(`↩ ${m-1}월 실적 복사 완료 (${prevAmt.toLocaleString()}원)`);
+  showToast(`↩ ${m}월 실적 복사 완료 (${prevAmt.toLocaleString()}원)`);
 }
 function updateNote(accName,m,val){
   if(!actuals[accName]) initActuals();
