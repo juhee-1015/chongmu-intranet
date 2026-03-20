@@ -1,6 +1,6 @@
 {
   "_version": 1,
-  "_date": "2026-03-20T06:34:16.126Z",
+  "_date": "2026-03-20T06:48:14.804Z",
   "_app": "총무대백과",
   "vouchers": [],
   "vendors": [
@@ -806,36 +806,6 @@
       "annualMonth": 11,
       "dueDay": 20,
       "memo": "전 층 대청소 일정 공지"
-    },
-    {
-      "id": "t1773901634901",
-      "title": "사택 지출품의서",
-      "category": "복리후생",
-      "recurrence": "monthly",
-      "assignees": [
-        "남궁호"
-      ],
-      "memo": "",
-      "dueDate": "",
-      "dueDay": 10,
-      "annualMonth": 3,
-      "quarterMonths": []
-    },
-    {
-      "id": "t1773913357553",
-      "title": "ㅇㅇ",
-      "category": "ㅇㅇ",
-      "recurrence": "quarterly",
-      "assignees": [
-        "서주희"
-      ],
-      "memo": "",
-      "dueDate": "2027-06-12",
-      "dueDay": -1,
-      "annualMonth": 3,
-      "quarterMonths": [
-        11
-      ]
     }
   ],
   "taskCompletions": {},
