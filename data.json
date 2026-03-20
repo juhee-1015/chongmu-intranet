@@ -1,6 +1,6 @@
 {
   "_version": 1,
-  "_date": "2026-03-19T07:23:02.243Z",
+  "_date": "2026-03-20T06:19:39.046Z",
   "_app": "총무대백과",
   "vouchers": [
     {
@@ -836,7 +836,13 @@
       "quarterMonths": []
     }
   ],
-  "taskCompletions": {},
+  "taskCompletions": {
+    "td13_2026-03": {
+      "doneBy": "",
+      "note": "",
+      "doneAt": "2026-03-18T10:56:04.379Z"
+    }
+  },
   "manuals": [],
   "regulations": [],
   "parkingLots": [
@@ -906,13 +912,13 @@
     },
     {
       "id": "VC-01",
-      "lot": "차량 해지",
-      "dept": "SSR 기획실",
       "name": "김찬중",
-      "status": "재직",
+      "dept": "SSR 기획실",
+      "lot": "",
+      "feeType": "차량해지",
       "carNum": "63우1391",
-      "note": "",
-      "feeType": "차량해지"
+      "status": "퇴직",
+      "note": ""
     },
     {
       "id": "A-03",
