@@ -1,22 +1,8 @@
 {
   "_version": 1,
-  "_date": "2026-03-20T06:19:39.046Z",
+  "_date": "2026-03-20T06:34:16.126Z",
   "_app": "총무대백과",
-  "vouchers": [
-    {
-      "id": "v1773832070713",
-      "date": "2026-03-18",
-      "year": 2026,
-      "purpose": "설날",
-      "recipient": "ㅇㅇ",
-      "vtype": "신세계상품권",
-      "unit": 5000000,
-      "qty": 1,
-      "totalAmt": 5000000,
-      "paidFrom": "",
-      "note": ""
-    }
-  ],
+  "vouchers": [],
   "vendors": [
     {
       "cat": "사옥 및 시설관리",
@@ -55,8 +41,8 @@
       "title": "대표",
       "email": "",
       "phone": "",
+      "fixed": 0,
       "unit": 0,
-      "staffContact": "남궁호",
       "payMethod": "",
       "emailRecv": "",
       "issueDate": "",
@@ -533,37 +519,45 @@
     {
       "id": "l1",
       "cat": "업무포탈",
-      "name": "예산관리 시스템",
+      "name": "총무팀 예산관리 시스템",
       "url": "총무팀_예산관리_2026.html",
       "desc": "연간 예산 실적 관리",
-      "emoji": ""
+      "emoji": "📊"
     },
     {
-      "id": "l1773831561259",
+      "id": "l1773899494456",
       "cat": "업무포탈",
-      "name": "배치도",
+      "name": "자리 배치도",
       "url": "https://office-map-bay.vercel.app/",
       "desc": "",
-      "emoji": ""
+      "emoji": "🏢"
     },
     {
-      "id": "l1773881640565",
-      "cat": "슈크필수",
+      "id": "l1773901290346",
+      "cat": "자주쓰는링크",
       "name": "슈크생활백서",
       "url": "https://loop.cloud.microsoft/p/eyJ3Ijp7InUiOiJodHRwczovL3N1cGVyY3JlYXRpdmUuc2hhcmVwb2ludC5jb20vP25hdj1jejBsTWtZbVpEMWlJVzVCYld4UFpqbFFjRVZUVDJ0bmNrRnhjWHBsWkVabmJGazRNRXN6VFRGQ2NVdGpaMnRtWldOdVlXdFVaa1Z1ZEdSelQwTlJjSFp0U2pKRllXdE1lV1ltWmowd01USkpVRmxRVkVsTU5sQkJWa28yVVU0eVFrSXpVRXRDV0U5T1dEZEdSMVJGSm1NOUptWnNkV2xrUFRFJTNEIiwiciI6ZmFsc2V9LCJwIjp7InUiOiJodHRwczovL3N1cGVyY3JlYXRpdmUuc2hhcmVwb2ludC5jb20vOmZsOi9yL2NvbnRlbnRzdG9yYWdlL0NTUF8zOWE1MDk5Yy00ZmZmLTQ0YTQtOGU5Mi0wYWMwYWFhY2RlNzQvJUVCJUFDJUI4JUVDJTg0JTlDJTIwJUVCJTlEJUJDJUVDJTlEJUI0JUVCJUI4JThDJUVCJTlGJUFDJUVCJUE2JUFDL0xvb3BBcHBEYXRhL1VudGl0bGVkLmxvb3A%2FZD13ZjFhNDllMjdlYzMwNGQwOWEyYjVkYWI0YTgxYmZjZTcmY3NmPTEmd2ViPTEmbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSa05UVUY4ek9XRTFNRGs1WXkwMFptWm1MVFEwWVRRdE9HVTVNaTB3WVdNd1lXRmhZMlJsTnpRbVpEMWlJVzVCYld4UFpqbFFjRVZUVDJ0bmNrRnhjWHBsWkVabmJGazRNRXN6VFRGQ2NVdGpaMnRtWldOdVlXdFVaa1Z1ZEdSelQwTlJjSFp0U2pKRllXdE1lV1ltWmowd01USkpVRmxRVkVwSVZESlRVRU5OU0UxQ1JrY3lSazVQTWxkVFZVSllOMGhJSm1NOUpUSkdKbVpzZFdsa1BURW1ZVDFNYjI5d1FYQndKbkE5SlRRd1pteDFhV1I0SlRKR2JHOXZjQzF3WVdkbExXTnZiblJoYVc1bGNpWjRQU1UzUWlVeU1uY2xNaklsTTBFbE1qSlVNRkpVVlVoNGVtUllRbXhqYlU1NVdsZEdNR0ZZV214TWJrNXZXVmhLYkdOSE9YQmlibEYxV1RJNWRHWkhTV2hpYTBaMFlrVTViVTlXUW5kU1ZrNVFZVEprZVZGWVJuaGxiVlpyVW0xa2MxZFVaM2RUZWs1T1RWVktlRk15VG01aE1scHNXVEkxYUdFeFVtMVNWelV3V2toT1VGRXhSbmRrYlRGTFRXdFdhR0V3ZURWYWJuZDNUVlJLU2xWR2JGRldSV3hOVG14Q1FsWnJiekpWVlRSNVVXdEplbFZGZEVOWFJUbFBWMFJrUjFJeFVrWWxNaklsTWtNbE1qSnBKVEl5SlROQkpUSXlZMlF5TkdJNE1EZ3RNemhqTWkwME1UVmxMVGc0TXpJdFptVTRNV1JsWmpreFl6RTBKVEl5SlRkRSIsInIiOmZhbHNlfSwiaSI6eyJpIjoiY2QyNGI4MDgtMzhjMi00MTVlLTg4MzItZmU4MWRlZjkxYzE0In19?podId=T0RTUHxzdXBlcmNyZWF0aXZlLnNoYXJlcG9pbnQuY29tfGIhZml3Y0pmd3pTRU9QUmsyMUVzZDE2SVF5UEEzcHNYSkVxNThwSTdETGEyeWpZdXRSOHNyeVFKQ290cDh0S2E5LXwwMVJJUEw3T1ZYRjJWNVZWQUFPQkFMQjdLN0VCRzIyT1hU",
       "desc": "",
-      "emoji": "📁"
+      "emoji": "🌐"
     },
     {
-      "id": "l1773882468296",
-      "cat": "업무포탈",
-      "name": "스마게 재무포탈",
-      "url": "https://myfi.cfapps.ap12.hana.ondemand.com/",
+      "id": "l1773901326689",
+      "cat": "자주쓰는링크",
+      "name": "총무팀 공유폴더",
+      "url": "https://supercreative-my.sharepoint.com/my?remoteItem=%7B%22mp%22%3A%7B%22webAbsoluteUrl%22%3A%22https%3A%2F%2Fsupercreative-my.sharepoint.com%2Fpersonal%2Fastre_supercreative_kr%22%2C%22listFullUrl%22%3A%22https%3A%2F%2Fsupercreative-my.sharepoint.com%2Fpersonal%2Fastre_supercreative_kr%2FDocuments%22%2C%22rootFolder%22%3A%22%2Fpersonal%2Fastre_supercreative_kr%2FDocuments%2Fsc_smtp%EC%9D%98+%ED%8C%8C%EC%9D%BC+-+%EC%B4%9D%EB%AC%B4%ED%8C%80_shared%22%7D%2C%22rsi%22%3A%7B%22webAbsoluteUrl%22%3A%22https%3A%2F%2Fsupercreative-my.sharepoint.com%2Fpersonal%2Fsc_smtp_supercreative_kr%22%2C%22listFullUrl%22%3A%22https%3A%2F%2Fsupercreative-my.sharepoint.com%2Fpersonal%2Fsc_smtp_supercreative_kr%2FDocuments%22%2C%22rootFolder%22%3A%22%2Fpersonal%2Fsc_smtp_supercreative_kr%2FDocuments%2F%EC%B4%9D%EB%AC%B4%ED%8C%80_shared%22%7D%7D",
       "desc": "",
-      "emoji": "📜"
+      "emoji": "🔗"
     },
     {
-      "id": "l1773882558230",
+      "id": "l1773901357824",
+      "cat": "자주쓰는링크",
+      "name": "주간업무보고",
+      "url": "https://supercreative-my.sharepoint.com/:p:/g/personal/sc_smtp_supercreative_kr/IQCY9VNNe2Z1QIlLxJGT2hnIAS8DFIbYRvnfKYyf3uGEY9c?e=Atc07v",
+      "desc": "",
+      "emoji": "📋"
+    },
+    {
+      "id": "l1773901382187",
       "cat": "참고사이트",
       "name": "캔바",
       "url": "https://www.canva.com/ko_kr/",
@@ -571,20 +565,12 @@
       "emoji": "⭐"
     },
     {
-      "id": "l1773882684432",
-      "cat": "슈크필수",
-      "name": "총무팀 공유폴더",
-      "url": "https://supercreative-my.sharepoint.com/my?remoteItem=%7B%22mp%22%3A%7B%22webAbsoluteUrl%22%3A%22https%3A%2F%2Fsupercreative-my%2Esharepoint%2Ecom%2Fpersonal%2Fastre_supercreative_kr%22%2C%22listFullUrl%22%3A%22https%3A%2F%2Fsupercreative-my%2Esharepoint%2Ecom%2Fpersonal%2Fastre_supercreative_kr%2FDocuments%22%2C%22rootFolder%22%3A%22%2Fpersonal%2Fastre_supercreative_kr%2FDocuments%2Fsc_smtp%EC%9D%98%20%ED%8C%8C%EC%9D%BC%20-%20%EC%B4%9D%EB%AC%B4%ED%8C%80_shared%22%7D%2C%22rsi%22%3A%7B%22webAbsoluteUrl%22%3A%22https%3A%2F%2Fsupercreative-my%2Esharepoint%2Ecom%2Fpersonal%2Fsc_smtp_supercreative_kr%22%2C%22listFullUrl%22%3A%22https%3A%2F%2Fsupercreative-my%2Esharepoint%2Ecom%2Fpersonal%2Fsc_smtp_supercreative_kr%2FDocuments%22%2C%22rootFolder%22%3A%22%2Fpersonal%2Fsc_smtp_supercreative_kr%2FDocuments%2F%EC%B4%9D%EB%AC%B4%ED%8C%80_shared%22%7D%7D",
+      "id": "l1773902021464",
+      "cat": "자주쓰는링크",
+      "name": "주차관리대장",
+      "url": "https://supercreative-my.sharepoint.com/:x:/g/personal/sc_smtp_supercreative_kr/IQC_B_mzhoS-SqFZk0PoVUHQAd3gj8UlBw6fepJthIGasaI?e=glQc6a",
       "desc": "",
-      "emoji": "📋"
-    },
-    {
-      "id": "l1773883039885",
-      "cat": "슈크필수",
-      "name": "주간업무보고",
-      "url": "https://supercreative-my.sharepoint.com/:p:/g/personal/sc_smtp_supercreative_kr/IQCY9VNNe2Z1QIlLxJGT2hnIAS8DFIbYRvnfKYyf3uGEY9c?e=Atc07v",
-      "desc": "",
-      "emoji": "✅"
+      "emoji": "🚀"
     }
   ],
   "notices": [],
@@ -822,8 +808,8 @@
       "memo": "전 층 대청소 일정 공지"
     },
     {
-      "id": "t1773831346087",
-      "title": "사택업무",
+      "id": "t1773901634901",
+      "title": "사택 지출품의서",
       "category": "복리후생",
       "recurrence": "monthly",
       "assignees": [
@@ -834,17 +820,60 @@
       "dueDay": 10,
       "annualMonth": 3,
       "quarterMonths": []
+    },
+    {
+      "id": "t1773913357553",
+      "title": "ㅇㅇ",
+      "category": "ㅇㅇ",
+      "recurrence": "quarterly",
+      "assignees": [
+        "서주희"
+      ],
+      "memo": "",
+      "dueDate": "2027-06-12",
+      "dueDay": -1,
+      "annualMonth": 3,
+      "quarterMonths": [
+        11
+      ]
     }
   ],
-  "taskCompletions": {
-    "td13_2026-03": {
-      "doneBy": "",
-      "note": "",
-      "doneAt": "2026-03-18T10:56:04.379Z"
-    }
-  },
+  "taskCompletions": {},
   "manuals": [],
-  "regulations": [],
+  "regulations": [
+    {
+      "id": "reg1773898189776",
+      "name": "구매규정",
+      "category": "슈크",
+      "history": [
+        {
+          "vid": "v1773898189776",
+          "type": "제정",
+          "date": "2024-12-09",
+          "note": "총무팀 담당",
+          "fileName": "[최종] 슈퍼크리에이티브 구매규정 제정.pdf",
+          "size": 1423571
+        }
+      ],
+      "createdAt": 1773898189782
+    },
+    {
+      "id": "reg1773898092795",
+      "name": "출장외근규정",
+      "category": "슈크",
+      "history": [
+        {
+          "vid": "v1773898092795",
+          "type": "제정",
+          "date": "2025-08-31",
+          "note": "인사팀 담당",
+          "fileName": "출장외근지침_250831 (1).pdf",
+          "size": 2262995
+        }
+      ],
+      "createdAt": 1773898092805
+    }
+  ],
   "parkingLots": [
     {
       "id": "mirae",
@@ -912,13 +941,13 @@
     },
     {
       "id": "VC-01",
-      "name": "김찬중",
+      "lot": "차량 해지",
       "dept": "SSR 기획실",
-      "lot": "",
-      "feeType": "차량해지",
+      "name": "김찬중",
+      "status": "재직",
       "carNum": "63우1391",
-      "status": "퇴직",
-      "note": ""
+      "note": "",
+      "feeType": "차량해지"
     },
     {
       "id": "A-03",
