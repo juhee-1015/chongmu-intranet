@@ -16,26 +16,27 @@
     --radius:10px; --shadow:0 2px 10px rgba(79,70,229,0.08);
   }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif; background:var(--gray-50); color:var(--gray-900); font-size:13px; }
+  body { font-family:'Apple SD Gothic Neo','Pretendard','Malgun Gothic','Noto Sans KR',sans-serif; background:var(--gray-50); color:var(--gray-900); font-size:14px; line-height:1.5; }
+  input,select,textarea,button { font-family:inherit; line-height:normal; }
 
   .header { background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 60%,#7c3aed 100%); color:white; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 12px rgba(79,70,229,0.25); }
-  .header h1 { font-size:17px; font-weight:700; letter-spacing:-0.3px; }
-  .header-sub { font-size:11px; color:rgba(255,255,255,0.7); margin-top:2px; }
+  .header h1 { font-size:18px; font-weight:700; letter-spacing:-0.3px; }
+  .header-sub { font-size:12px; color:rgba(255,255,255,0.75); margin-top:2px; }
   .year-badge { background:rgba(255,255,255,0.2); color:white; padding:4px 12px; border-radius:20px; font-weight:700; font-size:14px; cursor:pointer; border:1px solid rgba(255,255,255,0.3); transition:background 0.2s; }
   .year-badge:hover { background:rgba(255,255,255,0.3); }
 
-  .summary-bar { background:white; border-bottom:1px solid var(--gray-200); padding:16px 24px; display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
-  .summary-card { text-align:center; padding:16px 12px; border-radius:12px; background:var(--gray-50); border:1px solid var(--gray-200); transition:all 0.2s; position:relative; overflow:hidden; }
-  .summary-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:12px 12px 0 0; background:var(--gray-200); }
+  .summary-bar { background:white; border-bottom:1px solid var(--gray-200); padding:16px 24px; display:grid; grid-template-columns:repeat(5,minmax(120px,1fr)); gap:12px; overflow-x:auto; }
+  .summary-card { text-align:center; padding:16px 12px; border-radius:12px; background:var(--gray-50); border:1px solid var(--gray-200); transition:all 0.2s; position:relative; min-width:0; }
+  .summary-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:12px 12px 0 0; background:var(--gray-200); pointer-events:none; }
   .card-total::before { background:var(--primary-dark); }
   .card-used::before { background:var(--primary); }
   .card-remain::before { background:var(--success); }
   .card-rate::before { background:var(--warning); }
   .card-adj::before { background:var(--purple); }
   .summary-card:hover { box-shadow:0 4px 16px rgba(79,70,229,0.12); border-color:#c7d2fe; transform:translateY(-1px); }
-  .summary-card .label { font-size:11px; color:var(--gray-500); margin-bottom:8px; font-weight:600; letter-spacing:0.2px; }
-  .summary-card .value { font-size:26px; font-weight:900; line-height:1.1; letter-spacing:-0.5px; }
-  .summary-card .sub { font-size:11px; color:var(--gray-500); margin-top:6px; }
+  .summary-card .label { font-size:12px; color:var(--gray-500); margin-bottom:8px; font-weight:600; letter-spacing:0.2px; }
+  .summary-card .value { font-size:24px; font-weight:900; line-height:1.1; letter-spacing:-0.5px; }
+  .summary-card .sub { font-size:12px; color:var(--gray-500); margin-top:6px; }
   .card-total .value{color:var(--primary-dark)} .card-used .value{color:var(--primary)}
   .card-remain .value{color:var(--success)} .card-rate .value{color:var(--warning)} .card-adj .value{color:var(--purple)}
 
@@ -47,25 +48,25 @@
   /* Tabs */
   .tabs-container { background:white; border-bottom:2px solid var(--gray-200); padding:0 24px; position:sticky; top:0; z-index:100; box-shadow:0 2px 8px rgba(79,70,229,0.08); }
   .tabs { display:flex; overflow-x:auto; }
-  .tab { padding:11px 14px; cursor:pointer; font-size:12px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; white-space:nowrap; transition:all 0.2s; }
+  .tab { padding:11px 14px; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; white-space:nowrap; transition:all 0.2s; }
   .tab:hover { color:var(--primary); background:var(--primary-light); }
   .tab.active { color:var(--primary); border-bottom-color:var(--primary); background:linear-gradient(to top,var(--primary-light),transparent); }
   .dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-left:4px; vertical-align:middle; }
   .dot-ok{background:var(--success)} .dot-warn{background:var(--warning)} .dot-over{background:var(--danger)}
 
   /* Action bar under tabs */
-  .action-bar { background:linear-gradient(90deg,#f0f0ff,#f8f8ff); border-bottom:1px solid #e0e7ff; padding:8px 24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .action-bar-label { font-size:11px; color:var(--gray-500); font-weight:600; }
+  .action-bar { background:linear-gradient(90deg,#f0f0ff,#f8f8ff); border-bottom:1px solid #e0e7ff; padding:9px 24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .action-bar-label { font-size:12px; color:var(--gray-500); font-weight:600; }
 
   /* Main */
-  .main { padding:18px 24px; }
+  .main { padding:18px 24px; min-width:0; }
   .month-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-  .month-title { font-size:15px; font-weight:700; color:var(--primary-dark); }
+  .month-title { font-size:16px; font-weight:700; color:var(--primary-dark); }
 
   /* Tips */
   .tips-box { background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:10px 14px; margin-bottom:14px; }
-  .tips-title { font-size:11px; font-weight:700; color:var(--primary); margin-bottom:5px; }
-  .tips-content { font-size:12px; color:#1e40af; line-height:1.6; }
+  .tips-title { font-size:12px; font-weight:700; color:var(--primary); margin-bottom:5px; }
+  .tips-content { font-size:13px; color:#1e40af; line-height:1.6; }
 
   /* Adjustment banner */
   .adj-banner { background:var(--purple-light); border:1px solid #c4b5fd; border-radius:8px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
@@ -75,22 +76,31 @@
 
   /* Category */
   .category-group { margin-bottom:10px; }
-  .category-header { background:linear-gradient(90deg,var(--primary-dark),var(--primary)); color:white; padding:8px 14px; border-radius:8px 8px 0 0; font-weight:700; font-size:12px; display:flex; justify-content:space-between; cursor:pointer; letter-spacing:0.2px; }
-  .cat-total { font-size:11px; opacity:0.75; }
+  .category-header { background:linear-gradient(90deg,var(--primary-dark),var(--primary)); color:white; padding:9px 14px; border-radius:8px 8px 0 0; font-weight:700; font-size:13px; display:flex; justify-content:space-between; cursor:pointer; letter-spacing:0.2px; }
+  .cat-total { font-size:12px; opacity:0.8; }
 
-  /* Table */
-  .budget-table { width:100%; border-collapse:collapse; background:white; border-radius:0 0 8px 8px; overflow:hidden; box-shadow:0 2px 8px rgba(79,70,229,0.07); }
-  .budget-table th { background:#eef2ff; padding:8px 10px; text-align:right; font-size:11px; font-weight:700; color:var(--primary-dark); white-space:nowrap; border-bottom:2px solid #c7d2fe; }
-  .budget-table th:first-child { text-align:left; }
-  .budget-table td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--gray-100); font-size:12px; vertical-align:middle; }
-  .budget-table td:first-child { text-align:left; }
+  /* Table — table-layout:auto + min-width로 가로 스크롤, 컬럼 뭉개짐 방지 */
+  .budget-table { width:100%; min-width:980px; table-layout:auto; border-collapse:collapse; background:white; border-radius:0 0 8px 8px; box-shadow:0 2px 8px rgba(79,70,229,0.07); }
+  .budget-table th { background:#eef2ff; padding:10px 12px; text-align:right; font-size:12px; font-weight:700; color:var(--primary-dark); white-space:nowrap; border-bottom:2px solid #c7d2fe; }
+  .budget-table th:first-child { text-align:left; min-width:155px; }    /* 계정명 */
+  .budget-table th:nth-child(2) { min-width:90px; }                      /* 조정연간예산 */
+  .budget-table th:nth-child(3) { min-width:80px; }                      /* M월 계획 */
+  .budget-table th.actual-col   { min-width:115px; padding-left:12px; }  /* 실적 입력 */
+  .budget-table th:nth-child(5) { min-width:78px; }                      /* 계획 대비 */
+  .budget-table th:nth-child(6) { min-width:82px; }                      /* 누적 실적 */
+  .budget-table th:nth-child(7) { min-width:82px; }                      /* 잔여예산 */
+  .budget-table th:nth-child(8) { min-width:110px; }                     /* 소진율 */
+  .budget-table th:nth-child(9) { min-width:160px; text-align:left; }   /* 메모 — 고정 min-width, 남는 공간 자동 분배 */
+  .budget-table td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--gray-100); font-size:13px; vertical-align:middle; line-height:1.4; font-variant-numeric:tabular-nums; }
+  .budget-table td.actual-col { padding-left:12px; }
+  .budget-table td:first-child { text-align:left; font-variant-numeric:normal; }
+  .budget-table td:last-child { text-align:left; }   /* 메모 좌측 정렬 */
   .budget-table tr:last-child td { border-bottom:none; }
-  .budget-table tr:hover td { background:#f8f8ff; }
   .budget-table tr:hover td { background:#f8fafc; }
-  .subtotal-row td { background:#eef2ff; font-weight:700; color:var(--primary-dark); font-size:12px; }
+  .subtotal-row td { background:#eef2ff; font-weight:700; color:var(--primary-dark); font-size:13px; }
 
   .account-name { font-weight:600; }
-  .num { font-family:'SF Mono',monospace; }
+  .num { font-variant-numeric:tabular-nums; font-feature-settings:"tnum"; }
   .num-pos { color:var(--success); } .num-neg { color:var(--danger); font-weight:700; } .num-warn { color:var(--warning); font-weight:700; }
 
   /* 조정 표시 */
@@ -98,21 +108,22 @@
   .orig-val { font-size:10px; color:var(--gray-500); text-decoration:line-through; margin-right:4px; }
 
   /* Input */
-  .actual-input { width:105px; padding:4px 7px; border:1px solid var(--gray-300); border-radius:4px; text-align:right; font-size:12px; font-family:'SF Mono',monospace; transition:all 0.2s; }
+  .actual-input { width:100%; min-width:80px; padding:5px 7px; border:1px solid var(--gray-300); border-radius:4px; text-align:right; font-size:13px; font-variant-numeric:tabular-nums; transition:all 0.2s; box-sizing:border-box; }
   .actual-input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 2px rgba(37,99,235,0.14); }
   .actual-input.over { border-color:var(--danger); background:#fff5f5; }
 
-  .note-input { width:100%; padding:3px 6px; border:1px solid transparent; border-radius:4px; font-size:11px; color:var(--gray-500); background:transparent; }
-  .note-input:focus { border-color:var(--gray-300); background:white; outline:none; }
+  .note-input { width:100%; padding:4px 8px; border:1px solid var(--gray-200); border-radius:4px; font-size:12px; color:var(--gray-700); background:#fafbff; transition:all 0.15s; }
+  .note-input:focus { border-color:var(--primary); background:white; outline:none; box-shadow:0 0 0 2px rgba(79,70,229,0.1); }
+  .note-input:hover { border-color:var(--gray-300); }
 
   /* Mini bar */
-  .mini-bar { background:var(--gray-200); border-radius:3px; height:6px; width:70px; display:inline-block; overflow:hidden; vertical-align:middle; margin-left:5px; }
+  .mini-bar { background:var(--gray-200); border-radius:3px; height:6px; width:52px; display:inline-block; overflow:hidden; vertical-align:middle; margin-left:4px; }
   .mini-bar-fill { height:100%; border-radius:3px; }
   .bar-ok{background:var(--success)} .bar-warn{background:var(--warning)} .bar-over{background:var(--danger)}
 
   /* Buttons */
-  .btn { padding:7px 13px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all 0.2s; }
-  .btn-sm { padding:5px 10px; font-size:11px; }
+  .btn { padding:7px 14px; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer; border:none; transition:all 0.2s; }
+  .btn-sm { padding:5px 11px; font-size:12px; }
   .btn-primary{background:var(--primary);color:white} .btn-primary:hover{background:var(--primary-dark);box-shadow:0 3px 8px rgba(79,70,229,0.3)}
   .btn-secondary{background:var(--gray-100);color:var(--gray-700);border:1px solid var(--gray-300)} .btn-secondary:hover{background:var(--gray-200)}
   .btn-home{background:rgba(255,255,255,0.9);color:var(--primary-dark);border:none;font-weight:700} .btn-home:hover{background:white;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
@@ -178,7 +189,7 @@
   .legend-item { display:flex; align-items:center; gap:4px; }
   .legend-dot { width:8px; height:8px; border-radius:50%; }
 
-  .announce-banner { background:linear-gradient(135deg,var(--primary-dark),var(--primary)); color:white; padding:8px 24px; font-size:12px; display:flex; justify-content:space-between; align-items:center; }
+  .announce-banner { background:linear-gradient(135deg,var(--primary-dark),var(--primary)); color:white; padding:9px 24px; font-size:13px; display:flex; justify-content:space-between; align-items:center; }
   .announce-banner span { color:#93c5fd; }
 
   .table-scroll { overflow-x:auto; }
@@ -351,6 +362,7 @@
     <div class="bud-cloud-tab">
       <button class="bud-cloud-btn active" onclick="switchBudCloudTab('backup')">💾 백업/복원</button>
       <button class="bud-cloud-btn" onclick="switchBudCloudTab('github')">🐙 GitHub 동기화</button>
+      <button class="bud-cloud-btn" onclick="switchBudCloudTab('history')">🕒 버전 히스토리</button>
     </div>
 
     <!-- 패널: 백업/복원 -->
@@ -376,22 +388,28 @@
         <span id="budGhStatusText">연결 안됨</span>
         <span style="margin-left:auto;font-size:10px;color:var(--gray-400);" id="budGhLastSync"></span>
       </div>
+      <!-- 저장자 이름 -->
+      <div class="form-group" style="margin-bottom:10px;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;">
+        <label style="color:#92400e;font-weight:700;">👤 내 이름 (저장 시 기록됩니다)</label>
+        <input type="text" id="budGhSaverName" placeholder="예: 주희" style="margin-top:4px;font-size:13px;font-weight:600;" oninput="localStorage.setItem('bud_saver_name',this.value)">
+        <div style="font-size:11px;color:#b45309;margin-top:4px;">저장할 때마다 이름이 커밋 메시지에 기록됩니다. 팀원들도 각자 이름 입력 후 저장하세요.</div>
+      </div>
       <div class="bud-step-box">
-        <strong>1단계.</strong> GitHub → 우측 상단 프로필 → <strong>Settings → Developer settings → Personal access tokens → Tokens (classic)</strong><br>
-        <strong>2단계.</strong> Generate new token → Note에 이름 입력 → <strong>repo</strong> 체크 → Generate<br>
+        <strong>1단계.</strong> GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)<br>
+        <strong>2단계.</strong> Generate new token → <strong>repo</strong> 체크 → Generate<br>
         <strong>3단계.</strong> 발급된 토큰 복사 후 아래에 입력 (총무 대백과와 동일한 토큰 사용 가능)
       </div>
       <div class="form-group" style="margin-bottom:8px;">
-        <label>GitHub Token (비공개) — 총무 대백과와 공유</label>
+        <label>GitHub Token (비공개)</label>
         <input type="password" id="budGhToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="font-family:monospace;font-size:11px;">
       </div>
       <div class="form-row" style="margin-bottom:8px;">
         <div class="form-group">
-          <label>저장소 (owner/repo) — 총무 대백과와 공유</label>
+          <label>저장소 (owner/repo)</label>
           <input type="text" id="budGhRepo" placeholder="juhee-1015/chongmu-intranet" style="font-size:11px;">
         </div>
         <div class="form-group" style="max-width:150px;">
-          <label>파일명 (예산 전용)</label>
+          <label>파일명</label>
           <input type="text" id="budGhFile" placeholder="budget_data.json" value="budget_data.json" style="font-size:11px;">
         </div>
       </div>
@@ -401,7 +419,21 @@
       </div>
       <div id="budGhMsg" style="font-size:11px;min-height:18px;"></div>
       <div style="margin-top:12px;padding:10px;background:#f0fdf4;border-radius:6px;font-size:11px;color:#166534;">
-        💡 총무 대백과(<strong>data.json</strong>)와 예산관리(<strong>budget_data.json</strong>)는 같은 저장소의 서로 다른 파일에 저장됩니다. 토큰과 저장소 주소는 공유해요.
+        💡 총무 대백과(<strong>data.json</strong>)와 예산관리(<strong>budget_data.json</strong>)는 같은 저장소의 서로 다른 파일에 저장됩니다.
+      </div>
+    </div>
+
+    <!-- 패널: 버전 히스토리 -->
+    <div class="bud-cloud-panel" id="bcpanel_history">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="font-size:13px;color:var(--gray-500);">GitHub에 저장된 버전 목록입니다. 원하는 시점으로 복원할 수 있습니다.</div>
+        <button class="btn btn-secondary btn-sm" style="margin-left:auto;white-space:nowrap;" onclick="budGhLoadHistory()">🔄 목록 새로고침</button>
+      </div>
+      <div id="budGhHistoryList" style="max-height:360px;overflow-y:auto;border:1px solid var(--gray-200);border-radius:8px;">
+        <div style="padding:24px;text-align:center;color:var(--gray-500);font-size:13px;">
+          "목록 새로고침"을 눌러 버전 히스토리를 불러오세요.<br>
+          <span style="font-size:11px;color:#94a3b8;">GitHub 동기화 탭에서 토큰·저장소를 먼저 설정해야 합니다.</span>
+        </div>
       </div>
     </div>
 
@@ -1409,7 +1441,7 @@ function renderMonth(container, m) {
         <td><span class="account-name">${acc.name}</span>${adjTag}</td>
         <td class="num">${adj&&origAcc.annual!==eff.annual?`<span class="orig-val">${fmt(origAcc.annual)}</span>`:''}${fmt(eff.annual)}</td>
         <td class="num">${origPlanHint}${monthPlan===0?'<span style="color:#ccc">-</span>':fmt(monthPlan)}</td>
-        <td>
+        <td class="actual-col" style="padding:4px 6px;">
           <input type="text" class="actual-input${inClass}"
             value="${monthUsed===0?'':monthUsed.toLocaleString()}"
             placeholder="0"
@@ -1450,15 +1482,15 @@ function renderMonth(container, m) {
       <div class="table-scroll" id="cat_${cat.replace(/[\/\s]/g,'_')}">
         <table class="budget-table">
           <thead><tr>
-            <th style="width:185px">계정명</th>
+            <th>계정명</th>
             <th>조정연간예산</th>
             <th>${MONTHS[m]} 계획</th>
-            <th>${MONTHS[m]} 실적 입력</th>
+            <th class="actual-col">${MONTHS[m]} 실적 입력</th>
             <th>계획 대비</th>
             <th>누적 실적</th>
             <th>잔여예산</th>
             <th>소진율</th>
-            <th style="width:110px">메모</th>
+            <th>메모</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -1565,16 +1597,16 @@ function renderAnnual(container) {
   rows+=`<tr class="subtotal-row"><td colspan="2">📊 합계</td><td class="num">${fmt(gTotal)}</td><td class="num">${fmt(gUsed)}</td><td class="num ${gRemain<0?'num-neg':'num-pos'}">${fmt(gRemain)}</td><td class="num">${gRate}%</td>${Array(12).fill('<td></td>').join('')}</tr>`;
 
   let mHeaders='';
-  for(let m=0;m<12;m++) mHeaders+=`<th style="min-width:58px">${m+1}월 실적</th>`;
+  for(let m=0;m<12;m++) mHeaders+=`<th style="min-width:64px">${m+1}월 실적</th>`;
 
   container.innerHTML=`
     <div class="month-title" style="margin-bottom:12px">📊 ${currentYear}년 연간 예산 현황</div>
     <div class="annual-grid">${monthCards}</div>
     <div class="table-scroll">
-      <table class="budget-table">
+      <table class="budget-table" style="table-layout:auto;">
         <thead><tr>
-          <th>카테고리</th><th style="min-width:175px">계정명</th>
-          <th>조정연간예산</th><th>총 실적</th><th>잔여예산</th><th>소진율</th>
+          <th style="width:90px">카테고리</th><th style="min-width:160px">계정명</th>
+          <th style="width:90px">조정연간예산</th><th style="width:80px">총 실적</th><th style="width:80px">잔여예산</th><th style="width:100px">소진율</th>
           ${mHeaders}
         </tr></thead>
         <tbody>${rows}</tbody>
@@ -2041,9 +2073,11 @@ function showCloudModal() {
   const savedToken = localStorage.getItem(BUD_GH_TOKEN_KEY)||'';
   const savedRepo  = localStorage.getItem(BUD_GH_REPO_KEY)||'';
   const savedFile  = localStorage.getItem(BUD_GH_FILE_KEY)||'budget_data.json';
+  const savedSaver = localStorage.getItem(BUD_GH_SAVER_KEY)||'';
   const tEl=document.getElementById('budGhToken');if(tEl&&savedToken) tEl.value=savedToken;
   const rEl=document.getElementById('budGhRepo');if(rEl&&savedRepo) rEl.value=savedRepo;
   const fEl=document.getElementById('budGhFile');if(fEl) fEl.value=savedFile;
+  const sEl=document.getElementById('budGhSaverName');if(sEl) sEl.value=savedSaver;
   // 연결 상태 표시
   if(savedToken&&savedRepo) budGhSetStatus('ok','설정됨');
   switchBudCloudTab('github');
@@ -2055,6 +2089,7 @@ function showCloudModal() {
 const BUD_GH_TOKEN_KEY='intra_gh_token';   // 인트라넷과 공유
 const BUD_GH_REPO_KEY='intra_gh_repo';     // 인트라넷과 공유
 const BUD_GH_FILE_KEY='budget_gh_file';    // 예산관리 전용 파일
+const BUD_GH_SAVER_KEY='bud_saver_name';  // 저장자 이름
 
 function budGhSetMsg(msg,isErr){
   const el=document.getElementById('budGhMsg');
@@ -2080,13 +2115,19 @@ function budGhGatherData(){
   const raw=localStorage.getItem(key);
   let payload={};
   try{payload=JSON.parse(raw)||{};}catch(e){}
+  const saverName=localStorage.getItem(BUD_GH_SAVER_KEY)||'';
   return{_version:1,_date:new Date().toISOString(),_app:'총무예산관리',
-    storageKey:key,budgetData:payload};
+    _savedBy:saverName, storageKey:key,budgetData:payload};
 }
 async function budGhSave(){
   const {token,repo,file}=budGhSavePrefs();
   if(!token){budGhSetMsg('❌ Token을 입력해주세요',true);return;}
   if(!repo||!repo.includes('/')){budGhSetMsg('❌ 저장소를 owner/repo 형식으로 입력해주세요',true);return;}
+  const saverName=localStorage.getItem(BUD_GH_SAVER_KEY)||'';
+  if(!saverName){
+    budGhSetMsg('❌ "내 이름"을 먼저 입력해주세요 (저장 기록에 남습니다)',true);
+    document.getElementById('budGhSaverName')?.focus();return;
+  }
   budGhSetMsg('저장 중...'); budGhSetStatus('off','저장 중...');
   try{
     const content=btoa(unescape(encodeURIComponent(JSON.stringify(budGhGatherData(),null,2))));
@@ -2094,23 +2135,33 @@ async function budGhSave(){
     const headers={'Content-Type':'application/json','Authorization':'token '+token,'Accept':'application/vnd.github+json'};
     let sha='';
     try{const chk=await fetch(apiUrl,{headers});if(chk.ok){const j=await chk.json();sha=j.sha||'';}}catch(e){}
-    const body={message:'예산관리 데이터 저장 '+new Date().toLocaleString('ko-KR'),content};
+    const nowStr=new Date().toLocaleString('ko-KR');
+    const body={message:`[${saverName}] 예산관리 저장 ${nowStr}`,content};
     if(sha) body.sha=sha;
     const res=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body)});
     if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
     const now=new Date().toLocaleTimeString('ko-KR');
     budGhSetStatus('ok','연결됨');
-    budGhSetMsg('✅ 저장 완료 — '+now);
-    const ls=document.getElementById('budGhLastSync');if(ls) ls.textContent=now+' 저장';
-    showToast('GitHub 저장 완료 ✅');
+    budGhSetMsg(`✅ [${saverName}] 저장 완료 — ${now}`);
+    const ls=document.getElementById('budGhLastSync');if(ls) ls.textContent=`${now} · ${saverName} 저장`;
+    showToast(`✅ GitHub 저장 완료 — ${saverName}`);
   }catch(err){
     budGhSetStatus('err','오류');
     budGhSetMsg('❌ 오류: '+err.message,true);
   }
 }
 async function budGhLoad(){
-  const {token,repo,file}=budGhSavePrefs();
-  if(!repo||!repo.includes('/')){budGhSetMsg('❌ 저장소를 입력해주세요',true);return;}
+  // 입력 필드에 값이 있으면 저장 후 사용, 없으면 localStorage에서 직접 읽기
+  const tInput=(document.getElementById('budGhToken')?.value||'').trim();
+  const rInput=(document.getElementById('budGhRepo')?.value||'').trim();
+  const fInput=(document.getElementById('budGhFile')?.value||'').trim();
+  if(tInput) localStorage.setItem(BUD_GH_TOKEN_KEY,tInput);
+  if(rInput) localStorage.setItem(BUD_GH_REPO_KEY,rInput);
+  if(fInput) localStorage.setItem(BUD_GH_FILE_KEY,fInput);
+  const token=tInput||localStorage.getItem(BUD_GH_TOKEN_KEY)||'';
+  const repo=rInput||localStorage.getItem(BUD_GH_REPO_KEY)||'';
+  const file=fInput||localStorage.getItem(BUD_GH_FILE_KEY)||'budget_data.json';
+  if(!repo||!repo.includes('/')){budGhSetMsg('❌ 저장소를 입력해주세요 (클라우드 설정 필요)',true);return;}
   budGhSetMsg('불러오는 중...');
   try{
     const apiUrl=`https://api.github.com/repos/${repo}/contents/${file}`;
@@ -2170,6 +2221,118 @@ function budImportJSON(input){
   };
   reader.readAsText(file);
   input.value='';
+}
+
+// ── GitHub 버전 히스토리 ──
+const BUD_GH_HIDDEN_KEY='bud_gh_hidden_commits';
+function budGhGetHidden(){try{return JSON.parse(localStorage.getItem(BUD_GH_HIDDEN_KEY)||'[]');}catch(e){return[];}}
+function budGhSetHidden(arr){localStorage.setItem(BUD_GH_HIDDEN_KEY,JSON.stringify(arr));}
+
+function budGhDeleteVersion(sha){
+  if(!confirm('이 버전을 목록에서 숨기시겠습니까?\n(GitHub 서버 데이터는 유지됩니다)'))return;
+  const hidden=budGhGetHidden();
+  if(!hidden.includes(sha)){hidden.push(sha);budGhSetHidden(hidden);}
+  const el=document.getElementById('budHist_'+sha);
+  if(el) el.remove();
+}
+
+async function budGhLoadHistory(){
+  const token=localStorage.getItem(BUD_GH_TOKEN_KEY)||'';
+  const repo=localStorage.getItem(BUD_GH_REPO_KEY)||'';
+  const file=localStorage.getItem(BUD_GH_FILE_KEY)||'budget_data.json';
+  const listEl=document.getElementById('budGhHistoryList');
+  if(!repo||!repo.includes('/')){
+    listEl.innerHTML='<div style="padding:20px;text-align:center;color:#dc2626;font-size:13px;">❌ GitHub 동기화 탭에서 저장소를 먼저 설정해주세요.</div>';return;
+  }
+  listEl.innerHTML='<div style="padding:20px;text-align:center;color:#6b7280;font-size:13px;">🔄 불러오는 중...</div>';
+  try{
+    const url=`https://api.github.com/repos/${repo}/commits?path=${encodeURIComponent(file)}&per_page=50`;
+    const headers={'Accept':'application/vnd.github+json'};
+    if(token) headers['Authorization']='token '+token;
+    const res=await fetch(url,{headers});
+    if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
+    const allCommits=await res.json();
+    const hidden=budGhGetHidden();
+    const commits=allCommits.filter(c=>!hidden.includes(c.sha));
+    if(!commits.length){listEl.innerHTML='<div style="padding:24px;text-align:center;color:#6b7280;font-size:13px;">저장된 버전이 없습니다.</div>';return;}
+    let html='';
+    commits.forEach((c,i)=>{
+      const msg=c.commit.message||'';
+      const nameMatch=msg.match(/^\[(.+?)\]/);
+      const saverBadge=nameMatch
+        ?`<span style="display:inline-block;background:#ede9fe;color:#5b21b6;border-radius:12px;padding:1px 9px;font-size:11px;font-weight:700;margin-right:6px;">👤 ${nameMatch[1]}</span>`
+        :'';
+      const cleanMsg=msg.replace(/^\[.+?\]\s*/,'').replace(/예산관리 데이터 저장\s*/,'').replace(/예산관리 저장\s*/,'');
+      const dateStr=new Date(c.commit.author.date).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const sha7=c.sha.substring(0,7);
+      const isLatest=i===0;
+      const escapedDate=dateStr.replace(/'/g,'');
+      html+=`<div id="budHist_${c.sha}" style="display:grid;grid-template-columns:1fr auto;align-items:center;padding:11px 14px;border-bottom:1px solid #f1f5f9;${isLatest?'background:#f0fdf4;':''}">
+        <div>
+          <div style="font-size:12px;color:#374151;margin-bottom:2px;">${saverBadge}<strong>${dateStr}</strong>${isLatest?' <span style="font-size:10px;background:#22c55e;color:white;border-radius:8px;padding:1px 7px;">최신</span>':''}</div>
+          <div style="font-size:11px;color:#94a3b8;font-family:monospace;">${sha7} · ${cleanMsg||'예산 데이터'}</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-secondary btn-sm" onclick="budGhPreviewVersion('${c.sha}')">👁 미리보기</button>
+          ${isLatest
+            ?'<button class="btn btn-sm" style="background:#e2e8f0;color:#94a3b8;cursor:default;">현재 버전</button>'
+            :`<button class="btn btn-primary btn-sm" onclick="budGhRestoreVersion('${c.sha}','${escapedDate}')">↩ 복원</button>`}
+          <button class="btn btn-sm" style="background:#fff;color:#dc2626;border:1px solid #fca5a5;" onclick="budGhDeleteVersion('${c.sha}')">🗑 삭제</button>
+        </div>
+      </div>`;
+    });
+    listEl.innerHTML=html;
+  }catch(err){
+    listEl.innerHTML=`<div style="padding:20px;text-align:center;color:#dc2626;font-size:13px;">❌ 오류: ${err.message}</div>`;
+  }
+}
+
+async function budGhPreviewVersion(sha){
+  const token=localStorage.getItem(BUD_GH_TOKEN_KEY)||'';
+  const repo=localStorage.getItem(BUD_GH_REPO_KEY)||'';
+  const file=localStorage.getItem(BUD_GH_FILE_KEY)||'budget_data.json';
+  try{
+    const url=`https://api.github.com/repos/${repo}/contents/${encodeURIComponent(file)}?ref=${sha}`;
+    const headers={'Accept':'application/vnd.github+json'};
+    if(token) headers['Authorization']='token '+token;
+    const res=await fetch(url,{headers});
+    if(!res.ok)throw new Error('불러오기 실패');
+    const j=await res.json();
+    const decoded=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+    const data=JSON.parse(decoded);
+    const savedBy=data._savedBy||'알 수 없음';
+    const savedDate=data._date?new Date(data._date).toLocaleString('ko-KR'):'알 수 없음';
+    // actuals 계정 수 파악
+    const actuals=data.budgetData?.actuals||{};
+    const accCnt=Object.keys(actuals).length;
+    const totalActual=Object.values(actuals).reduce((s,arr)=>s+arr.reduce((ss,x)=>ss+(x.amount||0),0),0);
+    alert(`📋 버전 미리보기\n\n저장일시: ${savedDate}\n저장자: ${savedBy}\n실적 계정 수: ${accCnt}개\n누적 실적 합계: ${Math.round(totalActual/10000).toLocaleString()}만원\n\n복원하려면 "↩ 복원" 버튼을 누르세요.`);
+  }catch(err){alert('미리보기 오류: '+err.message);}
+}
+
+async function budGhRestoreVersion(sha,dateStr){
+  if(!confirm(`"${dateStr}" 버전으로 복원하시겠습니까?\n\n⚠️ 현재 데이터는 덮어씌워집니다.\n복원 전 백업/복원 탭에서 현재 데이터를 내보내두는 것을 권장합니다.`))return;
+  const token=localStorage.getItem(BUD_GH_TOKEN_KEY)||'';
+  const repo=localStorage.getItem(BUD_GH_REPO_KEY)||'';
+  const file=localStorage.getItem(BUD_GH_FILE_KEY)||'budget_data.json';
+  try{
+    const url=`https://api.github.com/repos/${repo}/contents/${encodeURIComponent(file)}?ref=${sha}`;
+    const headers={'Accept':'application/vnd.github+json'};
+    if(token) headers['Authorization']='token '+token;
+    const res=await fetch(url,{headers});
+    if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
+    const j=await res.json();
+    const decoded=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+    const data=JSON.parse(decoded);
+    if(data.budgetData&&data.storageKey){
+      localStorage.setItem(data.storageKey,JSON.stringify(data.budgetData));
+    } else if(data.actuals){
+      const payload={actuals:data.actuals,adjBudget:data.adjustments||{},history:data.transferHistory||[]};
+      localStorage.setItem(getStorageKey(),JSON.stringify(payload));
+    } else {alert('알 수 없는 데이터 형식입니다.');return;}
+    showToast(`✅ ${dateStr} 버전으로 복원 완료! 새로고침합니다.`);
+    setTimeout(()=>location.reload(),1000);
+  }catch(err){alert('복원 오류: '+err.message);}
 }
 
 function switchBudCloudTab(tab){
