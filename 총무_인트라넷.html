@@ -49,7 +49,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 .nav-sep{width:1px;background:rgba(255,255,255,.2);height:20px;margin:0 4px;align-self:center;}
 
 /* ─────── 레이아웃 ─────── */
-.container{max-width:1440px;margin:0 auto;padding:20px 24px;}
+.container{max-width:1440px;margin:0 auto;padding:24px 32px;}
 .page{display:none;} .page.active{display:block;}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
@@ -69,7 +69,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 .card-title .icon{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
 .icon-blue{background:#dbeafe;} .icon-green{background:#dcfce7;} .icon-purple{background:#ede9fe;}
 .icon-yellow{background:#fef9c3;} .icon-pink{background:#fce7f3;} .icon-teal{background:#ccfbf1;}
-.card-body{padding:16px 18px;}
+.card-body{padding:18px 22px;}
 
 /* ─────── 버튼 ─────── */
 .btn{padding:7px 14px;border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:4px;}
@@ -86,20 +86,20 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 /* ─────── 홈 대시보드 ─────── */
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
 .stat-card{
-  background:var(--surface);border-radius:var(--radius-lg);padding:14px 16px;
+  background:var(--surface);border-radius:var(--radius-lg);padding:18px 20px;
   border:1px solid var(--border);box-shadow:var(--shadow-sm);
-  display:flex;align-items:center;gap:12px;
+  display:flex;align-items:center;gap:16px;
   cursor:pointer;transition:box-shadow .15s,transform .12s,border-color .15s;
   text-decoration:none;color:inherit;
 }
 .stat-card:hover{box-shadow:0 4px 16px rgba(79,70,229,.13);border-color:var(--primary-light);transform:translateY(-1px);}
-.stat-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.stat-icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
 .stat-info{flex:1;min-width:0;}
-.stat-label{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:2px;}
+.stat-label{font-size:13px;color:var(--text3);font-weight:600;margin-bottom:3px;}
 .stat-value-row{display:flex;align-items:baseline;gap:4px;}
 .stat-value{font-size:24px;font-weight:800;color:var(--text);line-height:1.1;}
 .stat-unit{font-size:12px;font-weight:600;color:var(--text2);}
-.stat-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.stat-sub{font-size:12px;color:var(--text3);margin-top:2px;}
 
 /* ─────── 홈 시계 (인라인 + 예쁜 스타일) ─────── */
 .home-hero{
@@ -111,8 +111,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 .hero-greeting h2{font-size:18px;font-weight:700;margin-bottom:2px;}
 .hero-greeting p{font-size:12px;opacity:.75;}
 .hero-clock-block{text-align:right;}
-.hero-time{font-size:32px;font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;line-height:1;}
-.hero-date{font-size:12px;opacity:.75;margin-top:3px;}
+.hero-time{font-size:42px;font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;line-height:1;}
+.hero-date{font-size:14px;opacity:.75;margin-top:5px;}
 .hero-weekday{font-size:11px;opacity:.6;}
 
 /* ─────── 빠른 바로가기 ─────── */
@@ -124,8 +124,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
   cursor:pointer;transition:all .2s;text-decoration:none;color:inherit;
 }
 .quick-btn:hover{border-color:var(--primary-light);box-shadow:0 4px 12px rgba(79,70,229,.12);transform:translateY(-2px);}
-.quick-btn .qicon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.quick-btn .qlabel{font-size:11px;font-weight:600;color:var(--text2);text-align:center;line-height:1.3;}
+.quick-btn .qicon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.quick-btn .qlabel{font-size:11px;font-weight:600;color:var(--text2);text-align:center;line-height:1.3;margin-top:4px;}
 
 /* ─────── 이번달 업무 ─────── */
 .task-item{
@@ -361,7 +361,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 }
 @keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(6px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
-.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;}
+/* modal-actions → modal-box section */
 
 /* ─────── 토스트 ─────── */
 #toast{
@@ -556,7 +556,34 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 .reg-viewer-bar{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg);flex-shrink:0;}
 .reg-viewer-bar h3{font-size:14px;font-weight:700;color:var(--text);margin:0;}
 #regPdfFrame{flex:1;border:none;width:100%;height:100%;}
+
+/* ── modal-box 구조 ── */
+.modal-box{
+  background:var(--surface);border-radius:var(--radius-lg);
+  width:94%;max-height:90vh;
+  box-shadow:var(--shadow-lg);border:1px solid var(--border);
+  animation:modalIn .2s ease;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
+  background:var(--surface);
+}
+.modal-title{font-size:15px;font-weight:700;color:var(--text);}
+.modal-close{
+  background:none;border:none;cursor:pointer;font-size:17px;
+  color:var(--text3);padding:4px 8px;border-radius:var(--radius-sm);
+  line-height:1;transition:background .15s;
+}
+.modal-close:hover{background:var(--bg2);color:var(--text);}
+.modal-body{padding:20px;overflow-y:auto;flex:1;min-height:0;}
+.modal-actions{
+  display:flex;justify-content:flex-end;gap:8px;
+  padding:12px 20px;border-top:1px solid var(--border);flex-shrink:0;
+}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -583,6 +610,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <button class="nav-group-item" id="navParking" onclick="showPage('parking');closeNavGroups()">🚗 주차관리</button>
         <button class="nav-group-item" id="navHealth"  onclick="showPage('health');closeNavGroups()">🏥 건강검진</button>
         <button class="nav-group-item" id="navVoucher" onclick="showPage('voucher');closeNavGroups()">🎁 상품권</button>
+        <button class="nav-group-item" id="navHr" onclick="showPage('hr');closeNavGroups()">👤 인사일정</button>
       </div>
     </div>
     <!-- 업무문서 드롭다운 -->
@@ -592,6 +620,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <button class="nav-group-item" id="navManual"     onclick="showPage('manual');closeNavGroups()">📖 업무매뉴얼</button>
         <button class="nav-group-item" id="navRegulation" onclick="showPage('regulation');closeNavGroups()">📋 규정</button>
         <button class="nav-group-item" id="navVendor"     onclick="showPage('vendor');closeNavGroups()">🤝 거래처</button>
+        <button class="nav-group-item" id="navOrgchart" onclick="showPage('orgchart');closeNavGroups()">🏢 조직도</button>
+        <button class="nav-group-item" id="navRoster"   onclick="showPage('roster');closeNavGroups()">📋 직원명부</button>
       </div>
     </div>
     <div class="nav-sep"></div>
@@ -622,6 +652,14 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 
   <!-- 스탯 카드 -->
   <div class="stat-grid">
+    <div class="stat-card" onclick="showPage('hr')" title="재직자 현황 바로가기">
+      <div class="stat-icon" style="background:#dbeafe;">👥</div>
+      <div class="stat-info">
+        <div class="stat-label">재직자 현황</div>
+        <div class="stat-value-row"><span class="stat-value" id="statEmpTotal">-</span><span class="stat-unit">명</span></div>
+        <div class="stat-sub" id="statEmpSub" style="font-size:10px;color:var(--text3);margin-top:2px;"></div>
+      </div>
+    </div>
     <div class="stat-card" onclick="showPage('sateak')" title="사택 현황 바로가기">
       <div class="stat-icon" style="background:#ede9fe;">🏠</div>
       <div class="stat-info">
@@ -636,13 +674,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <div class="stat-value-row"><span class="stat-value" id="statHealth">-</span><span class="stat-unit">명 대상</span></div>
       </div>
     </div>
-    <div class="stat-card" onclick="window.open('https://www.sonohotelsresorts.com/','_blank')" title="소노 호텔&리조트 바로가기">
-      <div class="stat-icon" style="background:#fef3c7;">🏖️</div>
-      <div class="stat-info">
-        <div class="stat-label">휴양소 바로가기</div>
-        <div class="stat-value-row" style="margin-top:2px;"><span style="font-size:13px;font-weight:700;color:var(--primary);">소노 호텔&리조트</span></div>
-      </div>
-    </div>
+
     <div class="stat-card" onclick="showPage('parking')" title="주차 관리 바로가기">
       <div class="stat-icon" style="background:#e0f2fe;">🚗</div>
       <div class="stat-info">
@@ -658,9 +690,12 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
       <div class="card-title"><span class="icon icon-blue">⚡</span> 빠른 바로가기</div>
     </div>
     <div class="card-body">
-      <div class="quick-grid" style="grid-template-columns:repeat(5,1fr);">
+      <div class="quick-grid" style="grid-template-columns:repeat(6,1fr);gap:8px;">
         <a class="quick-btn" href="#" onclick="window.open('https://office-map-bay.vercel.app/','_blank');return false;">
           <div class="qicon" style="background:#dbeafe;">🗺️</div><div class="qlabel">좌석배치도</div>
+        </a>
+        <a class="quick-btn" href="#" onclick="window.open('https://www.sonohotelsresorts.com/','_blank');return false;">
+          <div class="qicon" style="background:#fef3c7;">🏖️</div><div class="qlabel">휴양소 바로가기</div>
         </a>
         <a class="quick-btn" href="#" onclick="window.open('https://gw.smilegate.net/Front/Main','_blank');return false;">
           <div class="qicon" style="background:#e0f2fe;">💻</div><div class="qlabel">재무포탈</div>
@@ -784,9 +819,16 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <button class="btn btn-primary btn-sm" onclick="openAddSateakModal()">＋ 추가</button>
       </div>
     </div>
+    <!-- 일괄처리 바 -->
+    <div id="sateakBulkBar" style="display:none;background:#fff7ed;border:1px solid #fdba74;border-radius:var(--radius-sm);padding:10px 16px;margin:0 0 0 0;align-items:center;gap:12px;border-bottom:1px solid #fdba74;border-left:none;border-right:none;border-top:none;">
+      <span id="sateakBulkCount" style="font-size:13px;font-weight:600;color:#92400e;"></span>
+      <button class="btn btn-sm btn-danger" onclick="bulkDeleteSateak()" style="margin-left:auto;">🗑 선택 삭제</button>
+      <button class="btn btn-sm btn-ghost" onclick="clearSateakSelection()">취소</button>
+    </div>
     <div class="card-body" style="padding:0;overflow-x:auto;">
       <table class="parking-table" style="min-width:960px;table-layout:fixed;" id="sateakTable">
         <thead><tr>
+          <th style="width:36px;text-align:center;"><input type="checkbox" id="sateakSelectAll" onchange="_toggleSelectAll('sateak',this)" style="cursor:pointer;"></th>
           <th style="width:36px;text-align:center;">#</th>
           <th style="width:160px;">사택명</th>
           <th style="width:220px;">계약기간 / 입주기간</th>
@@ -861,6 +903,12 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     </div>
   </div>
 
+  <!-- 일괄처리 바 -->
+  <div id="healthBulkBar" style="display:none;background:#fff7ed;border:1px solid #fdba74;border-radius:var(--radius);padding:10px 16px;margin-bottom:8px;align-items:center;gap:12px;">
+    <span id="healthBulkCount" style="font-size:13px;font-weight:600;color:#92400e;"></span>
+    <button class="btn btn-sm btn-danger" onclick="bulkDeleteHealth()" style="margin-left:auto;">🗑 선택 삭제</button>
+    <button class="btn btn-sm btn-ghost" onclick="clearHealthSelection()">취소</button>
+  </div>
   <!-- 테이블 -->
   <div class="card">
     <div class="card-body" style="padding:0;overflow-x:auto;">
@@ -1207,13 +1255,19 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     </div>
   </div>
 
+  <!-- 일괄처리 바 -->
+  <div id="parkingBulkBar" style="display:none;background:#fff7ed;border:1px solid #fdba74;border-radius:var(--radius);padding:10px 16px;margin-bottom:8px;align-items:center;gap:12px;">
+    <span id="parkingBulkCount" style="font-size:13px;font-weight:600;color:#92400e;"></span>
+    <button class="btn btn-sm btn-danger" onclick="bulkDeleteParking()" style="margin-left:auto;">🗑 선택 삭제</button>
+    <button class="btn btn-sm btn-ghost" onclick="clearParkingSelection()">취소</button>
+  </div>
   <!-- 직원 테이블 -->
   <div class="card">
     <div class="card-body" style="padding:0;overflow-x:auto;">
       <table class="parking-table" id="parkingTable">
         <thead>
           <tr>
-            <th style="width:40px;text-align:center;">번호</th><th>주차장</th><th>소속</th><th>이름</th><th>차량번호</th><th style="text-align:center;">구분</th><th style="text-align:center;">상태</th><th style="width:90px;text-align:center;">등록일</th><th style="width:90px;text-align:center;">해지일</th><th>비고</th><th style="width:90px;text-align:center;">관리</th>
+            <th style="width:36px;text-align:center;"><input type="checkbox" id="parkingSelectAll" onchange="_toggleSelectAll('parking',this)" style="cursor:pointer;"></th><th style="width:40px;text-align:center;">번호</th><th>주차장</th><th>소속</th><th>이름</th><th>차량번호</th><th style="text-align:center;">구분</th><th style="text-align:center;">상태</th><th style="width:90px;text-align:center;">등록일</th><th style="width:90px;text-align:center;">해지일</th><th>비고</th><th style="width:90px;text-align:center;">관리</th>
           </tr>
         </thead>
         <tbody id="parkingTbody"></tbody>
@@ -1520,7 +1574,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <table class="tbl" style="min-width:900px;">
           <thead>
             <tr>
-              <th style="width:36px;text-align:center;">#</th>
+              <th style="width:36px;text-align:center;"><input type="checkbox" id="sateakSelectAll" onchange="_toggleSelectAll('sateak',this)" style="cursor:pointer;"></th>
+          <th style="width:36px;text-align:center;">#</th>
               <th style="width:55px;">연도</th>
               <th style="width:90px;">날짜</th>
               <th style="width:55px;text-align:center;">구분</th>
@@ -1916,19 +1971,18 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 <div class="modal-overlay" id="cloudModal">
   <div class="modal" style="max-width:580px;">
     <h3>☁️ 클라우드 &amp; 백업</h3>
-    <p style="font-size:12px;color:var(--text3);margin-bottom:14px;">브라우저가 달라도 데이터를 유지하는 방법을 선택하세요</p>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:14px;">💡 예산관리와 동일한 GitHub 저장소·토큰을 공유합니다. 한 번 설정하면 양쪽 모두 사용 가능.</p>
     <div class="cloud-tab">
       <button class="cloud-tab-btn active" onclick="switchCloudTab('backup')">💾 백업/복원</button>
       <button class="cloud-tab-btn" onclick="switchCloudTab('github')">🐙 GitHub 동기화</button>
-      <button class="cloud-tab-btn" onclick="switchCloudTab('jsonbin')">🌐 JSONBin</button>
-      <button class="cloud-tab-btn" onclick="switchCloudTab('share')">👥 팀원 공유</button>
+      <button class="cloud-tab-btn" onclick="switchCloudTab('history')">🕒 버전 히스토리</button>
     </div>
 
     <!-- 패널: 백업/복원 -->
     <div class="cloud-panel active" id="cpanel_backup">
       <div class="cloud-step-box">
         <strong>📤 내보내기 (현재 브라우저 → 파일)</strong><br>
-        지금 이 브라우저에 저장된 모든 데이터(거래처, 상품권, 공지, 링크, 업무체크)를 하나의 JSON 파일로 내보냅니다.
+        지금 이 브라우저에 저장된 모든 데이터를 하나의 JSON 파일로 내보냅니다.
       </div>
       <button class="btn btn-primary" style="width:100%;margin-bottom:16px;" onclick="exportAllJSON()">📤 전체 데이터 내보내기 (.json)</button>
       <div class="cloud-step-box">
@@ -1947,10 +2001,16 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <span id="ghStatusText">연결 안됨</span>
         <span style="margin-left:auto;font-size:10px;color:var(--text3);" id="ghLastSync"></span>
       </div>
+      <!-- 저장자 이름 -->
+      <div class="form-group" style="margin-bottom:12px;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;">
+        <label style="color:#92400e;font-weight:700;font-size:12px;">👤 내 이름 (저장 시 기록됩니다)</label>
+        <input type="text" id="ghSaverName" placeholder="예: 주희" style="margin-top:4px;font-size:13px;font-weight:600;" oninput="localStorage.setItem('intra_saver_name',this.value)">
+        <div style="font-size:11px;color:#b45309;margin-top:4px;">저장할 때마다 이름이 커밋 메시지에 기록됩니다. 팀원들도 각자 이름 입력 후 저장하세요.</div>
+      </div>
       <div class="cloud-step-box">
-        <strong>1단계.</strong> GitHub → 우측 상단 프로필 → <strong>Settings → Developer settings → Personal access tokens → Tokens (classic)</strong><br>
-        <strong>2단계.</strong> Generate new token → Note에 이름 입력 → <strong>repo</strong> 체크 → Generate<br>
-        <strong>3단계.</strong> 발급된 토큰 복사 후 아래에 입력
+        <strong>1단계.</strong> GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)<br>
+        <strong>2단계.</strong> Generate new token → <strong>repo</strong> 체크 → Generate<br>
+        <strong>3단계.</strong> 발급된 토큰 복사 후 아래에 입력 (예산관리와 동일한 토큰 사용 가능)
       </div>
       <div class="form-group" style="margin-bottom:8px;">
         <label>GitHub Token (비공개)</label>
@@ -1972,54 +2032,21 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
       </div>
       <div id="ghMsg" style="font-size:11px;color:var(--text3);min-height:18px;"></div>
       <div style="margin-top:12px;padding:10px;background:#f0fdf4;border-radius:var(--radius);font-size:11px;color:#166534;">
-        💡 저장하면 <strong>data.json</strong> 파일이 저장소에 생성/업데이트돼요. 팀원도 같은 토큰이나 읽기 전용 PAT로 불러올 수 있어요.
+        💡 총무 대백과(<strong>data.json</strong>)와 예산관리(<strong>budget_data.json</strong>)는 같은 저장소의 서로 다른 파일에 저장됩니다.
       </div>
     </div>
 
-    <!-- 패널: JSONBin -->
-    <div class="cloud-panel" id="cpanel_jsonbin">
-      <div id="jbStatusBar" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg);border-radius:var(--radius);margin-bottom:14px;font-size:12px;">
-        <span class="cloud-status-dot cs-off" id="jbDot"></span>
-        <span id="jbStatusText">연결 안됨</span>
-        <span style="margin-left:auto;" id="jbLastSync" style="font-size:10px;color:var(--text3);"></span>
+    <!-- 패널: 버전 히스토리 -->
+    <div class="cloud-panel" id="cpanel_history">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="font-size:13px;color:var(--text3);">GitHub에 저장된 버전 목록입니다. 원하는 시점으로 복원할 수 있습니다.</div>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto;white-space:nowrap;" onclick="ghLoadHistory()">🔄 목록 새로고침</button>
       </div>
-      <div class="cloud-step-box">
-        <strong>1단계.</strong> <a href="https://jsonbin.io" target="_blank" style="color:var(--primary);">jsonbin.io</a> 무료 가입 → API Keys 메뉴에서 <strong>Master Key</strong> 복사<br>
-        <strong>2단계.</strong> 아래에 붙여넣기 후 "연결 &amp; 저장" 클릭<br>
-        <strong>3단계.</strong> 생성된 <strong>Bin URL</strong>을 팀원에게 공유
-      </div>
-      <div class="form-group" style="margin-bottom:10px;">
-        <label>Master Key (관리자용, 비공개)</label>
-        <input type="password" id="jbMasterKey" placeholder="$2a$10$..." style="font-family:monospace;font-size:11px;">
-      </div>
-      <div class="form-group" style="margin-bottom:14px;">
-        <label>Bin ID (연결 후 자동 입력)</label>
-        <input type="text" id="jbBinId" placeholder="연결하면 자동으로 생성됩니다" style="font-family:monospace;font-size:11px;">
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:10px;">
-        <button class="btn btn-primary" style="flex:1;" onclick="jbConnect()">🔗 연결 &amp; 저장</button>
-        <button class="btn btn-ghost" style="flex:1;" onclick="jbLoad()">🔄 불러오기</button>
-        <button class="btn btn-ghost" onclick="jbDisconnect()">연결 해제</button>
-      </div>
-      <div id="jbMsg" style="font-size:11px;color:var(--text3);"></div>
-    </div>
-
-    <!-- 패널: 팀원 공유 -->
-    <div class="cloud-panel" id="cpanel_share">
-      <div class="cloud-step-box">
-        <strong>JSONBin 연결 후</strong> 아래 URL을 팀원에게 공유하세요.<br>
-        팀원은 이 URL을 "JSONBin" 탭의 Bin URL에 입력하면 데이터를 볼 수 있습니다.<br>
-        ⚠️ Master Key 없이는 읽기 전용으로만 사용됩니다.
-      </div>
-      <div class="form-group">
-        <label>공유 URL (팀원용)</label>
-        <div style="display:flex;gap:6px;">
-          <input type="text" id="jbShareUrl" readonly placeholder="JSONBin 연결 후 자동 생성" style="font-size:11px;font-family:monospace;background:var(--bg);">
-          <button class="btn btn-ghost btn-sm" onclick="copyShareUrl()">복사</button>
+      <div id="ghHistoryList" style="max-height:360px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;">
+        <div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">
+          "목록 새로고침"을 눌러 버전 히스토리를 불러오세요.<br>
+          <span style="font-size:11px;color:var(--text3);">GitHub 동기화 탭에서 토큰·저장소를 먼저 설정해야 합니다.</span>
         </div>
-      </div>
-      <div style="margin-top:14px;padding:10px;background:#fef9c3;border-radius:var(--radius);font-size:11px;color:#92400e;">
-        💡 현재는 같은 PC에서 백업/복원으로도 충분합니다. 팀 전체 공유는 나중에 GitHub → Vercel 배포 후 해결하는 게 가장 깔끔합니다.
       </div>
     </div>
 
@@ -2130,10 +2157,10 @@ function showToast(msg){
 // ============================================================
 // 페이지 전환 (F5/새로고침 시 현재 탭 유지)
 // ============================================================
-const PAGES=['home','calendar','sateak','health','links','notice','checklist','manual','regulation','parking','voucher','vendor'];
+const PAGES=['home','calendar','sateak','health','links','notice','checklist','manual','regulation','parking','voucher','vendor','hr','orgchart','roster'];
 // 드롭다운 그룹에 속하는 페이지 목록
-const NAV_GROUP_SYSTEM=['sateak','parking','health','voucher'];
-const NAV_GROUP_DOC=['manual','regulation','vendor'];
+const NAV_GROUP_SYSTEM=['sateak','parking','health','voucher','hr'];
+const NAV_GROUP_DOC=['manual','regulation','vendor','orgchart','roster'];
 function toggleNavGroup(id,e){
   e.stopPropagation();
   const grp=document.getElementById(id);
@@ -2174,6 +2201,9 @@ function showPage(name){
   if(name==='parking') renderParking();
   if(name==='voucher'){_vTab='out';renderVoucher();}
   if(name==='vendor') renderVendors();
+  if(name==='hr') renderHr();
+  if(name==='orgchart') renderOrgchart();
+  if(name==='roster') renderRoster();
 }
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -3293,6 +3323,25 @@ function renderHomeDdaySummary(){
     });
   }catch(e){}
 
+  // HR 입/퇴사 예정자 D-day 추가 (early return 전에 처리)
+  try{
+    const hrAll=loadHrEntries();
+    hrAll.filter(h=>h.status==='예정').forEach(h=>{
+      const d=new Date(h.date);d.setHours(0,0,0,0);
+      const diff=Math.round((d-today)/(1000*60*60*24));
+      if(diff>=-3&&diff<=60){
+        items.push({
+          type:'hr',
+          icon:h.type==='new'?'🆕':'👋',
+          label:h.name+' '+(h.type==='new'?'입사':'퇴직'),
+          diff,
+          color:diff<=0?'#dc2626':diff<=7?'#f59e0b':'#6366f1',
+          bg:diff<=0?'#fee2e2':diff<=7?'#fef9c3':'#ede9fe',
+          linkPage:'hr'
+        });
+      }
+    });
+  }catch(e){}
   if(!items.length){
     el.innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px 0;">⚡ 현재 임박한 일정 없음</div>';
     return;
@@ -3300,10 +3349,10 @@ function renderHomeDdaySummary(){
   items.sort((a,b)=>a.diff-b.diff);
   el.innerHTML=items.slice(0,6).map(it=>{
     const dstr=it.diff<0?`D+${Math.abs(it.diff)}`:it.diff===0?'D-day':`D-${it.diff}`;
-    return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2);cursor:pointer;" onclick="showPage('${it.linkPage}')">
-      <span style="font-size:14px;">${it.icon}</span>
-      <span style="flex:1;font-size:11px;color:var(--text);">${it.label}</span>
-      <span style="font-size:11px;font-weight:700;background:${it.bg};color:${it.color};border-radius:8px;padding:2px 8px;">${dstr}</span>
+    return`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2);cursor:pointer;line-height:1.4;" onclick="showPage('${it.linkPage||'home'}')">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;font-size:14px;flex-shrink:0;">${it.icon}</span>
+      <span style="flex:1;font-size:12px;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.label}</span>
+      <span style="font-size:11px;font-weight:700;background:${it.bg};color:${it.color};border-radius:8px;padding:2px 8px;white-space:nowrap;flex-shrink:0;">${dstr}</span>
     </div>`;
   }).join('');
 }
@@ -3366,6 +3415,21 @@ function updateStatCards(){
     const sp=document.getElementById('statParking');if(sp)sp.textContent=activeParked;
     const spSub=document.getElementById('statParkingSub');
     if(spSub)spSub.textContent='(주차장 '+parkLots.length+'곳 운영)';
+  }catch(e){}
+  // 재직자 현황 (건강검진 명단 기준 eligible=true)
+  try{
+    const healths=loadHealths();
+    const activeEmps=healths.filter(h=>h.eligible!==false).length;
+    const probEmps=healths.filter(h=>{
+      if(!h.probEndDate)return false;
+      const pd=new Date(h.probEndDate);pd.setHours(0,0,0,0);
+      const td=new Date();td.setHours(0,0,0,0);
+      return pd>td;
+    }).length;
+    const el=document.getElementById('statEmpTotal');
+    if(el)el.textContent=activeEmps;
+    const sub=document.getElementById('statEmpSub');
+    if(sub)sub.textContent=probEmps>0?'수습중 '+probEmps+'명 포함':'전원 정규 근무중';
   }catch(e){}
 }
 
@@ -4293,11 +4357,14 @@ function ghSavePrefs(){
 }
 
 async function ghSave(){
+  const saverName=(localStorage.getItem('intra_saver_name')||'').trim();
+  if(!saverName){ghSetMsg('❌ "내 이름"을 먼저 입력해주세요',true);return;}
   const {token,repo,file}=ghSavePrefs();
   if(!token){ghSetMsg('❌ Token을 입력해주세요',true);return;}
   if(!repo||!repo.includes('/')){ghSetMsg('❌ 저장소를 owner/repo 형식으로 입력해주세요',true);return;}
   ghSetMsg('저장 중...'); ghSetStatus('off','저장 중...');
   try{
+    const nowStr=new Date().toLocaleString('ko-KR');
     const content=btoa(unescape(encodeURIComponent(JSON.stringify(gatherAllData(),null,2))));
     const apiUrl=`https://api.github.com/repos/${repo}/contents/${file}`;
     const headers={'Content-Type':'application/json','Authorization':'token '+token,'Accept':'application/vnd.github+json'};
@@ -4307,15 +4374,15 @@ async function ghSave(){
       const chk=await fetch(apiUrl,{headers});
       if(chk.ok){const j=await chk.json();sha=j.sha||'';}
     }catch(e){}
-    const body={message:'총무대백과 데이터 저장 '+new Date().toLocaleString('ko-KR'),content};
+    const body={message:`[${saverName}] 총무대백과 저장 ${nowStr}`,content};
     if(sha) body.sha=sha;
     const res=await fetch(apiUrl,{method:'PUT',headers,body:JSON.stringify(body)});
     if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
     const now=new Date().toLocaleTimeString('ko-KR');
     ghSetStatus('ok','연결됨');
-    ghSetMsg('✅ 저장 완료 — '+now);
+    ghSetMsg(`✅ 저장 완료 — ${now} (저장자: ${saverName})`);
     const ls=document.getElementById('ghLastSync');if(ls) ls.textContent=now+' 저장';
-    showToast('GitHub 저장 완료 ✅');
+    showToast(`GitHub 저장 완료 ✅ (${saverName})`);
   }catch(err){
     ghSetStatus('err','오류');
     ghSetMsg('❌ 오류: '+err.message,true);
@@ -4355,6 +4422,113 @@ async function ghLoad(){
   }catch(err){
     ghSetStatus('err','오류');
     ghSetMsg('❌ 오류: '+err.message,true);
+  }
+}
+
+// ── GitHub 버전 히스토리 ──
+const GH_HIDDEN_KEY='intra_gh_hidden_commits';
+function ghGetHidden(){try{return JSON.parse(localStorage.getItem(GH_HIDDEN_KEY)||'[]');}catch(e){return[];}}
+function ghSetHidden(arr){localStorage.setItem(GH_HIDDEN_KEY,JSON.stringify(arr));}
+
+function ghDeleteVersion(sha){
+  if(!confirm('이 버전을 목록에서 숨기시겠습니까?\n(GitHub 서버 데이터는 유지됩니다)'))return;
+  const hidden=ghGetHidden();
+  if(!hidden.includes(sha)){hidden.push(sha);ghSetHidden(hidden);}
+  const el=document.getElementById('ghHist_'+sha);
+  if(el) el.remove();
+}
+
+async function ghLoadHistory(){
+  const {token,repo,file}=ghGetCreds();
+  if(!repo||!repo.includes('/')){alert('GitHub 저장소를 먼저 입력하세요.');return;}
+  const listEl=document.getElementById('ghHistoryList');
+  if(listEl) listEl.innerHTML='<p style="color:#6b7280;font-size:13px;padding:20px;text-align:center;">불러오는 중...</p>';
+  try{
+    const url=`https://api.github.com/repos/${repo}/commits?path=${encodeURIComponent(file)}&per_page=50`;
+    const headers={'Accept':'application/vnd.github+json'};
+    if(token) headers['Authorization']='token '+token;
+    const res=await fetch(url,{headers});
+    if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
+    const allCommits=await res.json();
+    const hidden=ghGetHidden();
+    const commits=allCommits.filter(c=>!hidden.includes(c.sha));
+    if(!commits.length){if(listEl) listEl.innerHTML='<p style="color:#6b7280;font-size:13px;padding:20px;text-align:center;">저장 기록이 없습니다.</p>';return;}
+    const rows=commits.map((c,i)=>{
+      const msg=c.commit.message||'';
+      const nameMatch=msg.match(/^\[(.+?)\]/);
+      const saverBadge=nameMatch
+        ?`<span style="display:inline-block;background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;margin-right:6px;">👤 ${nameMatch[1]}</span>`:'';
+      const dateStr=new Date(c.commit.committer.date).toLocaleString('ko-KR');
+      const cleanMsg=msg.replace(/^\[[^\]]+\]\s*/,'');
+      const sha=c.sha;
+      const short=sha.slice(0,7);
+      const isLatest=i===0;
+      const escapedDate=dateStr.replace(/'/g,'');
+      return `<div id="ghHist_${sha}" style="display:flex;align-items:center;gap:6px;padding:10px 12px;border-bottom:1px solid #e5e7eb;${isLatest?'background:#f0fdf4;':''}">
+        <div style="flex:1;min-width:0;">
+          ${saverBadge}${isLatest?'<span style="font-size:10px;background:#22c55e;color:white;border-radius:8px;padding:1px 7px;margin-right:4px;">최신</span>':''}
+          <span style="font-size:12px;color:#374151;">${cleanMsg}</span>
+          <div style="font-size:11px;color:#9ca3af;margin-top:2px;">${dateStr} · <code style="background:#f3f4f6;padding:1px 4px;border-radius:3px;">${short}</code></div>
+        </div>
+        <button onclick="ghPreviewVersion('${sha}','${escapedDate}')" style="font-size:11px;padding:4px 8px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;white-space:nowrap;">👁 미리보기</button>
+        ${isLatest
+          ?`<button style="font-size:11px;padding:4px 8px;background:#e2e8f0;color:#94a3b8;border:1px solid #d1d5db;border-radius:4px;cursor:default;white-space:nowrap;">현재 버전</button>`
+          :`<button onclick="ghRestoreVersion('${sha}','${escapedDate}')" style="font-size:11px;padding:4px 8px;background:#dbeafe;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:4px;cursor:pointer;white-space:nowrap;">↩ 복원</button>`}
+        <button onclick="ghDeleteVersion('${sha}')" style="font-size:11px;padding:4px 8px;background:#fff;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;cursor:pointer;white-space:nowrap;">🗑 삭제</button>
+      </div>`;
+    }).join('');
+    if(listEl) listEl.innerHTML=rows;
+  }catch(err){
+    if(listEl) listEl.innerHTML=`<p style="color:#dc2626;font-size:13px;padding:20px;">❌ 오류: ${err.message}</p>`;
+  }
+}
+
+async function ghPreviewVersion(sha,dateStr){
+  const {token,repo,file}=ghGetCreds();
+  try{
+    const url=`https://api.github.com/repos/${repo}/contents/${encodeURIComponent(file)}?ref=${sha}`;
+    const headers={'Accept':'application/vnd.github+json'};
+    if(token) headers['Authorization']='token '+token;
+    const res=await fetch(url,{headers});
+    if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
+    const j=await res.json();
+    const decoded=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+    const data=JSON.parse(decoded);
+    const voucherCnt=(data.vouchers||[]).length;
+    const vendorCnt=(data.vendors||[]).length;
+    const noticeCnt=(data.notices||[]).length;
+    const manualCnt=(data.manuals||[]).length;
+    alert(`📋 버전 미리보기: ${dateStr}\n\n지출결의서: ${voucherCnt}건\n거래처: ${vendorCnt}개\n공지사항: ${noticeCnt}개\n매뉴얼: ${manualCnt}개\n\n이 버전으로 복원하려면 "↩ 복원" 버튼을 클릭하세요.`);
+  }catch(err){
+    alert('❌ 미리보기 오류: '+err.message);
+  }
+}
+
+async function ghRestoreVersion(sha,dateStr){
+  if(!confirm(`"${dateStr}" 버전으로 복원하시겠습니까?\n\n현재 데이터는 덮어씌워집니다.`))return;
+  const {token,repo,file}=ghGetCreds();
+  try{
+    const url=`https://api.github.com/repos/${repo}/contents/${encodeURIComponent(file)}?ref=${sha}`;
+    const headers={'Accept':'application/vnd.github+json'};
+    if(token) headers['Authorization']='token '+token;
+    const res=await fetch(url,{headers});
+    if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
+    const j=await res.json();
+    const decoded=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+    const data=JSON.parse(decoded);
+    if(data.vouchers) LS.set('intra_vouchers',data.vouchers);
+    if(data.vendors) LS.set('intra_vendors',data.vendors);
+    if(data.links) LS.set('intra_links',data.links);
+    if(data.notices) LS.set('intra_notices',data.notices);
+    if(data.tasks) LS.set('intra_tasks',data.tasks);
+    if(data.taskCompletions) LS.set('intra_completions',data.taskCompletions);
+    if(data.manuals) LS.set(MANUAL_KEY,data.manuals);
+    if(data.regulations) LS.set(REG_KEY,data.regulations);
+    showToast(`✅ ${dateStr} 버전으로 복원 완료`);
+    closeModal('cloudModal');
+    location.reload();
+  }catch(err){
+    alert('❌ 복원 오류: '+err.message);
   }
 }
 
@@ -4685,25 +4859,21 @@ function copyShareUrl(){
 // 클라우드 모달 열기/탭전환
 // ============================================================
 function openCloudModal(){
-  const {master,binId}=jbGetCreds();
-  if(master) document.getElementById('jbMasterKey').value=master;
-  if(binId){document.getElementById('jbBinId').value=binId;updateShareUrl(binId);}
-  const lastSync=localStorage.getItem('intra_jb_lastsync');
-  if(lastSync){const el=document.getElementById('jbLastSync');if(el)el.textContent='최근 동기화: '+lastSync;}
-  if(master&&binId) jbSetStatus('ok','연결됨');
-  else jbSetStatus('off','연결 안됨');
   // GitHub 설정값 복원
   const ghCreds=ghGetCreds();
   const ghTEl=document.getElementById('ghToken');if(ghTEl&&ghCreds.token) ghTEl.value=ghCreds.token;
   const ghREl=document.getElementById('ghRepo');if(ghREl&&ghCreds.repo) ghREl.value=ghCreds.repo;
   const ghFEl=document.getElementById('ghFile');if(ghFEl&&ghCreds.file) ghFEl.value=ghCreds.file;
+  // 저장자 이름 복원
+  const savedSaver=localStorage.getItem('intra_saver_name')||'';
+  const sEl=document.getElementById('ghSaverName');if(sEl) sEl.value=savedSaver;
   openModal('cloudModal');
 }
 function switchCloudTab(tab){
   document.querySelectorAll('.cloud-tab-btn').forEach((b,i)=>{
-    b.classList.toggle('active',['backup','github','jsonbin','share'][i]===tab);
+    b.classList.toggle('active',['backup','github','history'][i]===tab);
   });
-  ['backup','github','jsonbin','share'].forEach(t=>{
+  ['backup','github','history'].forEach(t=>{
     const p=document.getElementById('cpanel_'+t);
     if(p) p.classList.toggle('active',t===tab);
   });
@@ -5036,6 +5206,7 @@ function renderSateakTable(){
       }
     }
     return`<tr>
+    <td style="text-align:center;padding:8px 4px;"><input type="checkbox" class="sateak-row-chk" value="${s.id}" onchange="_onRowCheck('sateak')" style="cursor:pointer;"></td>
     <td style="font-size:11px;color:var(--text3);text-align:center;padding:8px 4px;">${i+1}</td>
     <td style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:8px 10px;">${s.name}${expiryBadge}</td>
     <td style="font-size:11px;padding:8px 10px;">
@@ -5509,6 +5680,7 @@ function renderHealthTable(){
   const thead=document.getElementById('healthThead');
   if(thead){
     thead.innerHTML='<tr>'
+      +'<th style="width:32px;text-align:center;"><input type="checkbox" id="healthSelectAll" onchange="_toggleSelectAll(\'health\',this)" style="cursor:pointer;"></th>'
       +'<th style="width:32px;text-align:center;">#</th>'
       +'<th style="width:60px;">사번</th>'
       +'<th style="width:70px;">성명</th>'
@@ -5551,6 +5723,7 @@ function renderHealthTable(){
   const today=new Date();today.setHours(0,0,0,0);
 
   tbody.innerHTML=filtered.map((h,i)=>`<tr>
+    <td style="text-align:center;padding:6px 4px;"><input type="checkbox" class="health-row-chk" value="${h.id}" onchange="_onRowCheck('health')" style="cursor:pointer;"></td>
     <td style="font-size:11px;color:var(--text3);text-align:center;padding:6px 4px;">${i+1}</td>
     <td style="font-family:monospace;font-size:11px;color:var(--text3);padding:6px 8px;">${h.id}</td>
     <td style="font-weight:600;white-space:nowrap;">
@@ -5592,7 +5765,7 @@ function openAddHealthEmpModal(){
 
 function openEditHealthModal(id){
   const all=loadHealths();
-  const h=all.find(x=>x.id===id);if(!h)return;
+  const h=all.find(x=>String(x.id)===String(id));if(!h){showToast('데이터를 찾을 수 없습니다 (id:'+id+')','error');return;}
   document.getElementById('editHealthId').value=id;
   document.getElementById('editHealthModalTitle').textContent='✏️ 건강검진 정보 수정';
   document.getElementById('editHealthName').textContent=h.name+' ('+h.project+' / '+h.dept+' '+h.team+')';
@@ -5985,6 +6158,7 @@ function renderParkingTable(){
   tbody.innerHTML=filtered.map((e,i)=>{
     const histCount=(e.carHistory||[]).length;
     return`<tr>
+    <td style="text-align:center;"><input type="checkbox" class="parking-row-chk" value="${e.id}" onchange="_onRowCheck('parking')" style="cursor:pointer;"></td>
     <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
     <td style="font-size:12px;">${e.lot||'-'}</td>
     <td style="font-size:12px;">${e.dept||'-'}</td>
@@ -6411,7 +6585,7 @@ function openRetireModal(source){
   const id=document.getElementById('editHealthId').value;
   _retireEmpId=id;
   const all=loadHealths();
-  const h=all.find(x=>x.id===id);if(!h)return;
+  const h=all.find(x=>String(x.id)===String(id));if(!h){showToast('데이터를 찾을 수 없습니다 (id:'+id+')','error');return;}
   _retireEmpId=id;
   const infoEl=document.getElementById('retireEmpInfo');
   if(infoEl)infoEl.innerHTML=`👤 <b>${h.name}</b> &nbsp;|&nbsp; ${h.project} / ${h.dept} ${h.team}`;
@@ -6588,7 +6762,8 @@ function renderMonthlyReport(){
       <!-- 사택 상세 -->
       <div style="padding:16px 24px;border-bottom:1px solid #e2e8f0;">
         <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:10px;">🏠 사택 입주 현황 (입주중 ${activeSateak}개)</div>
-        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
+          <colgroup><col style="width:32px"><col style="width:auto"><col style="width:60px"><col style="width:90px"><col style="width:150px"><col style="width:90px"></colgroup>
           <thead><tr style="background:#f8fafc;">
             <th style="padding:5px 8px;text-align:left;border:1px solid #e2e8f0;">#</th>
             <th style="padding:5px 8px;text-align:left;border:1px solid #e2e8f0;">사택명</th>
@@ -6673,11 +6848,1022 @@ function openEditHealthModal(id){
   const retBtn=document.getElementById('editHealthRetireBtn');
   if(retBtn)retBtn.style.display=''; // 항상 표시
 }
+// ============================================================
+// 일괄 선택/삭제 공통 함수
+// ============================================================
+function _toggleSelectAll(type, el){
+  const chks = document.querySelectorAll('.'+type+'-row-chk');
+  chks.forEach(c=>{ c.checked = el.checked; });
+  _onRowCheck(type);
+}
+
+function _onRowCheck(type){
+  const chks = Array.from(document.querySelectorAll('.'+type+'-row-chk'));
+  const selected = chks.filter(c=>c.checked);
+  const bar = document.getElementById(type+'BulkBar');
+  const countEl = document.getElementById(type+'BulkCount');
+  if(!bar) return;
+  if(selected.length > 0){
+    bar.style.display = 'flex';
+    if(countEl) countEl.textContent = selected.length + '개 선택됨';
+  } else {
+    bar.style.display = 'none';
+  }
+  // 전체선택 체크박스 상태 동기화
+  const selectAll = document.getElementById(type+'SelectAll');
+  if(selectAll){
+    selectAll.checked = selected.length === chks.length && chks.length > 0;
+    selectAll.indeterminate = selected.length > 0 && selected.length < chks.length;
+  }
+}
+
+function clearHealthSelection(){
+  document.querySelectorAll('.health-row-chk').forEach(c=>c.checked=false);
+  const sa = document.getElementById('healthSelectAll');
+  if(sa){ sa.checked=false; sa.indeterminate=false; }
+  const bar = document.getElementById('healthBulkBar');
+  if(bar) bar.style.display='none';
+}
+
+function clearSateakSelection(){
+  document.querySelectorAll('.sateak-row-chk').forEach(c=>c.checked=false);
+  const sa = document.getElementById('sateakSelectAll');
+  if(sa){ sa.checked=false; sa.indeterminate=false; }
+  const bar = document.getElementById('sateakBulkBar');
+  if(bar) bar.style.display='none';
+}
+
+function clearParkingSelection(){
+  document.querySelectorAll('.parking-row-chk').forEach(c=>c.checked=false);
+  const sa = document.getElementById('parkingSelectAll');
+  if(sa){ sa.checked=false; sa.indeterminate=false; }
+  const bar = document.getElementById('parkingBulkBar');
+  if(bar) bar.style.display='none';
+}
+
+function bulkDeleteHealth(){
+  const ids = Array.from(document.querySelectorAll('.health-row-chk:checked')).map(c=>c.value);
+  if(ids.length===0) return;
+  if(!confirm(ids.length+'명의 건강검진 데이터를 삭제하시겠습니까?')) return;
+  let all = loadHealths();
+  all = all.filter(h=> !ids.includes(String(h.id)));
+  LS.set(HEALTH_KEY, all);
+  clearHealthSelection();
+  renderHealth();
+  updateStatCards();
+  showToast('🗑 '+ids.length+'건 삭제 완료');
+}
+
+function bulkDeleteSateak(){
+  const ids = Array.from(document.querySelectorAll('.sateak-row-chk:checked')).map(c=>c.value);
+  if(ids.length===0) return;
+  if(!confirm(ids.length+'개 사택 데이터를 삭제하시겠습니까?')) return;
+  let all = loadSateaks();
+  all = all.filter(s=> !ids.includes(String(s.id)));
+  saveSateaks(all);
+  clearSateakSelection();
+  renderSateak();
+  updateStatCards();
+  showToast('🗑 '+ids.length+'건 삭제 완료');
+}
+
+function bulkDeleteParking(){
+  const ids = Array.from(document.querySelectorAll('.parking-row-chk:checked')).map(c=>c.value);
+  if(ids.length===0) return;
+  if(!confirm(ids.length+'명의 주차 데이터를 삭제하시겠습니까?')) return;
+  let all = loadParkingEmps();
+  all = all.filter(e=> !ids.includes(String(e.id)));
+  saveParkingEmps(all);
+  clearParkingSelection();
+  renderParkingTable();
+  renderParkingLotCards();
+  updateStatCards();
+  showToast('🗑 '+ids.length+'건 삭제 완료');
+}
+
+// ============================================================
+// 인사 일정 관리 (HR Schedule)
+// ============================================================
+const HR_KEY = 'intra_hr_schedule';
+function loadHrEntries(){ return LS.get(HR_KEY)||[]; }
+function saveHrEntries(arr){ LS.set(HR_KEY,arr); }
+
+let _hrTab = 'all';
+function setHrTab(tab){
+  _hrTab = tab;
+  ['all','new','out','done'].forEach(t=>{
+    const btn=document.getElementById('hrTab_'+t);
+    if(!btn)return;
+    if(t===tab){btn.style.background='var(--primary)';btn.style.color='#fff';}
+    else{btn.style.background='';btn.style.color='';btn.classList.add('btn-secondary');btn.classList.remove('btn-primary');}
+  });
+  renderHrTable();
+}
+
+function renderHr(){
+  renderHrAlertBanner();
+  renderHrTable();
+}
+
+function renderHrAlertBanner(){
+  const el=document.getElementById('hrAlertBanner');
+  if(!el)return;
+  const all=loadHrEntries();
+  const today=new Date();today.setHours(0,0,0,0);
+  const soon=all.filter(h=>{
+    if(h.status!=='예정')return false;
+    const d=new Date(h.date);d.setHours(0,0,0,0);
+    const diff=Math.round((d-today)/(1000*60*60*24));
+    return diff>=0&&diff<=7;
+  });
+  if(!soon.length){el.innerHTML='';return;}
+  el.innerHTML=`<div style="background:#fef9c3;border:1px solid #fbbf24;border-radius:var(--radius);padding:12px 16px;">
+    <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ 7일 이내 입/퇴사 예정자 ${soon.length}명</div>
+    ${soon.map(h=>{
+      const d=new Date(h.date);d.setHours(0,0,0,0);
+      const diff=Math.round((d-today)/(1000*60*60*24));
+      return`<div style="font-size:12px;color:#78350f;">${h.type==='new'?'🆕 입사':'👋 퇴직'} <b>${h.name}</b> (${h.project||''} ${h.dept||''}) - ${diff===0?'<b style="color:#dc2626;">오늘!</b>':'D-'+diff}</div>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderHrTable(){
+  const all=loadHrEntries();
+  const today=new Date();today.setHours(0,0,0,0);
+  let filtered=all;
+  if(_hrTab==='new') filtered=all.filter(h=>h.type==='new'&&h.status==='예정');
+  else if(_hrTab==='out') filtered=all.filter(h=>h.type==='out'&&h.status==='예정');
+  else if(_hrTab==='done') filtered=all.filter(h=>h.status==='완료'||h.status==='취소');
+  
+  // 날짜순 정렬
+  filtered.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  
+  const tbody=document.getElementById('hrTbody');
+  if(!tbody)return;
+  if(!filtered.length){
+    tbody.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text3);">등록된 일정이 없습니다</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=filtered.map(h=>{
+    const d=new Date(h.date);d.setHours(0,0,0,0);
+    const diff=Math.round((d-today)/(1000*60*60*24));
+    const ddayStr=diff===0?'<span style="color:#dc2626;font-weight:700;">D-day</span>':diff>0?'<span style="color:#2563eb;">D-'+diff+'</span>':'<span style="color:#6b7280;">D+'+Math.abs(diff)+'</span>';
+    const typeBadge=h.type==='new'?'<span style="background:#dcfce7;color:#15803d;border-radius:6px;padding:2px 8px;font-size:11px;">🆕 입사</span>':'<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:2px 8px;font-size:11px;">👋 퇴직</span>';
+    const statColor=h.status==='완료'?'#15803d':h.status==='취소'?'#6b7280':'#92400e';
+    const statBg=h.status==='완료'?'#dcfce7':h.status==='취소'?'#f3f4f6':'#fef9c3';
+    const dateStr=h.date?h.date.replace(/-/g,'.').slice(2):'';
+    // 입사완료 처리 버튼
+    const completeBtn=(h.type==='new'&&h.status==='예정')
+      ?`<button class="btn btn-xs btn-success" onclick="completeNewHire('${h.id}')" style="font-size:10px;">입사완료</button>`
+      :(h.type==='out'&&h.status==='예정')
+      ?`<button class="btn btn-xs" onclick="completeRetire('${h.id}')" style="font-size:10px;background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;">퇴직처리</button>`
+      :'';
+    return`<tr style="${h.status==='취소'?'opacity:0.5;':''}">
+      <td style="text-align:center;">${typeBadge}</td>
+      <td style="font-weight:600;">${h.name}</td>
+      <td style="text-align:center;font-size:11px;">${h.project||'-'}</td>
+      <td style="font-size:11px;">${h.dept||''} ${h.team||''}</td>
+      <td style="text-align:center;font-size:12px;">${dateStr}</td>
+      <td style="text-align:center;font-size:12px;">${h.status==='예정'?ddayStr:'-'}</td>
+      <td style="text-align:center;"><span style="background:${statBg};color:${statColor};border-radius:6px;padding:2px 8px;font-size:11px;">${h.status}</span></td>
+      <td style="font-size:11px;color:var(--text3);">${h.note||'-'}</td>
+      <td style="text-align:center;white-space:nowrap;">
+        ${completeBtn}
+        <button class="btn btn-xs btn-ghost" onclick="openHrModal('${h.id}')">수정</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateHrForm(){
+  const type=document.getElementById('hrType').value;
+  const dateLabel=document.getElementById('hrDateLabel');
+  const probDiv=document.getElementById('hrProbEndDiv');
+  const addHealthDiv=document.getElementById('hrAddHealthDiv');
+  if(dateLabel) dateLabel.textContent=type==='new'?'입사 예정일 *':'퇴직 예정일 *';
+  if(probDiv) probDiv.style.display=type==='new'?'':'none';
+  if(addHealthDiv) addHealthDiv.style.display=type==='new'?'':'none';
+}
+
+function openHrModal(id){
+  document.getElementById('hrEditId').value=id||'';
+  document.getElementById('hrDeleteBtn').style.display=id?'':'none';
+  if(id){
+    const h=loadHrEntries().find(x=>String(x.id)===String(id));
+    if(!h)return;
+    document.getElementById('hrType').value=h.type||'new';
+    document.getElementById('hrStatus').value=h.status||'예정';
+    document.getElementById('hrName').value=h.name||'';
+    document.getElementById('hrProject').value=h.project||'E7';
+    document.getElementById('hrDept').value=h.dept||'';
+    document.getElementById('hrTeam').value=h.team||'';
+    document.getElementById('hrDate').value=h.date||'';
+    document.getElementById('hrProbEnd').value=h.probEnd||'';
+    document.getElementById('hrNote').value=h.note||'';
+    document.getElementById('hrAddHealth').checked=h.addToHealth!==false;
+    const probStat=h.probStatus||'수습있음';
+    if(document.getElementById('hrHasProb')) document.getElementById('hrHasProb').checked=(probStat==='수습있음');
+    if(document.getElementById('hrNoProb')) document.getElementById('hrNoProb').checked=(probStat==='수습없음');
+    document.getElementById('hrModalTitle').textContent='✏️ 인사일정 수정';
+  } else {
+    document.getElementById('hrType').value='new';
+    document.getElementById('hrStatus').value='예정';
+    document.getElementById('hrName').value='';
+    document.getElementById('hrProject').value='E7';
+    document.getElementById('hrDept').value='';
+    document.getElementById('hrTeam').value='';
+    document.getElementById('hrDate').value='';
+    document.getElementById('hrProbEnd').value='';
+    document.getElementById('hrNote').value='';
+    document.getElementById('hrAddHealth').checked=true;
+    if(document.getElementById('hrHasProb')) document.getElementById('hrHasProb').checked=true;
+    if(document.getElementById('hrNoProb')) document.getElementById('hrNoProb').checked=false;
+    document.getElementById('hrModalTitle').textContent='👤 입/퇴사 예정 등록';
+  }
+  updateHrForm();
+  openModal('hrModal');
+}
+
+function saveHrEntry(){
+  const id=document.getElementById('hrEditId').value;
+  const name=document.getElementById('hrName').value.trim();
+  if(!name){showToast('성명을 입력하세요','error');return;}
+  const date=document.getElementById('hrDate').value;
+  if(!date){showToast('예정일을 입력하세요','error');return;}
+  const all=loadHrEntries();
+  const entry={
+    id:id||(Date.now()+''),
+    type:document.getElementById('hrType').value,
+    status:document.getElementById('hrStatus').value,
+    name,
+    project:document.getElementById('hrProject').value,
+    dept:document.getElementById('hrDept').value.trim(),
+    team:document.getElementById('hrTeam').value.trim(),
+    date,
+    probEnd:document.getElementById('hrProbEnd').value,
+    note:document.getElementById('hrNote').value.trim(),
+    addToHealth:document.getElementById('hrAddHealth').checked,
+    probStatus:(document.getElementById('hrHasProb')&&document.getElementById('hrHasProb').checked)?'수습있음':'수습없음',
+  };
+  if(id){
+    const idx=all.findIndex(x=>String(x.id)===String(id));
+    if(idx>=0)all[idx]=entry;
+  } else {
+    all.push(entry);
+  }
+  saveHrEntries(all);
+  closeModal('hrModal');
+  renderHr();
+  showToast('저장되었습니다');
+}
+
+function deleteHrEntry(){
+  const id=document.getElementById('hrEditId').value;
+  if(!id||!confirm('삭제하시겠습니까?'))return;
+  saveHrEntries(loadHrEntries().filter(x=>String(x.id)!==String(id)));
+  closeModal('hrModal');
+  renderHr();
+  showToast('삭제되었습니다');
+}
+
+function completeNewHire(id){
+  const all=loadHrEntries();
+  const h=all.find(x=>String(x.id)===String(id));
+  if(!h)return;
+  if(!confirm(`${h.name} 입사 완료 처리하시겠습니까?\n${h.addToHealth?'✅ 건강검진 대상자에 자동 등록됩니다.':''}`))return;
+  h.status='완료';
+  saveHrEntries(all);
+  // 건강검진 자동 등록
+  if(h.addToHealth){
+    const healths=loadHealths();
+    const empId='HR'+Date.now();
+    const probD=h.probEnd?new Date(h.probEnd):null;
+    const todayD=new Date();todayD.setHours(0,0,0,0);
+    const hasFutureProb=probD&&probD>todayD;
+    if(!healths.find(x=>x.name===h.name&&x.dept===h.dept)){
+      healths.push({
+        id:empId,
+        name:h.name,
+        project:h.project||'',
+        dept:h.dept||'',
+        team:h.team||'',
+        joinDate:h.date,
+        probEndDate:h.probEnd||'',
+        checkPattern:h.healthPattern||'25만원',
+        eligible:hasFutureProb?false:true,
+        eligibleFrom:hasFutureProb&&probD?String(probD.getFullYear()+1):'',
+      });
+      LS.set(HEALTH_KEY,healths);
+      showToast(`✅ ${h.name} 입사 완료 + 건강검진 등록!`);
+    } else {
+      showToast(`✅ ${h.name} 입사 완료 (건강검진 이미 존재)`);
+    }
+  } else {
+    showToast(`✅ ${h.name} 입사 완료`);
+  }
+  renderHr();
+  updateStatCards();
+}
+
+function completeRetire(id){
+  const all=loadHrEntries();
+  const h=all.find(x=>String(x.id)===String(id));
+  if(!h)return;
+  if(!confirm(`${h.name} 퇴직 처리하시겠습니까?`))return;
+  h.status='완료';
+  saveHrEntries(all);
+  showToast(`${h.name} 퇴직 처리 완료. 건강검진/주차/사택은 별도 처리 필요`,'warning');
+  renderHr();
+}
+
+// ============================================================
+// 엑셀 파일 뷰어 (조직도 / 직원명부 공통)
+// ============================================================
+const ORGCHART_KEY='intra_orgchart_files';
+const ROSTER_KEY='intra_roster_files';
+
+function getExcelKey(type){ return type==='orgchart'?ORGCHART_KEY:ROSTER_KEY; }
+
+function loadExcelFiles(type){ return LS.get(getExcelKey(type))||[]; }
+function saveExcelFiles(type,arr){ LS.set(getExcelKey(type),arr); }
+
+function uploadExcelFile(type, input){
+  const file=input.files[0];
+  if(!file)return;
+  const maxMB=3;
+  if(file.size>maxMB*1024*1024){showToast('파일 크기 '+maxMB+'MB 초과','error');input.value='';return;}
+  
+  showToast('파일 파싱 중...');
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      if(typeof XLSX==='undefined'){showToast('SheetJS 로딩 실패. 인터넷 연결 확인','error');return;}
+      const data=new Uint8Array(e.target.result);
+      const wb=XLSX.read(data,{type:'array',cellDates:true,dateNF:'yyyy.mm.dd'});
+      const sheets=wb.SheetNames.map(sn=>{
+        const ws=wb.Sheets[sn];
+        const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        if(!raw.length)return{name:sn,headers:[],rows:[]};
+        const headers=raw[0].map(String);
+        const rows=raw.slice(1).filter(r=>r.some(c=>c!==''));
+        return{name:sn,headers,rows};
+      });
+      const entry={
+        id:Date.now()+'',
+        fileName:file.name,
+        uploadedAt:new Date().toISOString().slice(0,10),
+        sheets,
+        activeSheet:0,
+      };
+      const all=loadExcelFiles(type);
+      all.unshift(entry);
+      // 최대 5개 보관
+      if(all.length>5)all.splice(5);
+      saveExcelFiles(type,all);
+      input.value='';
+      renderExcelPage(type);
+      showToast('✅ '+file.name+' 업로드 완료 ('+sheets.length+'개 시트)');
+    }catch(err){
+      showToast('파싱 오류: '+err.message,'error');
+      input.value='';
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+let _excelViewState={orgchart:{fileId:null,sheetIdx:0,search:''},roster:{fileId:null,sheetIdx:0,search:''}};
+
+function renderExcelPage(type){
+  renderExcelFileList(type);
+  // 현재 파일이 없으면 최신 파일 자동 선택
+  const files=loadExcelFiles(type);
+  if(files.length&&!_excelViewState[type].fileId){
+    _excelViewState[type].fileId=files[0].id;
+    _excelViewState[type].sheetIdx=0;
+  }
+  renderExcelViewer(type);
+}
+
+function renderExcelFileList(type){
+  const el=document.getElementById(type+'FileList');
+  if(!el)return;
+  const files=loadExcelFiles(type);
+  if(!files.length){el.innerHTML='<div style="color:var(--text3);font-size:13px;">업로드된 파일이 없습니다.</div>';return;}
+  el.innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:8px;">
+    ${files.map(f=>{
+      const isActive=_excelViewState[type].fileId===f.id;
+      return`<div style="display:flex;align-items:center;gap:6px;background:${isActive?'var(--primary)':'var(--bg2)'};color:${isActive?'#fff':'var(--text)'};border-radius:var(--radius-sm);padding:6px 12px;cursor:pointer;font-size:12px;border:1px solid ${isActive?'transparent':'var(--border)'};"
+        onclick="selectExcelFile('${type}','${f.id}')">
+        <span>📄 ${f.fileName}</span>
+        <span style="font-size:10px;opacity:0.7;">${f.uploadedAt}</span>
+        <button onclick="event.stopPropagation();deleteExcelFile('${type}','${f.id}')" style="background:none;border:none;cursor:pointer;color:${isActive?'#fff':'var(--text3)'};font-size:12px;padding:0 0 0 4px;">✕</button>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function selectExcelFile(type,id){
+  _excelViewState[type].fileId=id;
+  _excelViewState[type].sheetIdx=0;
+  _excelViewState[type].search='';
+  renderExcelPage(type);
+}
+
+function deleteExcelFile(type,id){
+  if(!confirm('파일을 삭제하시겠습니까?'))return;
+  const all=loadExcelFiles(type).filter(f=>f.id!==id);
+  saveExcelFiles(type,all);
+  if(_excelViewState[type].fileId===id){
+    _excelViewState[type].fileId=all.length?all[0].id:null;
+    _excelViewState[type].sheetIdx=0;
+  }
+  renderExcelPage(type);
+  showToast('삭제되었습니다');
+}
+
+function renderExcelViewer(type){
+  const el=document.getElementById(type+'Viewer');
+  if(!el)return;
+  const files=loadExcelFiles(type);
+  const fileId=_excelViewState[type].fileId;
+  const file=files.find(f=>f.id===fileId);
+  if(!file){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3);">파일을 선택하거나 업로드하세요.</div>';return;}
+  
+  const sheetIdx=_excelViewState[type].sheetIdx;
+  const sheet=file.sheets[sheetIdx];
+  const search=_excelViewState[type].search||'';
+  
+  // 시트 탭
+  const sheetTabs=file.sheets.length>1?`<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+    ${file.sheets.map((s,i)=>`<button class="btn btn-sm" onclick="_excelViewState['${type}'].sheetIdx=${i};renderExcelViewer('${type}')" style="background:${i===sheetIdx?'var(--primary)':'var(--bg2)'};color:${i===sheetIdx?'#fff':'var(--text)'};">${s.name}</button>`).join('')}
+  </div>`:'';
+  
+  // 검색
+  const searchBar=`<div style="margin-bottom:10px;display:flex;gap:8px;align-items:center;">
+    <input type="text" placeholder="🔍 검색..." value="${search}" oninput="_excelViewState['${type}'].search=this.value;renderExcelViewer('${type}')"
+      style="padding:6px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;width:240px;">
+    <span style="font-size:12px;color:var(--text3);">${sheet.rows.length}행</span>
+  </div>`;
+  
+  // 필터링된 행
+  const sq=search.toLowerCase();
+  const rows=search?sheet.rows.filter(r=>r.some(c=>String(c).toLowerCase().includes(sq))):sheet.rows;
+  
+  // 테이블
+  const MAX_ROWS=500;
+  const displayRows=rows.slice(0,MAX_ROWS);
+  const tbl=`<div style="overflow-x:auto;max-height:65vh;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:max-content;">
+      <thead style="position:sticky;top:0;z-index:2;">
+        <tr style="background:#1e293b;color:#fff;">
+          ${sheet.headers.map(h=>`<th style="padding:8px 12px;text-align:left;white-space:nowrap;font-weight:600;border-right:1px solid rgba(255,255,255,0.1);">${h||''}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>
+        ${displayRows.map((r,ri)=>`<tr style="background:${ri%2===0?'var(--surface)':'var(--bg2)'};">
+          ${sheet.headers.map((_,ci)=>`<td style="padding:6px 12px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis;" title="${String(r[ci]||'')}">${r[ci]||''}</td>`).join('')}
+        </tr>`).join('')}
+        ${rows.length>MAX_ROWS?`<tr><td colspan="${sheet.headers.length}" style="text-align:center;padding:12px;color:var(--text3);font-size:11px;">... 상위 ${MAX_ROWS}행 표시 중 (전체 ${rows.length}행)</td></tr>`:''}
+      </tbody>
+    </table>
+  </div>`;
+  
+  el.innerHTML=`<div class="card"><div class="card-body">${sheetTabs}${searchBar}${tbl}</div></div>`;
+}
+
+// hr/orgchart/roster 렌더링은 showPage 함수에 직접 추가됨
+
+// ============================================================
+// 직원 데이터 (직원명부 2026.03.23 기준)
+// ============================================================
+const SC_EMPLOYEES = [{"no":1,"sc_id":"101001","name":"강기현","project":"공통","dept":"공동대표","team":"공동대표","join_date":"2015.08.12","prob_end":"","emp_type":"임원","title":"CEO","senior":""},{"no":2,"sc_id":"101002","name":"김형석","project":"공통","dept":"공동대표","team":"공동대표","join_date":"2015.08.17","prob_end":"","emp_type":"임원","title":"CEO","senior":""},{"no":3,"sc_id":"101003","name":"류한경","project":"E7","dept":"비주얼아트실","team":"비주얼아트실","join_date":"2015.08.17","prob_end":"","emp_type":"정규직","title":"AD","senior":""},{"no":4,"sc_id":"101007","name":"조성빈","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2015.12.01","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":5,"sc_id":"101008","name":"서연주","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2016.01.11","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":6,"sc_id":"101009","name":"김보연","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2016.01.11","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":7,"sc_id":"101010","name":"김재형","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2016.03.07","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":8,"sc_id":"101012","name":"김탁곤","project":"SSR","dept":"아트실","team":"아트실","join_date":"2016.03.21","prob_end":"","emp_type":"정규직","title":"실장","senior":""},{"no":9,"sc_id":"101013","name":"최호준","project":"공통","dept":"TD실","team":"TD실","join_date":"2016.03.30","prob_end":"","emp_type":"정규직","title":"CTO","senior":""},{"no":10,"sc_id":"101014","name":"배현준","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2016.03.30","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":11,"sc_id":"101016","name":"김신혜","project":"E7","dept":"비주얼아트실","team":"컷인팀","join_date":"2016.04.01","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":12,"sc_id":"101018","name":"윤준영","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2016.05.04","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":13,"sc_id":"101020","name":"소수빈","project":"SSR","dept":"아트실","team":"아트실","join_date":"2016.05.19","prob_end":"","emp_type":"정규직","title":"AD","senior":""},{"no":14,"sc_id":"101021","name":"이윤수","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2016.05.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":15,"sc_id":"101023","name":"김혁진","project":"E7","dept":"프로그램실","team":"프로그램 지원팀","join_date":"2016.09.19","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":16,"sc_id":"101025","name":"정태양","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2017.01.09","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":17,"sc_id":"101029","name":"이민재","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2017.03.06","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":18,"sc_id":"101030","name":"박예슬","project":"SSR","dept":"프로그램실","team":"프로그램3팀","join_date":"2017.03.13","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":19,"sc_id":"101031","name":"허원영","project":"SSR","dept":"기획실","team":"컨텐츠팀","join_date":"2017.03.23","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":20,"sc_id":"101032","name":"정승연","project":"E7","dept":"비주얼아트실","team":"비주얼아트실","join_date":"2017.04.10","prob_end":"","emp_type":"정규직","title":"AAD","senior":""},{"no":21,"sc_id":"101034","name":"류경서","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2017.05.02","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":22,"sc_id":"101036","name":"권두환","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2017.08.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":23,"sc_id":"101037","name":"임보라","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2017.08.16","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":24,"sc_id":"101040","name":"이동석","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2017.10.16","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":25,"sc_id":"101041","name":"박성진","project":"E7","dept":"프로그램실","team":"프로그램실","join_date":"2017.10.24","prob_end":"","emp_type":"정규직","title":"실장","senior":""},{"no":26,"sc_id":"101043","name":"권나현","project":"공통","dept":"-","team":"시나리오TF팀","join_date":"2018.04.09","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":27,"sc_id":"101046","name":"박경수","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2018.04.23","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":28,"sc_id":"101047","name":"최기원","project":"E7","dept":"프로그램실","team":"프로그램 지원팀","join_date":"2018.05.14","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":29,"sc_id":"101048","name":"김종학","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2018.05.18","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":30,"sc_id":"101049","name":"최성욱","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2018.06.20","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":31,"sc_id":"101056","name":"최선우","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2018.09.10","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":32,"sc_id":"101057","name":"이지은","project":"E7","dept":"비주얼아트실","team":"배경원화팀","join_date":"2018.09.27","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":33,"sc_id":"101058","name":"하동익","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2018.10.10","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":34,"sc_id":"101059","name":"김가영","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2018.10.15","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":35,"sc_id":"101060","name":"박상흠","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2018.10.15","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":36,"sc_id":"101062","name":"유상용","project":"SSR","dept":"기획실","team":"시스템팀","join_date":"2018.10.22","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":37,"sc_id":"101063","name":"탁광진","project":"E7","dept":"E7","team":"E7","join_date":"2018.10.22","prob_end":"","emp_type":"정규직","title":"PD","senior":""},{"no":38,"sc_id":"101064","name":"김주영","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2018.11.19","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":39,"sc_id":"101070","name":"권소영","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2018.12.03","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":40,"sc_id":"101072","name":"조화평","project":"E7","dept":"프로그램실","team":"프로그램 지원팀","join_date":"2018.12.03","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":41,"sc_id":"101073","name":"김정은","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2018.12.10","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":42,"sc_id":"101075","name":"최승현","project":"SSR","dept":"기획실","team":"기획실","join_date":"2018.12.10","prob_end":"","emp_type":"정규직","title":"LD (Live Director)","senior":""},{"no":43,"sc_id":"101077","name":"김수진","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2018.12.17","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":44,"sc_id":"101084","name":"이재훈","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2019.01.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":45,"sc_id":"101089","name":"민소영","project":"SSR","dept":"아트실","team":"콘티팀","join_date":"2019.01.28","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":46,"sc_id":"101092","name":"황명윤","project":"SSR","dept":"아트실","team":"콘티팀","join_date":"2019.03.04","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":47,"sc_id":"101094","name":"이나래","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2019.03.06","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":48,"sc_id":"101099","name":"박진곤","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2019.04.10","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":49,"sc_id":"101101","name":"강문현","project":"E7","dept":"기획실","team":"레벨컨텐츠팀","join_date":"2019.04.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":50,"sc_id":"101106","name":"박지연","project":"E7","dept":"기획실","team":"UI팀","join_date":"2019.06.20","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":51,"sc_id":"101108","name":"김지원","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2019.07.02","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":52,"sc_id":"101109","name":"김지민","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2019.07.09","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":53,"sc_id":"101115","name":"남현민","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2019.08.19","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":54,"sc_id":"101119","name":"한유종","project":"SSR","dept":"프로그램실","team":"프로그램실","join_date":"2019.09.02","prob_end":"","emp_type":"정규직","title":"실장","senior":""},{"no":55,"sc_id":"101120","name":"강주영","project":"E7","dept":"프로그램실","team":"프로그램 지원팀","join_date":"2019.09.16","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":56,"sc_id":"101125","name":"강우영","project":"E7","dept":"기획실","team":"영웅팀","join_date":"2019.10.10","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":57,"sc_id":"101126","name":"이준수","project":"SSR","dept":"프로그램실","team":"프로그램1팀","join_date":"2019.10.14","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":58,"sc_id":"101128","name":"임혜리","project":"공통","dept":"경영지원실","team":"인사팀","join_date":"2019.11.18","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":59,"sc_id":"101129","name":"엄지손","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2019.11.20","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":60,"sc_id":"101130","name":"조용호","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2019.11.20","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":61,"sc_id":"101131","name":"박새별","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2019.11.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":62,"sc_id":"101132","name":"김영욱","project":"E7","dept":"기획실","team":"영웅팀","join_date":"2019.12.02","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":63,"sc_id":"101133","name":"최오성","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2019.12.02","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":64,"sc_id":"101134","name":"홍다운","project":"SSR","dept":"기획실","team":"UI팀","join_date":"2019.12.02","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":65,"sc_id":"101135","name":"최웅환","project":"SSR","dept":"아트실","team":"배경원화팀","join_date":"2019.12.18","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":66,"sc_id":"101144","name":"오정훈","project":"SSR","dept":"아트실","team":"비주얼아트웍팀","join_date":"2020.02.24","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":67,"sc_id":"101145","name":"공유라","project":"E7","dept":"비주얼아트실","team":"컷인팀","join_date":"2020.03.02","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":68,"sc_id":"101146","name":"이정주","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2020.03.16","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":69,"sc_id":"101147","name":"김소라","project":"SSR","dept":"개발지원실","team":"PM팀","join_date":"2020.05.11","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":70,"sc_id":"101148","name":"김시나","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2020.05.18","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":71,"sc_id":"101150","name":"허인지","project":"E7","dept":"비주얼아트실","team":"컷인팀","join_date":"2020.05.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":72,"sc_id":"101156","name":"반창현","project":"E7","dept":"기획실","team":"기획실","join_date":"2020.07.20","prob_end":"","emp_type":"정규직","title":"BDD","senior":""},{"no":73,"sc_id":"101164","name":"이지연","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2020.09.21","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":74,"sc_id":"101169","name":"김건우","project":"E7","dept":"비주얼아트실","team":"배경원화팀","join_date":"2020.10.19","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":75,"sc_id":"101170","name":"정수민","project":"E7","dept":"비주얼아트실","team":"배경원화팀","join_date":"2020.10.19","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":76,"sc_id":"101173","name":"김준범","project":"SSR","dept":"프로그램실","team":"프로그램2팀","join_date":"2020.11.09","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":77,"sc_id":"101175","name":"김다은","project":"SSR","dept":"기획실","team":"UI팀","join_date":"2020.12.01","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":78,"sc_id":"101176","name":"김승환","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2020.12.07","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":79,"sc_id":"101177","name":"하헌영","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2021.01.04","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":80,"sc_id":"101178","name":"김덕유","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2021.01.04","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":81,"sc_id":"101183","name":"이은비","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2021.04.05","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":82,"sc_id":"101184","name":"김려원","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2021.04.12","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":83,"sc_id":"101185","name":"김원학","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2021.04.12","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":84,"sc_id":"101187","name":"이창현","project":"SSR","dept":"기획실","team":"기획실","join_date":"2021.04.27","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":85,"sc_id":"101189","name":"장은준","project":"공통","dept":"TD실","team":"TD실","join_date":"2021.05.17","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":86,"sc_id":"101191","name":"정구연","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2021.06.29","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":87,"sc_id":"101195","name":"김성","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2021.07.19","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":88,"sc_id":"101196","name":"유정훈","project":"SSR","dept":"기획실","team":"시스템팀","join_date":"2021.07.20","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":89,"sc_id":"101197","name":"성시우","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2021.07.26","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":90,"sc_id":"101198","name":"민성호","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2021.07.26","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":91,"sc_id":"101199","name":"박나래","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2021.07.26","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":92,"sc_id":"101201","name":"이동윤","project":"E7","dept":"기획실","team":"코어시스템팀","join_date":"2021.08.23","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":93,"sc_id":"101202","name":"김수연","project":"SSR","dept":"아트실","team":"배경원화팀","join_date":"2021.09.27","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":94,"sc_id":"101206","name":"김화영","project":"E7","dept":"비주얼아트실","team":"컷인팀","join_date":"2021.11.03","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":95,"sc_id":"101208","name":"하정현","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2021.11.15","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":96,"sc_id":"101209","name":"함은비","project":"공통","dept":"경영지원실","team":"총무팀","join_date":"2021.11.15","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":97,"sc_id":"101211","name":"박서휘","project":"E7","dept":"비주얼아트실","team":"콘티팀","join_date":"2021.11.22","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":98,"sc_id":"101217","name":"이가은","project":"E7","dept":"기획실","team":"레벨컨텐츠팀","join_date":"2021.12.27","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":99,"sc_id":"101222","name":"박건호","project":"E7","dept":"기획실","team":"영웅팀","join_date":"2022.02.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":100,"sc_id":"101223","name":"형성찬","project":"SSR","dept":"아트실","team":"비주얼아트웍팀","join_date":"2022.02.07","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":101,"sc_id":"101228","name":"임효선","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2022.03.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":102,"sc_id":"101230","name":"노희상","project":"E7","dept":"기획실","team":"영웅팀","join_date":"2022.04.18","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":103,"sc_id":"101231","name":"김서을","project":"E7","dept":"비주얼아트실","team":"컷인팀","join_date":"2022.04.25","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":104,"sc_id":"101232","name":"김은진","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2022.04.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":105,"sc_id":"101233","name":"김예준","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2022.05.09","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":106,"sc_id":"101235","name":"채준","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2022.05.16","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":107,"sc_id":"101238","name":"남궁호","project":"공통","dept":"경영지원실","team":"총무팀","join_date":"2022.06.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":108,"sc_id":"101244","name":"김선민","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2022.07.11","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":109,"sc_id":"101249","name":"장이국","project":"SSR","dept":"프로그램실","team":"프로그램2팀","join_date":"2022.08.08","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":110,"sc_id":"101250","name":"배제성","project":"SSR","dept":"아트실","team":"배경원화팀","join_date":"2022.08.16","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":111,"sc_id":"101251","name":"문소영","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2022.08.23","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":112,"sc_id":"101252","name":"정지현","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2022.09.05","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":113,"sc_id":"101253","name":"김현진B","project":"SSR","dept":"프로그램실","team":"프로그램1팀","join_date":"2022.09.14","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":114,"sc_id":"101254","name":"이승훈","project":"SSR","dept":"프로그램실","team":"프로그램3팀","join_date":"2022.09.14","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":115,"sc_id":"101257","name":"김민재","project":"E7","dept":"기획실","team":"영웅팀","join_date":"2022.10.05","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":116,"sc_id":"101258","name":"김주연","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2022.10.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":117,"sc_id":"101259","name":"부혜진","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2022.10.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":118,"sc_id":"101260","name":"이현희","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2022.10.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":119,"sc_id":"101262","name":"김동훈","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2022.11.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":120,"sc_id":"101264","name":"박연옥","project":"공통","dept":"재무회계실","team":"재무회계팀","join_date":"2022.11.07","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":121,"sc_id":"101265","name":"조성훈","project":"공통","dept":"경영지원실","team":"총무팀","join_date":"2022.11.07","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":122,"sc_id":"101266","name":"최종성","project":"공통","dept":"경영지원실","team":"인사팀","join_date":"2022.11.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":123,"sc_id":"101267","name":"이나레","project":"SSR","dept":"아트실","team":"콘티팀","join_date":"2022.12.05","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":124,"sc_id":"101269","name":"김민경","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2022.12.26","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":125,"sc_id":"101274","name":"강은표","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2023.01.16","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":126,"sc_id":"101275","name":"오승재","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2023.01.16","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":127,"sc_id":"101277","name":"안승호","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2023.01.25","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":128,"sc_id":"101279","name":"정유경","project":"SSR","dept":"기획실","team":"컨텐츠팀","join_date":"2023.01.30","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":129,"sc_id":"101282","name":"정진영","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2023.03.13","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":130,"sc_id":"101283","name":"이민우","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2023.03.27","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":131,"sc_id":"101284","name":"한지현","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2023.03.27","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":132,"sc_id":"101287","name":"최원석","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2023.04.10","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":133,"sc_id":"101290","name":"안기수","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2023.04.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":134,"sc_id":"101291","name":"전홍집","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2023.04.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":135,"sc_id":"101292","name":"최정효","project":"공통","dept":"경영지원실","team":"총무팀","join_date":"2023.04.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":136,"sc_id":"101294","name":"조태현","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2023.05.02","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":137,"sc_id":"101295","name":"황선경","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2023.05.08","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":138,"sc_id":"101298","name":"유별라","project":"공통","dept":"서비스기획팀","team":"서비스기획팀","join_date":"2023.05.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":139,"sc_id":"101303","name":"신성우","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2023.06.19","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":140,"sc_id":"101306","name":"임윤하","project":"E7","dept":"비주얼아트실","team":"콘티팀","join_date":"2023.06.19","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":141,"sc_id":"101308","name":"이주형","project":"SSR","dept":"개발지원실","team":"PM팀","join_date":"2023.06.26","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":142,"sc_id":"101310","name":"최현지","project":"SSR","dept":"프로그램실","team":"프로그램1팀","join_date":"2023.06.26","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":143,"sc_id":"101311","name":"김현호","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2023.07.03","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":144,"sc_id":"101312","name":"성혜진","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2023.07.03","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":145,"sc_id":"101313","name":"이용준","project":"공통","dept":"TD실","team":"TD실","join_date":"2023.07.03","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":146,"sc_id":"101315","name":"이수경","project":"SSR","dept":"아트실","team":"콘티팀","join_date":"2023.07.17","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":147,"sc_id":"101316","name":"강경준","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2023.07.18","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":148,"sc_id":"101317","name":"신건우","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2023.07.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":149,"sc_id":"101319","name":"조성해","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2023.07.31","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":150,"sc_id":"101320","name":"박용현","project":"공통","dept":"경영지원실","team":"총무팀","join_date":"2023.08.01","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":151,"sc_id":"101322","name":"이상현","project":"E7","dept":"비주얼아트실","team":"콘티팀","join_date":"2023.08.07","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":152,"sc_id":"101326","name":"박준식","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2023.09.11","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":153,"sc_id":"101329","name":"배지환","project":"SSR","dept":"아트실","team":"배경원화팀","join_date":"2023.10.05","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":154,"sc_id":"101331","name":"강지은","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2023.10.16","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":155,"sc_id":"101333","name":"유영호","project":"SSR","dept":"개발지원실","team":"PM팀","join_date":"2023.10.30","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":156,"sc_id":"101334","name":"이지수","project":"SSR","dept":"아트실","team":"콘티팀","join_date":"2023.11.06","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":157,"sc_id":"101335","name":"전영철","project":"SSR","dept":"기획실","team":"컨텐츠팀","join_date":"2023.11.13","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":158,"sc_id":"101337","name":"김유라","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2023.11.27","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":159,"sc_id":"101338","name":"김한모","project":"E7","dept":"기획실","team":"코어시스템팀","join_date":"2023.11.27","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":160,"sc_id":"101339","name":"이민선","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2023.11.27","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":161,"sc_id":"101340","name":"위수현","project":"SSR","dept":"기획실","team":"컨텐츠팀","join_date":"2023.12.04","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":162,"sc_id":"101345","name":"박환용","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2024.01.02","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":163,"sc_id":"101347","name":"김대현","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2024.01.10","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":164,"sc_id":"101349","name":"최영현","project":"E7","dept":"기획실","team":"시나리오팀","join_date":"2024.01.15","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":165,"sc_id":"101350","name":"이예니","project":"공통","dept":"경영지원실","team":"인사팀","join_date":"2024.01.15","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":166,"sc_id":"101352","name":"박지윤","project":"공통","dept":"재무회계실","team":"재무회계팀","join_date":"2024.01.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":167,"sc_id":"101353","name":"신동근","project":"공통","dept":"경영지원실","team":"인사팀","join_date":"2024.01.29","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":168,"sc_id":"101354","name":"최시우","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2024.01.29","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":169,"sc_id":"101355","name":"허정윤","project":"E7","dept":"기획실","team":"레벨컨텐츠팀","join_date":"2024.01.29","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":170,"sc_id":"101356","name":"강동우","project":"E7","dept":"기획실","team":"라이브팀","join_date":"2024.01.31","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":171,"sc_id":"101358","name":"김지은","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2024.01.31","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":172,"sc_id":"101360","name":"문수진","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2024.02.19","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":173,"sc_id":"101361","name":"이명준","project":"E7","dept":"기획실","team":"UI팀","join_date":"2024.02.19","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":174,"sc_id":"101362","name":"서지인","project":"E7","dept":"비주얼아트실","team":"컷인팀","join_date":"2024.02.19","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":175,"sc_id":"101365","name":"이은빈","project":"E7","dept":"비주얼아트실","team":"콘티팀","join_date":"2024.02.19","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":176,"sc_id":"101366","name":"이재원","project":"E7","dept":"비주얼아트실","team":"컷인팀","join_date":"2024.02.19","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":177,"sc_id":"101368","name":"이지원","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2024.02.22","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":178,"sc_id":"101369","name":"허대균","project":"E7","dept":"기획실","team":"기획실","join_date":"2024.02.26","prob_end":"","emp_type":"정규직","title":"DD","senior":""},{"no":179,"sc_id":"101371","name":"이세영","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2024.03.04","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":180,"sc_id":"101374","name":"나동원","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2024.03.11","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":181,"sc_id":"101376","name":"이혜정","project":"E7","dept":"비주얼아트실","team":"리소스원화팀","join_date":"2024.03.18","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":182,"sc_id":"101378","name":"류혜령","project":"E7","dept":"기획실","team":"코어시스템팀","join_date":"2024.03.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":183,"sc_id":"101379","name":"서주희","project":"공통","dept":"경영지원실","team":"총무팀","join_date":"2024.03.25","prob_end":"","emp_type":"정규직","title":"파트장","senior":""},{"no":184,"sc_id":"101380","name":"조윤진","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2024.03.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":185,"sc_id":"101381","name":"설유진","project":"E7","dept":"기획실","team":"시나리오팀","join_date":"2024.04.01","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":186,"sc_id":"101383","name":"나경엽","project":"공통","dept":"재무회계실","team":"재무회계팀","join_date":"2024.04.08","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":187,"sc_id":"101385","name":"전병성","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2024.04.08","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":188,"sc_id":"101386","name":"최지원","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2024.04.08","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":189,"sc_id":"101387","name":"박상우","project":"공통","dept":"서비스기획팀","team":"서비스기획팀","join_date":"2024.04.11","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":190,"sc_id":"101388","name":"방아정","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2024.04.15","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":191,"sc_id":"101390","name":"유소정","project":"공통","dept":"재무회계실","team":"재무회계팀","join_date":"2024.04.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":192,"sc_id":"101391","name":"이민정","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2024.04.29","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":193,"sc_id":"101392","name":"서형택","project":"공통","dept":"경영지원실","team":"경영지원실","join_date":"2018.12.03","prob_end":"","emp_type":"정규직","title":"실장","senior":""},{"no":194,"sc_id":"101393","name":"김민석","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2024.05.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":195,"sc_id":"101394","name":"박다유","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2024.05.07","prob_end":"","emp_type":"정규직","title":"","senior":"선임"},{"no":196,"sc_id":"101396","name":"이은","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2024.05.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":197,"sc_id":"101397","name":"노현수","project":"E7","dept":"기획실","team":"시나리오팀","join_date":"2024.05.13","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":198,"sc_id":"101400","name":"박동연","project":"SSR","dept":"아트실","team":"아트실","join_date":"2024.06.03","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":199,"sc_id":"101402","name":"박고은","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2024.06.10","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":200,"sc_id":"101403","name":"송성화","project":"공통","dept":"경영지원실","team":"인사팀","join_date":"2024.06.10","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":201,"sc_id":"101404","name":"이민지","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2024.06.17","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":202,"sc_id":"101405","name":"나병한","project":"SSR","dept":"프로그램실","team":"프로그램3팀","join_date":"2024.06.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":203,"sc_id":"101406","name":"문다슬","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2024.06.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":204,"sc_id":"101407","name":"박현준","project":"E7","dept":"기획실","team":"코어시스템팀","join_date":"2024.06.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":205,"sc_id":"101408","name":"임한규","project":"SSR","dept":"아트실","team":"배경원화팀","join_date":"2024.06.24","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":206,"sc_id":"101409","name":"박영수","project":"E7","dept":"기획실","team":"UI팀","join_date":"2024.06.26","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":207,"sc_id":"101411","name":"백형록","project":"E7","dept":"비주얼아트실","team":"배경원화팀","join_date":"2024.07.01","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":208,"sc_id":"101412","name":"손지혜","project":"E7","dept":"비주얼아트실","team":"배경원화팀","join_date":"2024.07.01","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":209,"sc_id":"101413","name":"염승화","project":"SSR","dept":"개발지원실","team":"PM팀","join_date":"2024.07.01","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":210,"sc_id":"101414","name":"황현정","project":"공통","dept":"TD실","team":"TD실","join_date":"2024.07.01","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":211,"sc_id":"101415","name":"김동리","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2024.07.08","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":212,"sc_id":"101416","name":"노근석","project":"E7","dept":"기획실","team":"레벨컨텐츠팀","join_date":"2024.07.08","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":213,"sc_id":"101418","name":"이상연B","project":"E7","dept":"기획실","team":"라이브팀","join_date":"2024.07.08","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":214,"sc_id":"101420","name":"김창현","project":"SSR","dept":"개발지원실","team":"PM팀","join_date":"2024.07.18","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":215,"sc_id":"101421","name":"조홍래","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2024.07.29","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":216,"sc_id":"101422","name":"강다은","project":"SSR","dept":"기획실","team":"UI팀","join_date":"2024.08.05","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":217,"sc_id":"101423","name":"조혜진","project":"공통","dept":"재무회계실","team":"재무회계실","join_date":"2024.08.05","prob_end":"","emp_type":"정규직","title":"실장","senior":""},{"no":218,"sc_id":"101424","name":"이유미","project":"SSR","dept":"기획실","team":"라이브팀","join_date":"2024.08.26","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":219,"sc_id":"101427","name":"김민경B","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2024.09.02","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":220,"sc_id":"101429","name":"허유빈","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2024.09.23","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":221,"sc_id":"101430","name":"백승열","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2024.09.30","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":222,"sc_id":"101431","name":"이수빈","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2024.09.30","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":223,"sc_id":"101432","name":"최성민B","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2024.09.30","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":224,"sc_id":"101433","name":"김기범","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2024.10.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":225,"sc_id":"101435","name":"김기윤","project":"E7","dept":"비주얼아트실","team":"애니메이션팀","join_date":"2024.10.14","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":226,"sc_id":"101436","name":"김비오","project":"SSR","dept":"프로그램실","team":"프로그램2팀","join_date":"2024.10.21","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":227,"sc_id":"101437","name":"이상희","project":"E7","dept":"기획실","team":"라이브팀","join_date":"2024.10.21","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":228,"sc_id":"101440","name":"정미아","project":"SSR","dept":"기획실","team":"UI팀","join_date":"2024.11.04","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":229,"sc_id":"101441","name":"한미현","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2024.11.04","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":230,"sc_id":"101442","name":"김찬우","project":"SSR","dept":"기획실","team":"라이브팀","join_date":"2024.11.18","prob_end":"","emp_type":"정규직","title":"팀장","senior":""},{"no":231,"sc_id":"101444","name":"이성수","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2024.11.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":232,"sc_id":"101445","name":"이준호","project":"E7","dept":"기획실","team":"레벨컨텐츠팀","join_date":"2024.11.25","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":233,"sc_id":"101448","name":"구자영","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2024.12.09","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":234,"sc_id":"101453","name":"김동민","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2025.01.06","prob_end":"2025.04.05","emp_type":"정규직","title":"","senior":""},{"no":235,"sc_id":"101454","name":"김세은","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2025.01.06","prob_end":"2025.04.05","emp_type":"정규직","title":"","senior":""},{"no":236,"sc_id":"101455","name":"서어진","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2025.01.06","prob_end":"2025.04.05","emp_type":"정규직","title":"","senior":""},{"no":237,"sc_id":"101457","name":"김지수B","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2025.01.13","prob_end":"2025.04.12","emp_type":"정규직","title":"","senior":""},{"no":238,"sc_id":"101458","name":"김학민","project":"E7","dept":"비주얼아트실","team":"배경원화팀","join_date":"2025.01.13","prob_end":"2025.04.12","emp_type":"정규직","title":"","senior":""},{"no":239,"sc_id":"101459","name":"주건영","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2025.01.13","prob_end":"2025.04.12","emp_type":"정규직","title":"","senior":""},{"no":240,"sc_id":"101460","name":"고지혜","project":"E7","dept":"기획실","team":"시나리오팀","join_date":"2025.02.03","prob_end":"2025.05.02","emp_type":"정규직","title":"팀장","senior":""},{"no":241,"sc_id":"101461","name":"안희준","project":"E7","dept":"기획실","team":"레벨컨텐츠팀","join_date":"2025.02.03","prob_end":"2025.05.02","emp_type":"정규직","title":"","senior":""},{"no":242,"sc_id":"101462","name":"장지웅","project":"E7","dept":"개발지원실","team":"QA팀","join_date":"2025.02.03","prob_end":"2025.05.02","emp_type":"계약직","title":"","senior":""},{"no":243,"sc_id":"101463","name":"최소원","project":"E7","dept":"기획실","team":"UI팀","join_date":"2025.02.10","prob_end":"2025.05.09","emp_type":"정규직","title":"","senior":""},{"no":244,"sc_id":"101464","name":"박예령","project":"공통","dept":"경영지원실","team":"인사팀","join_date":"2025.02.17","prob_end":"2025.05.16","emp_type":"정규직","title":"","senior":""},{"no":245,"sc_id":"101465","name":"강명진","project":"SSR","dept":"프로그램실","team":"프로그램3팀","join_date":"2025.02.17","prob_end":"2025.05.16","emp_type":"정규직","title":"","senior":""},{"no":246,"sc_id":"101466","name":"위지영","project":"SSR","dept":"프로그램실","team":"프로그램2팀","join_date":"2025.02.17","prob_end":"2025.05.16","emp_type":"정규직","title":"","senior":""},{"no":247,"sc_id":"101468","name":"장한솔","project":"SSR","dept":"기획실","team":"시스템팀","join_date":"2025.02.24","prob_end":"2025.05.23","emp_type":"정규직","title":"","senior":""},{"no":248,"sc_id":"101469","name":"박근홍","project":"E7","dept":"기획실","team":"시나리오팀","join_date":"2025.02.24","prob_end":"2025.05.23","emp_type":"정규직","title":"","senior":""},{"no":249,"sc_id":"101470","name":"허준희","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2025.03.04","prob_end":"2025.06.03","emp_type":"계약직","title":"","senior":""},{"no":250,"sc_id":"101472","name":"김주진","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2025.03.10","prob_end":"2025.06.09","emp_type":"정규직","title":"","senior":""},{"no":251,"sc_id":"101474","name":"송윤선","project":"E7","dept":"기획실","team":"라이브팀","join_date":"2025.03.31","prob_end":"2025.06.29","emp_type":"정규직","title":"","senior":""},{"no":252,"sc_id":"101475","name":"함선우","project":"SSR","dept":"기획실","team":"기획실","join_date":"2025.04.01","prob_end":"2025.06.30","emp_type":"정규직","title":"실장","senior":""},{"no":253,"sc_id":"101476","name":"이진원","project":"SSR","dept":"기획실","team":"컨텐츠팀","join_date":"2025.04.07","prob_end":"2025.07.06","emp_type":"정규직","title":"","senior":""},{"no":254,"sc_id":"101477","name":"공지환","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2025.04.14","prob_end":"2025.07.13","emp_type":"정규직","title":"파트장","senior":""},{"no":255,"sc_id":"101480","name":"표세준","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2025.04.28","prob_end":"2025.07.27","emp_type":"정규직","title":"","senior":"선임"},{"no":256,"sc_id":"101481","name":"박혜민","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2025.05.07","prob_end":"2025.08.06","emp_type":"정규직","title":"","senior":""},{"no":257,"sc_id":"101482","name":"신서아","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2025.05.12","prob_end":"2025.08.11","emp_type":"정규직","title":"","senior":""},{"no":258,"sc_id":"101483","name":"남예림","project":"SSR","dept":"기획실","team":"UI팀","join_date":"2025.05.16","prob_end":"2025.08.15","emp_type":"정규직","title":"","senior":""},{"no":259,"sc_id":"101484","name":"마예슬","project":"E7","dept":"기획실","team":"UI팀","join_date":"2025.06.09","prob_end":"2025.09.08","emp_type":"정규직","title":"","senior":""},{"no":260,"sc_id":"101485","name":"이병연","project":"E7","dept":"기획실","team":"코어시스템팀","join_date":"2025.06.09","prob_end":"2025.09.08","emp_type":"정규직","title":"","senior":""},{"no":261,"sc_id":"101486","name":"이현동","project":"SSR","dept":"기획실","team":"시스템팀","join_date":"2025.06.09","prob_end":"2025.09.08","emp_type":"정규직","title":"파트장","senior":""},{"no":262,"sc_id":"101487","name":"홍진성","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2025.06.09","prob_end":"2025.09.08","emp_type":"계약직","title":"","senior":""},{"no":263,"sc_id":"101488","name":"문정인","project":"E7","dept":"프로그램실","team":"컨텐츠프로그램팀","join_date":"2025.06.16","prob_end":"2025.09.15","emp_type":"정규직","title":"","senior":""},{"no":264,"sc_id":"101489","name":"이현정","project":"SSR","dept":"프로그램실","team":"프로그램1팀","join_date":"2025.06.16","prob_end":"2025.09.15","emp_type":"정규직","title":"","senior":""},{"no":265,"sc_id":"101490","name":"차재현","project":"SSR","dept":"기획실","team":"시스템팀","join_date":"2025.06.16","prob_end":"2025.09.15","emp_type":"정규직","title":"","senior":""},{"no":266,"sc_id":"101491","name":"이아연","project":"E7","dept":"기획실","team":"코어시스템팀","join_date":"2025.06.23","prob_end":"2025.09.22","emp_type":"정규직","title":"","senior":""},{"no":267,"sc_id":"101492","name":"고효정","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2025.07.07","prob_end":"2025.10.06","emp_type":"정규직","title":"","senior":""},{"no":268,"sc_id":"101493","name":"성주녕","project":"SSR","dept":"기획실","team":"컨텐츠팀","join_date":"2025.07.07","prob_end":"2025.10.06","emp_type":"정규직","title":"","senior":""},{"no":269,"sc_id":"101494","name":"고민서","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2025.07.07","prob_end":"","emp_type":"계약직","title":"","senior":""},{"no":270,"sc_id":"101495","name":"손주호","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2025.07.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":271,"sc_id":"101496","name":"이근","project":"E7","dept":"기획실","team":"레벨컨텐츠팀","join_date":"2025.07.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":272,"sc_id":"101499","name":"정윤희","project":"SSR","dept":"기획실","team":"시스템팀","join_date":"2025.07.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":273,"sc_id":"101500","name":"탁예은","project":"SSR","dept":"아트실","team":"콘티팀","join_date":"2025.07.07","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":274,"sc_id":"101501","name":"남예지","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2025.07.21","prob_end":"","emp_type":"정규직","title":"","senior":""},{"no":275,"sc_id":"101502","name":"이기녕","project":"E7","dept":"기획실","team":"시나리오팀","join_date":"2025.07.21","prob_end":"2025.10.20","emp_type":"정규직","title":"","senior":""},{"no":276,"sc_id":"101503","name":"최원천","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2025.07.21","prob_end":"2025.10.20","emp_type":"정규직","title":"팀장","senior":""},{"no":277,"sc_id":"101505","name":"김하연","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2025.07.28","prob_end":"2025.10.27","emp_type":"정규직","title":"","senior":""},{"no":278,"sc_id":"101506","name":"김호진","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2025.07.28","prob_end":"2025.10.27","emp_type":"정규직","title":"","senior":""},{"no":279,"sc_id":"101507","name":"홍성우","project":"SSR","dept":"아트실","team":"콘티팀","join_date":"2025.08.04","prob_end":"2025.11.03","emp_type":"정규직","title":"","senior":""},{"no":280,"sc_id":"101508","name":"임홍주","project":"SSR","dept":"아트실","team":"배경원화팀","join_date":"2025.08.18","prob_end":"2025.11.17","emp_type":"정규직","title":"","senior":""},{"no":281,"sc_id":"101509","name":"김지원B","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2025.08.25","prob_end":"2025.11.24","emp_type":"정규직","title":"","senior":""},{"no":282,"sc_id":"101510","name":"손현목","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2025.09.15","prob_end":"2025.12.14","emp_type":"정규직","title":"","senior":""},{"no":283,"sc_id":"101511","name":"이민재B","project":"공통","dept":"경영지원실","team":"인사팀","join_date":"2025.09.15","prob_end":"2025.12.14","emp_type":"정규직","title":"","senior":""},{"no":284,"sc_id":"101513","name":"김은성","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2025.09.22","prob_end":"2025.12.21","emp_type":"정규직","title":"","senior":""},{"no":285,"sc_id":"101514","name":"문해온","project":"E7","dept":"비주얼아트실","team":"이펙트팀","join_date":"2025.09.22","prob_end":"2025.12.21","emp_type":"정규직","title":"","senior":""},{"no":286,"sc_id":"101515","name":"탁다운","project":"SSR","dept":"개발지원실","team":"PM팀","join_date":"2025.09.22","prob_end":"2025.12.21","emp_type":"정규직","title":"","senior":""},{"no":287,"sc_id":"101516","name":"윤송이","project":"E7","dept":"비주얼아트실","team":"콘티팀","join_date":"2025.10.13","prob_end":"2026.01.12","emp_type":"계약직","title":"","senior":""},{"no":288,"sc_id":"101517","name":"조간섭","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2025.10.27","prob_end":"2026.01.26","emp_type":"정규직","title":"","senior":""},{"no":289,"sc_id":"101518","name":"차석운","project":"SSR","dept":"아트실","team":"비주얼아트웍팀","join_date":"2025.11.03","prob_end":"2026.02.02","emp_type":"정규직","title":"","senior":""},{"no":290,"sc_id":"101519","name":"하병찬","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2025.11.10","prob_end":"2026.02.09","emp_type":"정규직","title":"","senior":""},{"no":291,"sc_id":"101520","name":"서동주","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2025.11.10","prob_end":"2026.02.09","emp_type":"계약직","title":"","senior":""},{"no":292,"sc_id":"101521","name":"정원재","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2025.11.10","prob_end":"2026.02.09","emp_type":"계약직","title":"","senior":""},{"no":293,"sc_id":"101522","name":"조민혁","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2025.11.10","prob_end":"2026.02.09","emp_type":"계약직","title":"","senior":""},{"no":294,"sc_id":"101523","name":"신재희","project":"공통","dept":"서비스기획팀","team":"서비스기획팀","join_date":"2025.11.10","prob_end":"2026.02.09","emp_type":"정규직","title":"","senior":""},{"no":295,"sc_id":"101524","name":"김건욱","project":"공통","dept":"서비스기획팀","team":"서비스기획팀","join_date":"2025.11.24","prob_end":"2026.02.23","emp_type":"정규직","title":"팀장","senior":""},{"no":296,"sc_id":"101525","name":"박국현","project":"E7","dept":"기획실","team":"영웅팀","join_date":"2025.12.01","prob_end":"2026.02.28","emp_type":"정규직","title":"","senior":""},{"no":297,"sc_id":"101526","name":"이동우","project":"SSR","dept":"프로그램실","team":"프로그램실","join_date":"2025.12.08","prob_end":"2026.03.07","emp_type":"정규직","title":"","senior":""},{"no":298,"sc_id":"101527","name":"조하영","project":"SSR","dept":"프로그램실","team":"프로그램실","join_date":"2025.12.08","prob_end":"2026.03.07","emp_type":"정규직","title":"","senior":""},{"no":299,"sc_id":"101528","name":"김민섭","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2025.12.15","prob_end":"2026.03.14","emp_type":"정규직","title":"","senior":""},{"no":300,"sc_id":"101529","name":"박지원","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2026.01.05","prob_end":"2026.04.04","emp_type":"정규직","title":"","senior":""},{"no":301,"sc_id":"101530","name":"서현성","project":"SSR","dept":"아트실","team":"캐릭터원화팀","join_date":"2026.01.19","prob_end":"2026.04.18","emp_type":"정규직","title":"","senior":""},{"no":302,"sc_id":"101531","name":"오승완","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2026.01.19","prob_end":"2026.04.18","emp_type":"정규직","title":"","senior":""},{"no":303,"sc_id":"101532","name":"이정환","project":"SSR","dept":"기획실","team":"라이브팀","join_date":"2026.01.19","prob_end":"2026.04.18","emp_type":"정규직","title":"","senior":""},{"no":304,"sc_id":"101533","name":"장시은","project":"SSR","dept":"아트실","team":"이펙트팀","join_date":"2026.01.19","prob_end":"2026.04.18","emp_type":"정규직","title":"","senior":""},{"no":305,"sc_id":"101534","name":"박종철","project":"공통","dept":"서비스기획팀","team":"서비스기획팀","join_date":"2026.01.19","prob_end":"2026.04.18","emp_type":"정규직","title":"","senior":""},{"no":306,"sc_id":"101535","name":"김세연","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2026.01.19","prob_end":"2026.04.18","emp_type":"정규직","title":"","senior":""},{"no":307,"sc_id":"101536","name":"최수린","project":"E7","dept":"기획실","team":"코어시스템팀","join_date":"2026.01.26","prob_end":"2026.04.25","emp_type":"정규직","title":"","senior":""},{"no":308,"sc_id":"101537","name":"이은서","project":"SSR","dept":"기획실","team":"시스템팀","join_date":"2026.02.02","prob_end":"2026.05.01","emp_type":"정규직","title":"","senior":""},{"no":309,"sc_id":"101538","name":"이재현","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2026.02.02","prob_end":"2026.05.01","emp_type":"정규직","title":"","senior":""},{"no":310,"sc_id":"101539","name":"장지아","project":"공통","dept":"경영지원실","team":"인사팀","join_date":"2026.02.02","prob_end":"2026.05.01","emp_type":"정규직","title":"","senior":""},{"no":311,"sc_id":"101540","name":"류근우","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2026.02.02","prob_end":"2026.05.01","emp_type":"계약직","title":"","senior":""},{"no":312,"sc_id":"101541","name":"고병호","project":"SSR","dept":"개발지원실","team":"PM팀","join_date":"2026.02.23","prob_end":"2026.05.22","emp_type":"정규직","title":"","senior":""},{"no":313,"sc_id":"101542","name":"손은경","project":"E7","dept":"기획실","team":"시나리오팀","join_date":"2026.02.23","prob_end":"2026.05.22","emp_type":"정규직","title":"","senior":""},{"no":314,"sc_id":"101543","name":"원종영","project":"SSR","dept":"기획실","team":"컨텐츠팀","join_date":"2026.02.23","prob_end":"2026.05.22","emp_type":"정규직","title":"","senior":""},{"no":315,"sc_id":"101544","name":"곽은정","project":"SSR","dept":"기획실","team":"UI팀","join_date":"2026.03.03","prob_end":"2026.06.02","emp_type":"정규직","title":"","senior":""},{"no":316,"sc_id":"101545","name":"박성진B","project":"SSR","dept":"개발지원실","team":"QA팀","join_date":"2026.03.03","prob_end":"2026.06.02","emp_type":"계약직","title":"","senior":""},{"no":317,"sc_id":"101546","name":"박현이","project":"E7","dept":"비주얼아트실","team":"캐릭터원화팀","join_date":"2026.03.03","prob_end":"2026.06.02","emp_type":"정규직","title":"","senior":""},{"no":318,"sc_id":"101547","name":"안성범","project":"SSR","dept":"기획실","team":"시나리오팀","join_date":"2026.03.03","prob_end":"2026.06.02","emp_type":"정규직","title":"","senior":""},{"no":319,"sc_id":"101548","name":"이승원","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2026.03.03","prob_end":"2026.06.02","emp_type":"정규직","title":"","senior":""},{"no":320,"sc_id":"101549","name":"이용철","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2026.03.03","prob_end":"2026.06.02","emp_type":"정규직","title":"","senior":""},{"no":321,"sc_id":"101550","name":"이찬영","project":"SSR","dept":"기획실","team":"전투팀","join_date":"2026.03.03","prob_end":"2026.06.02","emp_type":"정규직","title":"","senior":""},{"no":322,"sc_id":"101551","name":"김동재","project":"SSR","dept":"아트실","team":"비주얼아트웍팀","join_date":"2026.03.09","prob_end":"2026.06.08","emp_type":"정규직","title":"","senior":""},{"no":323,"sc_id":"101552","name":"김민제","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2026.03.09","prob_end":"2026.06.08","emp_type":"계약직","title":"","senior":""},{"no":324,"sc_id":"101553","name":"김해리","project":"SSR","dept":"아트실","team":"애니메이션팀","join_date":"2026.03.09","prob_end":"2026.06.08","emp_type":"계약직","title":"","senior":""},{"no":325,"sc_id":"101554","name":"이현아","project":"공통","dept":"서비스기획팀","team":"서비스기획팀","join_date":"2026.03.09","prob_end":"2026.06.08","emp_type":"정규직","title":"","senior":""},{"no":326,"sc_id":"101555","name":"김문형","project":"SSR","dept":"기획실","team":"라이브팀","join_date":"2026.03.16","prob_end":"2026.06.15","emp_type":"정규직","title":"","senior":""},{"no":327,"sc_id":"101556","name":"박진용","project":"E7","dept":"개발지원실","team":"PM팀","join_date":"2026.03.23","prob_end":"2026.06.22","emp_type":"정규직","title":"","senior":""}];
+
+
+// ── 조직도: Excel 파일 뷰어 ──
+const ORG_PDF_KEY='intra_orgchart_pdf';
+let _orgPdfBlobUrl=null;
+
+function renderOrgchart(){
+  const pdfViewer=document.getElementById('orgPdfViewer');
+  const emptyState=document.getElementById('orgEmptyState');
+  if(!pdfViewer||!emptyState)return;
+  const b64=localStorage.getItem(ORG_PDF_KEY);
+  if(b64){
+    // PDF 불러오기
+    try{
+      const bin=atob(b64);const bytes=new Uint8Array(bin.length);
+      for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+      const blob=new Blob([bytes],{type:'application/pdf'});
+      if(_orgPdfBlobUrl)URL.revokeObjectURL(_orgPdfBlobUrl);
+      _orgPdfBlobUrl=URL.createObjectURL(blob);
+      document.getElementById('orgPdfFrame').src=_orgPdfBlobUrl;
+      pdfViewer.style.display='block';
+      emptyState.style.display='none';
+      // 날짜 표시
+      const savedDate=localStorage.getItem(ORG_PDF_KEY+'_date');
+      const dateEl=document.getElementById('orgHeaderDate');
+      if(dateEl&&savedDate)dateEl.textContent='등록: '+savedDate;
+    }catch(e){pdfViewer.style.display='none';emptyState.style.display='flex';}
+  } else {
+    pdfViewer.style.display='none';
+    emptyState.style.display='flex';
+  }
+}
+
+function uploadOrgPdf(){
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='.pdf';
+  inp.onchange=function(ev){
+    const file=ev.target.files[0];if(!file)return;
+    if(file.type!=='application/pdf'){showToast('PDF 파일만 업로드 가능합니다','error');return;}
+    if(file.size>30*1024*1024){showToast('30MB 이하 PDF만 가능합니다','error');return;}
+    showToast('업로드 중...');
+    const rd=new FileReader();
+    rd.onload=function(e){
+      try{
+        const b64=e.target.result.split(',')[1];
+        localStorage.setItem(ORG_PDF_KEY,b64);
+        const now=new Date().toLocaleDateString('ko-KR');
+        localStorage.setItem(ORG_PDF_KEY+'_date',now+' ('+file.name+')');
+        showToast('✅ 조직도 등록 완료: '+file.name);
+        renderOrgchart();
+      }catch(err){showToast('저장 오류: '+err.message,'error');}
+    };
+    rd.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+function deleteOrgPdf(){
+  if(!confirm('등록된 조직도 PDF를 삭제하시겠습니까?'))return;
+  localStorage.removeItem(ORG_PDF_KEY);
+  localStorage.removeItem(ORG_PDF_KEY+'_date');
+  if(_orgPdfBlobUrl){URL.revokeObjectURL(_orgPdfBlobUrl);_orgPdfBlobUrl=null;}
+  renderOrgchart();
+  showToast('조직도가 삭제되었습니다');
+}
+
+function orgOpenNewTab(){if(_orgPdfBlobUrl)window.open(_orgPdfBlobUrl,'_blank');}
+
+function uploadOrgExcel(){
+  // 업로드 시 xlsx2html 방식으로 처리 불가 (client-side)
+  // SheetJS로 HTML 테이블 렌더링 후 iframe에 주입
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='.xlsx,.xls';
+  inp.onchange=function(ev){
+    const file=ev.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        const data=new Uint8Array(e.target.result);
+        const wb=XLSX.read(data,{type:'array',cellDates:true,dateNF:'yyyy.mm.dd'});
+        const sheets=wb.SheetNames.map(name=>{
+          const ws=wb.Sheets[name];
+          const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+          while(rows.length&&rows[rows.length-1].every(c=>!c))rows.pop();
+          return{name,rows};
+        });
+        _orgExcelData={sheets,activeSheet:0};
+        // iframe에 직접 HTML 주입
+        const iframe=document.getElementById('orgIframe');
+        if(iframe){
+          const sheetHtml=buildOrgSheetHtml(sheets);
+          const blob=new Blob([sheetHtml],{type:'text/html;charset=utf-8'});
+          iframe.src=URL.createObjectURL(blob);
+        }
+        showToast('조직도 업로드 완료: '+file.name);
+      }catch(err){showToast('엑셀 파싱 오류: '+err.message,'error');}
+    };
+    reader.readAsArrayBuffer(file);
+  };
+  inp.click();
+}
+
+function buildOrgSheetHtml(sheets){
+  const tabHtml=sheets.length>1?`<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;padding:8px;">
+    ${sheets.map((s,i)=>`<span onclick="document.querySelectorAll('.org-sheet').forEach(el=>el.style.display='none');document.getElementById('orgSheet${i}').style.display='';document.querySelectorAll('.org-tab').forEach(el=>{el.style.background='#f1f5f9';el.style.color='#374151';});this.style.background='#4f46e5';this.style.color='#fff';" class="org-tab" style="padding:4px 14px;border-radius:20px;background:${i===0?'#4f46e5':'#f1f5f9'};color:${i===0?'#fff':'#374151'};font-size:12px;cursor:pointer;">${s.name}</span>`).join('')}
+  </div>`:'';
+  const sheetsHtml=sheets.map((s,i)=>{
+    const rows=s.rows;
+    if(!rows||!rows.length)return`<div id="orgSheet${i}" class="org-sheet" style="${i>0?'display:none':''}">빈 시트</div>`;
+    const maxCols=Math.max(...rows.map(r=>r.length));
+    const tableRows=rows.map(row=>{
+      const cells=[];
+      for(let c=0;c<maxCols;c++){
+        const val=row[c]!==undefined?String(row[c]):'';
+        cells.push(`<td style="font-size:10px;padding:3px 6px;border:1px solid #e2e8f0;white-space:nowrap;background:${val?'#fff':'transparent'}">${val}</td>`);
+      }
+      return`<tr>${cells.join('')}</tr>`;
+    }).join('');
+    return`<div id="orgSheet${i}" class="org-sheet" style="${i>0?'display:none':''}overflow:auto;"><table style="border-collapse:collapse;">${tableRows}</table></div>`;
+  }).join('');
+  return`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:8px;font-family:'Malgun Gothic',sans-serif;background:#f8fafc;}table{font-size:10px;}</style></head><body>${tabHtml}${sheetsHtml}</body></html>`;
+}
+
+function renderOrgExcelView(){
+  if(!_orgExcelData)return;
+  const el=document.getElementById('orgViewer');
+  if(!el)return;
+  const sheets=_orgExcelData.sheets;
+  const activeIdx=_orgExcelData.activeSheet;
+  const sheetData=sheets[activeIdx];
+  // 시트 탭
+  const tabHtml=sheets.length>1?`<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+    ${sheets.map((s,i)=>`<button onclick="setOrgSheet(${i})" style="padding:4px 14px;border-radius:20px;border:1px solid ${i===activeIdx?'var(--primary)':'var(--border2)'};background:${i===activeIdx?'var(--primary)':'var(--surface)'};color:${i===activeIdx?'#fff':'var(--text)'};font-size:12px;cursor:pointer;">${s.name}</button>`).join('')}
+  </div>`:'';
+  // 테이블 렌더
+  const rows=sheetData.rows;
+  if(!rows||!rows.length){el.innerHTML=tabHtml+'<p style="text-align:center;padding:40px;color:var(--text3);">빈 시트입니다</p>';return;}
+  const maxCols=Math.max(...rows.map(r=>r.length));
+  const tableRows=rows.map(row=>{
+    const cells=[];
+    for(let c=0;c<maxCols;c++){
+      const val=row[c]!==undefined?row[c]:'';
+      const isEmpty=!String(val).trim();
+      cells.push(`<td style="font-size:11px;padding:4px 8px;border:1px solid #e2e8f0;white-space:nowrap;min-width:${isEmpty?'30':'60'}px;max-width:200px;overflow:hidden;text-overflow:ellipsis;background:${isEmpty?'transparent':'#fff'};color:var(--text);" title="${String(val).replace(/"/g,'&quot;')}">${val}</td>`);
+    }
+    return`<tr>${cells.join('')}</tr>`;
+  }).join('');
+  el.innerHTML=tabHtml+`<div style="overflow:auto;border:1px solid var(--border2);border-radius:var(--radius);background:#f8fafc;">
+    <table style="border-collapse:collapse;width:max-content;">${tableRows}</table>
+  </div>
+  <div style="font-size:11px;color:var(--text3);margin-top:8px;">총 ${rows.length}행 × ${maxCols}열 · 가로 스크롤 가능</div>`;
+}
+
+function setOrgSheet(idx){
+  if(!_orgExcelData)return;
+  _orgExcelData.activeSheet=idx;
+  renderOrgExcelView();
+}
+
+// ── 직원명부 뷰어 ──
+// 직원명부 동적 데이터 (localStorage 우선, 없으면 SC_EMPLOYEES 사용)
+let _rosterActiveData = null;
+let _rosterResignedData = [];
+let _rosterTab = 'active'; // 'active' | 'resigned'
+
+function getRosterData(){
+  if(_rosterActiveData) return _rosterActiveData;
+  // localStorage에서 불러오기
+  try {
+    const stored = localStorage.getItem('roster_active');
+    if(stored){ _rosterActiveData = JSON.parse(stored); return _rosterActiveData; }
+  } catch(e){}
+  return SC_EMPLOYEES;
+}
+function getRosterResigned(){
+  if(_rosterResignedData&&_rosterResignedData.length) return _rosterResignedData;
+  try {
+    const stored = localStorage.getItem('roster_resigned');
+    if(stored){ _rosterResignedData = JSON.parse(stored); return _rosterResignedData; }
+  } catch(e){}
+  return [];
+}
+
+function setRosterTab(tab){
+  _rosterTab = tab;
+  ['active','resigned'].forEach(t=>{
+    const btn=document.getElementById('rosterTab_'+t);
+    if(btn){ btn.style.background=(t===tab)?'var(--primary)':''; btn.style.color=(t===tab)?'#fff':''; }
+  });
+  // 퇴직자 탭에서는 필터 숨김
+  const filters = document.getElementById('rosterFilters');
+  if(filters) filters.style.display = (tab==='active') ? '' : 'none';
+  renderRosterTable();
+}
+
+function renderRoster(){
+  const data = getRosterData();
+  // 실 필터 옵션 채우기
+  const deptSel=document.getElementById('rosterDeptFilter');
+  if(deptSel&&deptSel.options.length<=1){
+    const depts=[...new Set(data.map(e=>e.dept).filter(Boolean))].sort();
+    depts.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;deptSel.appendChild(o);});
+  }
+  const total=document.getElementById('rosterTotalCnt');
+  if(total)total.textContent=data.length;
+  const resignedCnt=document.getElementById('rosterResignedCnt');
+  const resigned=getRosterResigned();
+  if(resignedCnt)resignedCnt.textContent=resigned.length?`(${resigned.length}명)`:'';
+  renderRosterTable();
+}
+
+
+// Excel 날짜 → YYYY.MM.DD 변환 (숫자 시리얼, Date 객체, Date 문자열, ISO 문자열 모두 처리)
+function excelDateToStr(val){
+  if(val===null||val===undefined||val==='')return'';
+  // Date 객체 직접 처리 (cellDates:true 시 발생)
+  if(val instanceof Date){
+    if(isNaN(val.getTime()))return'';
+    const y=val.getFullYear();
+    if(y<1900||y>2100)return'';
+    return y+'.'+String(val.getMonth()+1).padStart(2,'0')+'.'+String(val.getDate()).padStart(2,'0');
+  }
+  const s=String(val).trim();
+  if(!s||s==='null'||s==='undefined')return'';
+  // 숫자형 시리얼 (Excel 날짜: 40000~70000 범위)
+  const n=parseFloat(s);
+  if(!isNaN(n)&&n>40000&&n<70000&&!/[^0-9.]/.test(s)){
+    const d=new Date(Math.round((n-25569)*86400*1000));
+    if(isNaN(d.getTime()))return'';
+    return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+  }
+  // YYYY-MM-DD or YYYY.MM.DD 형식
+  if(/^\d{4}[.\-]\d{1,2}[.\-]\d{1,2}/.test(s)){
+    const parts=s.replace(/-/g,'.').split('.').slice(0,3);
+    return parts[0]+'.'+parts[1].padStart(2,'0')+'.'+parts[2].padStart(2,'0');
+  }
+  // ISO 8601 (2022-04-19T23:59:08.000Z)
+  if(/^\d{4}-\d{2}-\d{2}T/.test(s)){
+    const d2=new Date(s);
+    if(!isNaN(d2.getTime()))return d2.getFullYear()+'.'+String(d2.getMonth()+1).padStart(2,'0')+'.'+String(d2.getDate()).padStart(2,'0');
+  }
+  // Date.toString() 형식 "Tue Apr 19 2022 23:59:08 GMT+0900 (한국 표준시)"
+  if(/^[A-Z][a-z]{2}\s/.test(s)||s.includes('GMT')||s.includes('표준시')){
+    const d3=new Date(s);
+    if(!isNaN(d3.getTime())&&d3.getFullYear()>1990&&d3.getFullYear()<2100){
+      return d3.getFullYear()+'.'+String(d3.getMonth()+1).padStart(2,'0')+'.'+String(d3.getDate()).padStart(2,'0');
+    }
+  }
+  return s;
+}
+// 퇴직자 월별 접기 상태
+let _resignedCollapsed = {};
+
+function renderRosterTable(){
+  const tbody=document.getElementById('rosterTbody');
+  if(!tbody)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  // 퇴직자 탭
+  if(_rosterTab==='resigned'){
+    const resigned=getRosterResigned();
+    const cnt=document.getElementById('rosterFilteredCnt');
+    if(cnt)cnt.textContent=resigned.length+'명';
+    if(!resigned.length){
+      tbody.innerHTML=`<tr><td colspan="12" style="text-align:center;padding:32px;color:var(--text3);">퇴직자 데이터가 없습니다.<br>엑셀 파일을 업로드하면 자동으로 표시됩니다.</td></tr>`;
+      return;
+    }
+    // 월별 그룹핑 (YYYY.MM)
+    const byMonth={};
+    resigned.forEach(e=>{
+      const rd=e.resign_date||'';
+      let ym='미상';
+      if(rd){
+        const parts=rd.replace(/-/g,'.').split('.');
+        if(parts.length>=2)ym=parts[0]+'.'+parts[1].padStart(2,'0');
+      }
+      if(!byMonth[ym])byMonth[ym]=[];
+      byMonth[ym].push(e);
+    });
+    const months=Object.keys(byMonth).sort((a,b)=>b.localeCompare(a)); // 최신순
+    const currentYM=(()=>{const d=new Date();return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0');})();
+    let rowsHtml='';
+    months.forEach(ym=>{
+      const members=byMonth[ym];
+      // 6개월 이상 지난 월은 기본으로 접힘
+      const isOld=ym<currentYM&&ym!=='미상'&&(()=>{
+        const [y,m]=ym.split('.');
+        const diff=(new Date().getFullYear()-parseInt(y))*12+(new Date().getMonth()+1-parseInt(m));
+        return diff>6;
+      })();
+      if(_resignedCollapsed[ym]===undefined)_resignedCollapsed[ym]=isOld;
+      const collapsed=_resignedCollapsed[ym];
+      const label=(()=>{
+        if(ym==='미상')return'날짜 미상';
+        const [y,m]=ym.split('.');
+        return y+'년 '+parseInt(m)+'월';
+      })();
+      rowsHtml+=`<tr style="background:#f1f5f9;cursor:pointer;" onclick="toggleResignedYear('${ym}')">
+        <td colspan="12" style="padding:7px 12px;font-size:12px;font-weight:700;color:#374151;">
+          ${collapsed?'▶':'▼'} ${label} 퇴직자 (${members.length}명)
+          <span style="font-size:10px;font-weight:400;color:var(--text3);margin-left:8px;">${collapsed?'펼치기':'접기'}</span>
+        </td>
+      </tr>`;
+      if(!collapsed){
+        rowsHtml+=members.map((e,i)=>`<tr style="background:#fff5f5;">
+          <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
+          <td style="font-family:monospace;font-size:11px;color:var(--text3);text-align:center;">${e.sc_id||'-'}</td>
+          <td style="font-weight:600;color:#b91c1c;">${e.name||'-'}</td>
+          <td style="text-align:center;"><span class="park-badge ${e.project==='E7'?'paid':e.project==='SSR'?'free':'active'}" style="font-size:10px;">${e.project||'-'}</span></td>
+          <td style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.dept||'-'}</td>
+          <td style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.team||'-'}</td>
+          <td style="text-align:center;"><span style="font-size:10px;background:#fee2e2;color:#b91c1c;border-radius:6px;padding:1px 7px;">${e.emp_type||'-'}</span></td>
+          <td style="text-align:center;font-size:11px;color:var(--text2);">${e.title||'-'}</td>
+          <td style="text-align:center;font-size:11px;color:var(--text3);">${e.join_date||'-'}</td>
+          <td style="text-align:center;font-size:11px;color:#b91c1c;font-weight:600;">${e.resign_date||'-'}</td>
+          <td style="text-align:center;font-size:11px;color:var(--text3);">${e.phone||'-'}</td>
+          <td style="text-align:center;font-size:11px;color:#6366f1;">${e.slack_id?'@'+e.slack_id:'-'}</td>
+        </tr>`).join('');
+      }
+    });
+    tbody.innerHTML=rowsHtml;
+    return;
+  }
+  // 재직자 탭
+  const q=(document.getElementById('rosterSearch')||{}).value.toLowerCase();
+  const proj=(document.getElementById('rosterProjFilter')||{}).value;
+  const dept=(document.getElementById('rosterDeptFilter')||{}).value;
+  const type=(document.getElementById('rosterTypeFilter')||{}).value;
+  const data=getRosterData();
+  let filtered=data.filter(e=>{
+    if(proj&&e.project!==proj)return false;
+    if(dept&&e.dept!==dept)return false;
+    if(type&&e.emp_type!==type)return false;
+    if(q&&!(e.name.toLowerCase().includes(q)||(e.sc_id&&e.sc_id.includes(q))||e.dept.toLowerCase().includes(q)||e.team.toLowerCase().includes(q)))return false;
+    return true;
+  });
+  const cnt=document.getElementById('rosterFilteredCnt');
+  if(cnt)cnt.textContent=filtered.length+'명';
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="12" style="text-align:center;padding:32px;color:var(--text3);">조회된 인원이 없습니다</td></tr>';return;}
+  tbody.innerHTML=filtered.map((e,i)=>{
+    const isProbActive=e.prob_end&&new Date(e.prob_end.replace(/\./g,'-'))>today;
+    const typeColor=e.emp_type==='계약직'?'#b91c1c':e.emp_type==='임원'?'#6d28d9':'#15803d';
+    const typeBg=e.emp_type==='계약직'?'#fee2e2':e.emp_type==='임원'?'#ede9fe':'#f0fdf4';
+    const projBadge=e.project==='E7'?'paid':e.project==='SSR'?'free':'active';
+    return`<tr>
+      <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--text3);text-align:center;">${e.sc_id||'-'}</td>
+      <td style="font-weight:700;">${e.name}${isProbActive?'<span style="font-size:9px;background:#fef9c3;color:#92400e;border-radius:4px;padding:0 4px;margin-left:3px;vertical-align:middle;">수습</span>':''}</td>
+      <td style="text-align:center;"><span class="park-badge ${projBadge}" style="font-size:10px;">${e.project||'-'}</span></td>
+      <td style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.dept||'-'}</td>
+      <td style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.team||'-'}</td>
+      <td style="text-align:center;"><span style="font-size:10px;background:${typeBg};color:${typeColor};border-radius:6px;padding:1px 7px;">${e.emp_type||'-'}</span></td>
+      <td style="text-align:center;font-size:11px;color:var(--text2);">${e.title||'-'}</td>
+      <td style="text-align:center;font-size:11px;color:var(--text3);">${e.join_date||'-'}</td>
+      <td style="text-align:center;font-size:11px;color:${isProbActive?'#b45309':'var(--text3)'};font-weight:${isProbActive?'600':'400'};">${e.prob_end||'-'}</td>
+      <td style="text-align:center;font-size:11px;color:var(--text3);">${e.phone||'-'}</td>
+      <td style="text-align:center;font-size:11px;color:#6366f1;">${e.slack_id?'@'+e.slack_id:'-'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleResignedYear(yr){
+  _resignedCollapsed[yr]=!_resignedCollapsed[yr];
+  renderRosterTable();
+}
+
+// Excel 업로드 파싱 함수
+function uploadRosterExcel(){
+  const inp=document.createElement('input');
+  inp.type='file';
+  inp.accept='.xlsx,.xls';
+  inp.onchange=function(ev){
+    const file=ev.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        const data=new Uint8Array(e.target.result);
+        // cellDates:false → 날짜를 숫자 시리얼로 받아 excelDateToStr로 처리 (Date.toString() 방지)
+        const wb=XLSX.read(data,{type:'array',cellDates:false});
+        // 재직자 시트 파싱 (첫 번째 시트 또는 '재직자' 시트)
+        let activeSheet=wb.Sheets[wb.SheetNames[0]];
+        // '재직자' 시트 있으면 우선
+        const activeSheetName=wb.SheetNames.find(n=>n.includes('재직'))||wb.SheetNames[0];
+        activeSheet=wb.Sheets[activeSheetName];
+        const activeRows=XLSX.utils.sheet_to_json(activeSheet,{header:1,defval:'',raw:true});
+        // row 4(index 3)이 헤더, row 5(index 4)부터 데이터
+        let headerIdx=3;
+        // 헤더행 자동 탐색: "사번" 또는 "성명"이 있는 행
+        for(let r=0;r<Math.min(10,activeRows.length);r++){
+          const row=activeRows[r];
+          if(row.some(c=>String(c).includes('사번')||String(c).includes('성명'))){headerIdx=r;break;}
+        }
+        const headers=activeRows[headerIdx].map(h=>String(h).trim());
+        const colMap={};
+        // 1차: 정확한 헤더 이름으로 매핑
+        const exactMap={
+          'SC 사번':'sc_id','성명':'name','프로젝트':'project','실':'dept','팀':'team',
+          '입사일':'join_date','수습 종료일':'prob_end','고용형태':'emp_type','직책':'title',
+          '연락처':'phone','핸드폰':'phone','휴대폰':'phone','전화번호':'phone','Mobile':'phone',
+          '슬랙ID':'slack_id','슬랙 ID':'slack_id','Slack ID':'slack_id','Slack':'slack_id','slack':'slack_id','SlackID':'slack_id'
+        };
+        headers.forEach((h,i)=>{if(exactMap[h]&&colMap[exactMap[h]]===undefined)colMap[exactMap[h]]=i;});
+        // 2차: 포함 매핑 (정확한 매핑에서 누락된 경우만)
+        headers.forEach((h,i)=>{
+          if(colMap.sc_id===undefined&&h.includes('SC 사번'))colMap.sc_id=i;
+          if(colMap.name===undefined&&h==='성명')colMap.name=i;
+          if(colMap.project===undefined&&(h==='프로젝트'||h.includes('PJT')||h.includes('프젝')))colMap.project=i;
+          if(colMap.dept===undefined&&(h==='실'||h.includes('부서')))colMap.dept=i;
+          if(colMap.team===undefined&&h==='팀')colMap.team=i;
+          if(colMap.join_date===undefined&&h.includes('입사'))colMap.join_date=i;
+          if(colMap.prob_end===undefined&&(h.includes('수습')&&h.includes('종료')))colMap.prob_end=i;
+          if(colMap.emp_type===undefined&&(h.includes('고용')||h.includes('형태')))colMap.emp_type=i;
+          if(colMap.title===undefined&&(h==='직책'||h.includes('직급')))colMap.title=i;
+          if(colMap.phone===undefined&&(h.includes('연락')||h.includes('전화')||h.includes('핸드폰')||h.includes('휴대')))colMap.phone=i;
+          if(colMap.slack_id===undefined&&(h.toLowerCase().includes('slack')||h.includes('슬랙')))colMap.slack_id=i;
+        });
+        const parseEmployees=(rows,startIdx)=>{
+          const result=[];
+          for(let r=startIdx;r<rows.length;r++){
+            const row=rows[r];
+            const name=colMap.name!==undefined?String(row[colMap.name]||'').trim():'';
+            if(!name||name==='성명')continue;
+            const sc_id=colMap.sc_id!==undefined?String(row[colMap.sc_id]||'').trim():'';
+            if(!sc_id&&!name)continue;
+            result.push({
+              no:r-startIdx+1,
+              sc_id,
+              name,
+              project:colMap.project!==undefined?String(row[colMap.project]||'').trim():'',
+              dept:colMap.dept!==undefined?String(row[colMap.dept]||'').trim():'',
+              team:colMap.team!==undefined?String(row[colMap.team]||'').trim():'',
+              join_date:excelDateToStr(colMap.join_date!==undefined?row[colMap.join_date]:''),
+              prob_end:excelDateToStr(colMap.prob_end!==undefined?row[colMap.prob_end]:''),
+              emp_type:colMap.emp_type!==undefined?String(row[colMap.emp_type]||'').trim():'',
+              title:colMap.title!==undefined?String(row[colMap.title]||'').trim():'',
+              phone:colMap.phone!==undefined?String(row[colMap.phone]||'').trim():'',
+              slack_id:colMap.slack_id!==undefined?String(row[colMap.slack_id]||'').trim():'',
+            });
+          }
+          return result;
+        };
+        const activeData=parseEmployees(activeRows,headerIdx+1);
+        // 퇴직자 시트
+        let resignedData=[];
+        const resignedSheetName=wb.SheetNames.find(n=>n.includes('퇴직')||n.includes('퇴사'));
+        if(resignedSheetName){
+          const rs=wb.Sheets[resignedSheetName];
+          const resignedRows=XLSX.utils.sheet_to_json(rs,{header:1,defval:'',raw:true});
+          let rHeaderIdx=3;
+          for(let r=0;r<Math.min(10,resignedRows.length);r++){
+            const row=resignedRows[r];
+            if(row.some(c=>String(c).includes('사번')||String(c).includes('성명'))){rHeaderIdx=r;break;}
+          }
+          const rHeaders=resignedRows[rHeaderIdx].map(h=>String(h).trim());
+          const rColMap={};
+          const rExactMap={
+            'SC 사번':'sc_id','성명':'name','프로젝트':'project','실':'dept','팀':'team',
+            '입사일':'join_date','행정상 퇴직일':'resign_date','퇴직일':'resign_date','고용형태':'emp_type','직책':'title'
+          };
+          rHeaders.forEach((h,i)=>{if(rExactMap[h]&&rColMap[rExactMap[h]]===undefined)rColMap[rExactMap[h]]=i;});
+          rHeaders.forEach((h,i)=>{
+            if(rColMap.sc_id===undefined&&h.includes('SC 사번'))rColMap.sc_id=i;
+            if(rColMap.name===undefined&&h==='성명')rColMap.name=i;
+            if(rColMap.project===undefined&&(h==='프로젝트'||h.includes('PJT')))rColMap.project=i;
+            if(rColMap.dept===undefined&&(h==='실'||h.includes('부서')))rColMap.dept=i;
+            if(rColMap.team===undefined&&h==='팀')rColMap.team=i;
+            if(rColMap.join_date===undefined&&h.includes('입사'))rColMap.join_date=i;
+            if(rColMap.resign_date===undefined&&(h.includes('퇴직')||h.includes('퇴사')))rColMap.resign_date=i;
+            if(rColMap.emp_type===undefined&&(h.includes('고용')||h.includes('형태')))rColMap.emp_type=i;
+            if(rColMap.title===undefined&&(h==='직책'||h.includes('직급')))rColMap.title=i;
+          });
+          for(let r=rHeaderIdx+1;r<resignedRows.length;r++){
+            const row=resignedRows[r];
+            const name=rColMap.name!==undefined?String(row[rColMap.name]||'').trim():'';
+            if(!name||name==='성명')continue;
+            resignedData.push({
+              no:r-rHeaderIdx,
+              sc_id:rColMap.sc_id!==undefined?String(row[rColMap.sc_id]||'').trim():'',
+              name,
+              project:rColMap.project!==undefined?String(row[rColMap.project]||'').trim():'',
+              dept:rColMap.dept!==undefined?String(row[rColMap.dept]||'').trim():'',
+              team:rColMap.team!==undefined?String(row[rColMap.team]||'').trim():'',
+              join_date:excelDateToStr(rColMap.join_date!==undefined?row[rColMap.join_date]:''),
+              resign_date:excelDateToStr(rColMap.resign_date!==undefined?row[rColMap.resign_date]:''),
+              emp_type:rColMap.emp_type!==undefined?String(row[rColMap.emp_type]||'').trim():'',
+              title:rColMap.title!==undefined?String(row[rColMap.title]||'').trim():'',
+            });
+          }
+        }
+        // localStorage 저장
+        try{
+          localStorage.setItem('roster_active',JSON.stringify(activeData));
+          localStorage.setItem('roster_resigned',JSON.stringify(resignedData));
+          localStorage.setItem('roster_upload_date',new Date().toLocaleDateString('ko-KR'));
+        }catch(e){showToast('저장 용량 초과. 일부 데이터만 적용됩니다.','error');}
+        _rosterActiveData=activeData;
+        _rosterResignedData=resignedData;
+        // 실 필터 리셋
+        const deptSel=document.getElementById('rosterDeptFilter');
+        if(deptSel){deptSel.innerHTML='<option value="">전체 실</option>';
+          const depts=[...new Set(activeData.map(e=>e.dept).filter(Boolean))].sort();
+          depts.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;deptSel.appendChild(o);});
+        }
+        // 날짜 표시 업데이트
+        const dateEl=document.getElementById('rosterUploadDate');
+        if(dateEl)dateEl.textContent='기준: '+localStorage.getItem('roster_upload_date')+' (업로드됨) · 재직자 '+activeData.length+'명';
+        const resignedCnt=document.getElementById('rosterResignedCnt');
+        if(resignedCnt)resignedCnt.textContent=resignedData.length?`(${resignedData.length}명)`:'';
+        const total=document.getElementById('rosterTotalCnt');
+        if(total)total.textContent=activeData.length;
+        showToast(`✅ 재직자 ${activeData.length}명${resignedData.length?', 퇴직자 '+resignedData.length+'명':''} 업로드 완료`);
+        setRosterTab('active');
+      }catch(err){
+        console.error(err);
+        showToast('엑셀 파싱 오류: '+err.message,'error');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+  inp.click();
+}
+
 
 </script>
 
 <!-- ===== 퇴직자 처리 모달 ===== -->
-<div class="modal-overlay" id="retireModal" style="display:none;" onclick="if(event.target===this)closeModal('retireModal')">
+<div class="modal-overlay" id="retireModal" onclick="if(event.target===this)closeModal('retireModal')">
   <div class="modal-box" style="max-width:480px;">
     <div class="modal-header">
       <div class="modal-title">🚪 퇴직자 일괄 처리</div>
@@ -6712,7 +7898,7 @@ function openEditHealthModal(id){
 </div>
 
 <!-- ===== 미수검자 추출 모달 ===== -->
-<div class="modal-overlay" id="uncheckModal" style="display:none;" onclick="if(event.target===this)closeModal('uncheckModal')">
+<div class="modal-overlay" id="uncheckModal" onclick="if(event.target===this)closeModal('uncheckModal')">
   <div class="modal-box" style="max-width:680px;max-height:90vh;">
     <div class="modal-header">
       <div class="modal-title">📋 미수검자 추출</div>
@@ -6741,7 +7927,7 @@ function openEditHealthModal(id){
 </div>
 
 <!-- ===== 건강검진 예산 설정 모달 ===== -->
-<div class="modal-overlay" id="healthBudgetModal" style="display:none;" onclick="if(event.target===this)closeModal('healthBudgetModal')">
+<div class="modal-overlay" id="healthBudgetModal" onclick="if(event.target===this)closeModal('healthBudgetModal')">
   <div class="modal-box" style="max-width:380px;">
     <div class="modal-header">
       <div class="modal-title">💰 건강검진 예산 설정</div>
@@ -6766,7 +7952,7 @@ function openEditHealthModal(id){
 </div>
 
 <!-- ===== 월별 업무 보고서 모달 ===== -->
-<div class="modal-overlay" id="monthlyReportModal" style="display:none;" onclick="if(event.target===this)closeModal('monthlyReportModal')">
+<div class="modal-overlay" id="monthlyReportModal" onclick="if(event.target===this)closeModal('monthlyReportModal')">
   <div class="modal-box" style="max-width:760px;max-height:90vh;">
     <div class="modal-header">
       <div class="modal-title">📊 총무팀 월별 업무 현황 보고서</div>
@@ -6784,6 +7970,232 @@ function openEditHealthModal(id){
       <button class="btn btn-ghost" onclick="closeModal('monthlyReportModal')">닫기</button>
     </div>
   </div>
+</div>
+
+<!-- ===== 인사일정 페이지 ===== -->
+<div class="page" id="pageHr">
+<div class="container">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <h2 style="font-size:17px;font-weight:800;color:var(--text);margin:0;">👤 인사 일정 관리</h2>
+    <button class="btn btn-primary btn-sm" onclick="openHrModal()">+ 입/퇴사 예정 등록</button>
+  </div>
+
+  <!-- D-day 알림 배너 -->
+  <div id="hrAlertBanner" style="margin-bottom:16px;"></div>
+
+  <!-- 필터 탭 -->
+  <div style="display:flex;gap:8px;margin-bottom:12px;">
+    <button class="btn btn-sm" id="hrTab_all" onclick="setHrTab('all')" style="background:var(--primary);color:#fff;">전체</button>
+    <button class="btn btn-sm btn-secondary" id="hrTab_new" onclick="setHrTab('new')">🆕 입사예정</button>
+    <button class="btn btn-sm btn-secondary" id="hrTab_out" onclick="setHrTab('out')">👋 퇴직예정</button>
+    <button class="btn btn-sm btn-secondary" id="hrTab_done" onclick="setHrTab('done')">✅ 완료</button>
+  </div>
+
+  <!-- 테이블 -->
+  <div class="card">
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table class="parking-table" style="min-width:800px;table-layout:fixed;" id="hrTable">
+        <thead><tr>
+          <th style="width:60px;text-align:center;">구분</th>
+          <th style="width:70px;">성명</th>
+          <th style="width:60px;">PJT</th>
+          <th style="width:100px;">실/팀</th>
+          <th style="width:100px;text-align:center;">예정일</th>
+          <th style="width:70px;text-align:center;">D-day</th>
+          <th style="width:70px;text-align:center;">상태</th>
+          <th style="width:160px;">메모</th>
+          <th style="width:120px;text-align:center;">관리</th>
+        </tr></thead>
+        <tbody id="hrTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== 인사일정 모달 ===== -->
+<div class="modal-overlay" id="hrModal" onclick="if(event.target===this)closeModal('hrModal')">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-header">
+      <div class="modal-title" id="hrModalTitle">👤 입/퇴사 예정 등록</div>
+      <button class="modal-close" onclick="closeModal('hrModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="hrEditId">
+      <div class="form-row">
+        <div class="form-group">
+          <label>구분 *</label>
+          <select id="hrType" onchange="updateHrForm()">
+            <option value="new">🆕 입사예정</option>
+            <option value="out">👋 퇴직예정</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>상태</label>
+          <select id="hrStatus">
+            <option value="예정">예정</option>
+            <option value="완료">완료</option>
+            <option value="취소">취소</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>성명 *</label>
+          <input type="text" id="hrName" placeholder="홍길동">
+        </div>
+        <div class="form-group">
+          <label>프로젝트</label>
+          <select id="hrProject">
+            <option value="E7">E7</option>
+            <option value="SSR">SSR</option>
+            <option value="공통">공통</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>실</label>
+          <input type="text" id="hrDept" placeholder="기획실">
+        </div>
+        <div class="form-group">
+          <label>팀</label>
+          <input type="text" id="hrTeam" placeholder="PM팀">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label id="hrDateLabel">입사 예정일 *</label>
+          <input type="date" id="hrDate">
+        </div>
+        <div class="form-group" id="hrProbEndDiv">
+          <label>수습종료 예정일</label>
+          <input type="date" id="hrProbEnd">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>메모</label>
+        <input type="text" id="hrNote" placeholder="고용형태, 특이사항 등">
+      </div>
+      <!-- 건강검진 자동등록 (입사예정만) -->
+      <div id="hrAddHealthDiv" style="background:#f0fdf4;border:1px solid #86efac;border-radius:var(--radius-sm);padding:10px 14px;margin-top:4px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;color:#15803d;">
+          <input type="checkbox" id="hrAddHealth" checked>
+          🏥 건강검진 대상자에 자동 등록
+        </label>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;margin-bottom:8px;">입사 완료 처리 시 건강검진 명단에 자동 추가됩니다.</div>
+        <div style="display:flex;gap:12px;">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;">
+            <input type="radio" name="hrProbStatus" id="hrHasProb" value="수습있음" checked>
+            <span>🔰 수습 있음</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;">
+            <input type="radio" name="hrProbStatus" id="hrNoProb" value="수습없음">
+            <span>✅ 수습 없음</span>
+          </label>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">수습 있음 선택 시 수습종료일까지 건강검진 대상 제외</div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="hrDeleteBtn" style="display:none;margin-right:auto;" onclick="deleteHrEntry()">삭제</button>
+      <button class="btn btn-ghost" onclick="closeModal('hrModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveHrEntry()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 조직도 페이지 ===== -->
+<div class="page" id="pageOrgchart">
+<div class="container">
+  <!-- 헤더 -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+    <h2 style="font-size:17px;font-weight:800;color:var(--text);margin:0;">🏢 조직도</h2>
+    <span id="orgHeaderDate" style="font-size:12px;color:var(--text3);">PDF 파일을 등록하세요</span>
+    <div style="margin-left:auto;display:flex;gap:8px;">
+      <button class="btn btn-sm btn-ghost" onclick="orgOpenNewTab()">↗ 새 탭</button>
+      <button class="btn btn-sm btn-ghost" onclick="deleteOrgPdf()" style="color:#dc2626;">🗑 삭제</button>
+      <button class="btn btn-sm btn-primary" onclick="uploadOrgPdf()">📂 PDF 등록</button>
+    </div>
+  </div>
+  <!-- 빈 상태 -->
+  <div id="orgEmptyState" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:16px;border:2px dashed var(--border2);border-radius:var(--radius);background:#f8fafc;">
+    <div style="font-size:48px;">📄</div>
+    <div style="font-size:15px;color:var(--text3);font-weight:600;">등록된 조직도 PDF가 없습니다</div>
+    <div style="font-size:12px;color:var(--text3);">PDF 파일을 등록하면 여기서 바로 볼 수 있습니다</div>
+    <button class="btn btn-primary" onclick="uploadOrgPdf()">📂 PDF 파일 등록</button>
+  </div>
+  <!-- PDF 뷰어 -->
+  <div id="orgPdfViewer" style="display:none;">
+    <iframe id="orgPdfFrame" style="width:100%;height:80vh;border:1px solid var(--border2);border-radius:var(--radius);display:block;"></iframe>
+  </div>
+</div>
+</div>
+
+<!-- ===== 직원명부 페이지 ===== -->
+<div class="page" id="pageRoster">
+<div class="container">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+    <h2 style="font-size:17px;font-weight:800;color:var(--text);margin:0;">📋 직원명부</h2>
+    <span id="rosterUploadDate" style="font-size:12px;color:var(--text3);">기준: 2026. 3. 20. (업로드됨) · 재직자 <b id="rosterTotalCnt">327</b>명</span>
+    <button class="btn btn-sm btn-secondary" onclick="uploadRosterExcel()" style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+      <span>📂</span> 엑셀 업로드
+    </button>
+  </div>
+  <!-- 탭 -->
+  <div style="display:flex;gap:8px;margin-bottom:12px;">
+    <button class="btn btn-sm" id="rosterTab_active" onclick="setRosterTab('active')" style="background:var(--primary);color:#fff;">👥 재직자</button>
+    <button class="btn btn-sm btn-secondary" id="rosterTab_resigned" onclick="setRosterTab('resigned')">🚪 퇴직자 <span id="rosterResignedCnt" style="font-size:10px;color:var(--text3);"></span></button>
+    <span style="font-size:11px;color:var(--text3);align-self:center;margin-left:4px;">엑셀 업로드 시 자동 업데이트됩니다</span>
+  </div>
+  <!-- 필터 (재직자만) -->
+  <div class="card" style="margin-bottom:16px;" id="rosterFilters">
+    <div class="card-body" style="padding:12px 16px;">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <input type="text" id="rosterSearch" placeholder="🔍 이름 / 사번 검색..." oninput="renderRosterTable()"
+          style="padding:7px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;width:200px;">
+        <select id="rosterProjFilter" onchange="renderRosterTable()" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;">
+          <option value="">전체 소속</option>
+          <option value="E7">E7</option>
+          <option value="SSR">SSR</option>
+          <option value="공통">공통</option>
+        </select>
+        <select id="rosterDeptFilter" onchange="renderRosterTable()" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;">
+          <option value="">전체 실</option>
+        </select>
+        <select id="rosterTypeFilter" onchange="renderRosterTable()" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;">
+          <option value="">전체 고용형태</option>
+          <option value="정규직">정규직</option>
+          <option value="계약직">계약직</option>
+          <option value="임원">임원</option>
+        </select>
+        <span id="rosterFilteredCnt" style="font-size:12px;color:var(--text3);margin-left:4px;"></span>
+      </div>
+    </div>
+  </div>
+  <!-- 테이블 -->
+  <div class="card">
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table class="parking-table" style="min-width:760px;table-layout:fixed;" id="rosterTable">
+        <thead><tr>
+          <th style="width:30px;text-align:center;">#</th>
+          <th style="width:58px;text-align:center;">사번</th>
+          <th style="width:64px;font-weight:700;">성명</th>
+          <th style="width:44px;text-align:center;">소속</th>
+          <th style="width:100px;">실</th>
+          <th style="width:110px;">팀</th>
+          <th style="width:58px;text-align:center;">고용형태</th>
+          <th style="width:52px;text-align:center;">직책</th>
+          <th style="width:80px;text-align:center;">입사일</th>
+          <th style="width:80px;text-align:center;">수습/퇴직일</th>
+          <th style="width:95px;text-align:center;">연락처</th>
+          <th style="width:110px;text-align:center;">슬랙 ID</th>
+        </tr></thead>
+        <tbody id="rosterTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 </div>
 </body>
 </html>
