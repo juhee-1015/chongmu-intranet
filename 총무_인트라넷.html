@@ -4390,7 +4390,16 @@ async function ghSave(){
 }
 
 async function ghLoad(){
-  const {token,repo,file}=ghSavePrefs();
+  // 불러오기는 이름 입력 불필요 — 입력 필드 값만 읽고 localStorage 갱신
+  const t=(document.getElementById('ghToken')?.value||'').trim();
+  const r=(document.getElementById('ghRepo')?.value||'').trim();
+  const f=(document.getElementById('ghFile')?.value||'').trim()||'data.json';
+  if(t) localStorage.setItem(GH_TOKEN_KEY,t);
+  if(r) localStorage.setItem(GH_REPO_KEY,r);
+  localStorage.setItem(GH_FILE_KEY,f);
+  const token=t||localStorage.getItem(GH_TOKEN_KEY)||'';
+  const repo=r||localStorage.getItem(GH_REPO_KEY)||'';
+  const file=f;
   if(!repo||!repo.includes('/')){ghSetMsg('❌ 저장소를 입력해주세요',true);return;}
   ghSetMsg('불러오는 중...');
   try{
