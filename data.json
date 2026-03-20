@@ -1,6 +1,6 @@
 {
   "_version": 1,
-  "_date": "2026-03-20T08:58:54.195Z",
+  "_date": "2026-03-20T09:01:02.908Z",
   "_app": "총무대백과",
   "vouchers": [],
   "vendors": [
@@ -571,6 +571,30 @@
       "url": "https://supercreative-my.sharepoint.com/:x:/g/personal/sc_smtp_supercreative_kr/IQC_B_mzhoS-SqFZk0PoVUHQAd3gj8UlBw6fepJthIGasaI?e=glQc6a",
       "desc": "",
       "emoji": "🚀"
+    },
+    {
+      "id": "l1773997226287",
+      "cat": "업무포탈",
+      "name": "식권대장",
+      "url": "http://corp.sikdae.com/",
+      "desc": "",
+      "emoji": "⭐"
+    },
+    {
+      "id": "l1773997245720",
+      "cat": "업무포탈",
+      "name": "카카오T 비즈니스",
+      "url": "https://biz.kakaomobility.com/tbiz",
+      "desc": "",
+      "emoji": "💼"
+    },
+    {
+      "id": "l1773997256184",
+      "cat": "업무포탈",
+      "name": "알고케어",
+      "url": "https://portal.algocare.me/devices",
+      "desc": "",
+      "emoji": "🔗"
     }
   ],
   "notices": [],
