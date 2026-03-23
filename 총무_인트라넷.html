@@ -7549,15 +7549,13 @@ function renderHrTable(){
       :'';
     return`<tr style="${h.status==='취소'?'opacity:0.5;':''}">
       <td style="text-align:center;">${typeBadge}</td>
-      <td style="font-weight:600;">${h.name}</td>
-      <td style="text-align:center;font-size:11px;">${h.project||'-'}</td>
-      <td style="font-size:11px;">${h.dept||''} ${h.team||''}</td>
-      <td style="text-align:center;font-size:12px;">${dateStr}${h.endDate?`<span style="color:var(--text3)"> ~ ${h.endDate.slice(2).replace(/-/g,'.')}</span>`:''}
-      </td>
-      <td style="text-align:center;font-size:12px;">${(()=>{
+      <td style="font-weight:600;white-space:nowrap;">${h.name}</td>
+      <td style="text-align:center;font-size:11px;white-space:nowrap;">${h.project||'-'}</td>
+      <td style="font-size:11px;white-space:nowrap;">${h.dept||''} ${h.team||''}</td>
+      <td style="text-align:center;font-size:12px;white-space:nowrap;">${dateStr}${h.endDate?`<span style="color:var(--text3)"> ~ ${h.endDate.slice(2).replace(/-/g,'.')}</span>`:''}</td>
+      <td style="text-align:center;font-size:12px;white-space:nowrap;">${(()=>{
         if(h.status==='예정'){
-          const endPart=h.endDate?(()=>{const e=new Date(h.endDate);e.setHours(0,0,0,0);const d=Math.round((e-today)/(1000*60*60*24));return`<br><span style="font-size:10px;color:var(--text3);">(~${d>=0?'D-'+d:'종료'})</span>`;})():'';
-          return ddayStr+endPart;
+          return ddayStr;
         }
         if(h.status==='진행중'&&(h.type==='leave'||h.type==='return'||h.type==='remote')&&h.endDate){
           const e=new Date(h.endDate);e.setHours(0,0,0,0);
@@ -8803,17 +8801,17 @@ function uploadRosterExcel(){
   <!-- 테이블 -->
   <div class="card">
     <div class="card-body" style="padding:0;overflow-x:auto;">
-      <table class="parking-table" style="min-width:800px;table-layout:fixed;" id="hrTable">
+      <table class="parking-table" style="min-width:860px;table-layout:auto;" id="hrTable">
         <thead><tr>
-          <th style="width:60px;text-align:center;">구분</th>
-          <th style="width:70px;">성명</th>
-          <th style="width:60px;">소속</th>
-          <th style="width:100px;">실/팀</th>
-          <th style="width:100px;text-align:center;">예정일</th>
-          <th style="width:70px;text-align:center;">D-day</th>
-          <th style="width:70px;text-align:center;">상태</th>
-          <th style="width:160px;">메모</th>
-          <th style="width:120px;text-align:center;">관리</th>
+          <th style="width:68px;text-align:center;white-space:nowrap;">구분</th>
+          <th style="width:72px;white-space:nowrap;">성명</th>
+          <th style="width:52px;text-align:center;white-space:nowrap;">소속</th>
+          <th style="width:120px;white-space:nowrap;">실/팀</th>
+          <th style="width:150px;text-align:center;white-space:nowrap;">예정일</th>
+          <th style="width:80px;text-align:center;white-space:nowrap;">D-day</th>
+          <th style="width:64px;text-align:center;white-space:nowrap;">상태</th>
+          <th style="white-space:nowrap;">메모</th>
+          <th style="width:130px;text-align:center;white-space:nowrap;">관리</th>
         </tr></thead>
         <tbody id="hrTbody"></tbody>
       </table>
