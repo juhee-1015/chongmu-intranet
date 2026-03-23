@@ -7529,7 +7529,8 @@ function renderHrTable(){
     const d=new Date(h.date);d.setHours(0,0,0,0);
     const diff=Math.round((d-today)/(1000*60*60*24));
     const ddayStr=diff===0?'<span style="color:#dc2626;font-weight:700;">D-day</span>':diff>0?'<span style="color:#2563eb;">D-'+diff+'</span>':'<span style="color:#6b7280;">D+'+Math.abs(diff)+'</span>';
-    const typeBadge=h.type==='new'?'<span style="background:#dcfce7;color:#15803d;border-radius:6px;padding:2px 8px;font-size:11px;">🆕 입사</span>':h.type==='out'?'<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:2px 8px;font-size:11px;">👋 퇴직</span>':(h.type==='leave'||h.type==='return')?'<span style="background:#fef9c3;color:#92400e;border-radius:6px;padding:2px 8px;font-size:11px;">🚫 휴직</span>':h.type==='remote'?'<span style="background:#ede9fe;color:#7c3aed;border-radius:6px;padding:2px 8px;font-size:11px;">🏠 재택</span>':`<span style="background:#f3f4f6;color:#374151;border-radius:6px;padding:2px 8px;font-size:11px;">${h.type}</span>`;
+    const _bs='border-radius:6px;padding:2px 8px;font-size:11px;white-space:nowrap;display:inline-block;';
+    const typeBadge=h.type==='new'?`<span style="${_bs}background:#dcfce7;color:#15803d;">🆕 입사</span>`:h.type==='out'?`<span style="${_bs}background:#fee2e2;color:#b91c1c;">👋 퇴직</span>`:(h.type==='leave'||h.type==='return')?`<span style="${_bs}background:#fef9c3;color:#92400e;">🚫 휴직</span>`:h.type==='remote'?`<span style="${_bs}background:#ede9fe;color:#7c3aed;">🏠 재택</span>`:`<span style="${_bs}background:#f3f4f6;color:#374151;">${h.type}</span>`;
     const statColor=h.status==='완료'?'#15803d':h.status==='취소'?'#6b7280':h.status==='진행중'?'#0369a1':'#92400e';
     const statBg=h.status==='완료'?'#dcfce7':h.status==='취소'?'#f3f4f6':h.status==='진행중'?'#e0f2fe':'#fef9c3';
     const dateStr=h.date?h.date.replace(/-/g,'.').slice(2):'';
@@ -7548,12 +7549,12 @@ function renderHrTable(){
       ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#dcfce7;color:#15803d;border:1px solid #86efac;">✓ 재택완료</button>`
       :'';
     return`<tr style="${h.status==='취소'?'opacity:0.5;':''}">
-      <td style="text-align:center;">${typeBadge}</td>
-      <td style="font-weight:600;white-space:nowrap;">${h.name}</td>
-      <td style="text-align:center;font-size:11px;white-space:nowrap;">${h.project||'-'}</td>
-      <td style="font-size:11px;white-space:nowrap;">${h.dept||''} ${h.team||''}</td>
-      <td style="text-align:center;font-size:12px;white-space:nowrap;">${dateStr}${h.endDate?`<span style="color:var(--text3)"> ~ ${h.endDate.slice(2).replace(/-/g,'.')}</span>`:''}</td>
-      <td style="text-align:center;font-size:12px;white-space:nowrap;">${(()=>{
+      <td style="text-align:center;overflow:hidden;">${typeBadge}</td>
+      <td style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.name}</td>
+      <td style="text-align:center;font-size:11px;overflow:hidden;white-space:nowrap;">${h.project||'-'}</td>
+      <td style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.dept||''} ${h.team||''}</td>
+      <td style="text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;">${dateStr}${h.endDate?`<span style="color:var(--text3)"> ~ ${h.endDate.slice(2).replace(/-/g,'.')}</span>`:''}</td>
+      <td style="text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;">${(()=>{
         if(h.status==='예정'){
           return ddayStr;
         }
@@ -7567,8 +7568,8 @@ function renderHrTable(){
         }
         return'-';
       })()}</td>
-      <td style="text-align:center;"><span style="background:${statBg};color:${statColor};border-radius:6px;padding:2px 8px;font-size:11px;">${h.status}</span></td>
-      <td style="font-size:11px;color:var(--text3);">${h.note||'-'}</td>
+      <td style="text-align:center;overflow:hidden;"><span style="background:${statBg};color:${statColor};border-radius:6px;padding:2px 7px;font-size:11px;white-space:nowrap;display:inline-block;">${h.status}</span></td>
+      <td style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.note||'-'}</td>
       <td style="text-align:center;white-space:nowrap;">
         ${completeBtn}
         <button class="btn btn-xs btn-ghost" onclick="openHrModal('${h.id}')">수정</button>
@@ -8801,17 +8802,17 @@ function uploadRosterExcel(){
   <!-- 테이블 -->
   <div class="card">
     <div class="card-body" style="padding:0;overflow-x:auto;">
-      <table class="parking-table" style="min-width:860px;table-layout:auto;" id="hrTable">
+      <table class="parking-table" style="width:100%;min-width:900px;table-layout:fixed;" id="hrTable">
         <thead><tr>
-          <th style="width:68px;text-align:center;white-space:nowrap;">구분</th>
-          <th style="width:72px;white-space:nowrap;">성명</th>
-          <th style="width:52px;text-align:center;white-space:nowrap;">소속</th>
-          <th style="width:120px;white-space:nowrap;">실/팀</th>
-          <th style="width:150px;text-align:center;white-space:nowrap;">예정일</th>
-          <th style="width:80px;text-align:center;white-space:nowrap;">D-day</th>
-          <th style="width:64px;text-align:center;white-space:nowrap;">상태</th>
-          <th style="white-space:nowrap;">메모</th>
-          <th style="width:130px;text-align:center;white-space:nowrap;">관리</th>
+          <th style="width:76px;text-align:center;">구분</th>
+          <th style="width:74px;">성명</th>
+          <th style="width:52px;text-align:center;">소속</th>
+          <th style="width:116px;">실/팀</th>
+          <th style="width:142px;text-align:center;">예정일</th>
+          <th style="width:78px;text-align:center;">D-day</th>
+          <th style="width:62px;text-align:center;">상태</th>
+          <th style="width:160px;">메모</th>
+          <th style="width:130px;text-align:center;">관리</th>
         </tr></thead>
         <tbody id="hrTbody"></tbody>
       </table>
