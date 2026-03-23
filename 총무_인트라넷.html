@@ -7438,13 +7438,14 @@ function renderHrAlertBanner(){
   if(!soon.length){el.innerHTML='';return;}
   // D-day 오름차순 정렬 (가까운 순)
   soon.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const typeLabel={new:'🆕 입사',out:'👋 퇴직',leave:'🚫 휴직',return:'✅ 복직',remote:'🏠 재택'};
+  const typeLabel={new:'🆕 입사',out:'👋 퇴직',leave:'🚫 휴직',remote:'🏠 재택'};
   el.innerHTML=`<div style="background:#fef9c3;border:1px solid #fbbf24;border-radius:var(--radius);padding:12px 16px;">
     <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ 7일 이내 인사 예정 ${soon.length}건</div>
     ${soon.map(h=>{
       const d=new Date(h.date);d.setHours(0,0,0,0);
       const diff=Math.round((d-today)/(1000*60*60*24));
-      return`<div style="font-size:12px;color:#78350f;">${typeLabel[h.type]||h.type} <b>${h.name}</b> (${h.project||''} ${h.dept||''}) - ${diff===0?'<b style="color:#dc2626;">오늘!</b>':'D-'+diff}</div>`;
+      const endStr=h.endDate?` ~ ${h.endDate.slice(2).replace(/-/g,'.')}`:''
+      return`<div style="font-size:12px;color:#78350f;">${typeLabel[h.type]||h.type} <b>${h.name}</b> (${h.project||''} ${h.dept||''}) ${h.date.slice(5).replace('-','.')}${endStr} - ${diff===0?'<b style="color:#dc2626;">오늘!</b>':'D-'+diff}</div>`;
     }).join('')}
   </div>`;
 }
@@ -7478,7 +7479,7 @@ function renderHrTable(){
     const d=new Date(h.date);d.setHours(0,0,0,0);
     const diff=Math.round((d-today)/(1000*60*60*24));
     const ddayStr=diff===0?'<span style="color:#dc2626;font-weight:700;">D-day</span>':diff>0?'<span style="color:#2563eb;">D-'+diff+'</span>':'<span style="color:#6b7280;">D+'+Math.abs(diff)+'</span>';
-    const typeBadge=h.type==='new'?'<span style="background:#dcfce7;color:#15803d;border-radius:6px;padding:2px 8px;font-size:11px;">🆕 입사</span>':h.type==='out'?'<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:2px 8px;font-size:11px;">👋 퇴직</span>':h.type==='leave'?'<span style="background:#fef9c3;color:#92400e;border-radius:6px;padding:2px 8px;font-size:11px;">🚫 휴직</span>':h.type==='remote'?'<span style="background:#ede9fe;color:#7c3aed;border-radius:6px;padding:2px 8px;font-size:11px;">🏠 재택</span>':'<span style="background:#e0f2fe;color:#0369a1;border-radius:6px;padding:2px 8px;font-size:11px;">✅ 복직</span>';
+    const typeBadge=h.type==='new'?'<span style="background:#dcfce7;color:#15803d;border-radius:6px;padding:2px 8px;font-size:11px;">🆕 입사</span>':h.type==='out'?'<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:2px 8px;font-size:11px;">👋 퇴직</span>':(h.type==='leave'||h.type==='return')?'<span style="background:#fef9c3;color:#92400e;border-radius:6px;padding:2px 8px;font-size:11px;">🚫 휴직</span>':h.type==='remote'?'<span style="background:#ede9fe;color:#7c3aed;border-radius:6px;padding:2px 8px;font-size:11px;">🏠 재택</span>':`<span style="background:#f3f4f6;color:#374151;border-radius:6px;padding:2px 8px;font-size:11px;">${h.type}</span>`;
     const statColor=h.status==='완료'?'#15803d':h.status==='취소'?'#6b7280':'#92400e';
     const statBg=h.status==='완료'?'#dcfce7':h.status==='취소'?'#f3f4f6':'#fef9c3';
     const dateStr=h.date?h.date.replace(/-/g,'.').slice(2):'';
@@ -7489,8 +7490,6 @@ function renderHrTable(){
       ?`<button class="btn btn-xs" onclick="openRetireModal('${h.id}')" style="font-size:10px;background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;">퇴직처리</button>`
       :(h.type==='leave'&&h.status==='예정')
       ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#fef9c3;color:#92400e;border:1px solid #fcd34d;">휴직처리</button>`
-      :(h.type==='return'&&h.status==='예정')
-      ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;">복직처리</button>`
       :(h.type==='remote'&&h.status==='예정')
       ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#ede9fe;color:#7c3aed;border:1px solid #c4b5fd;">재택완료</button>`
       :'';
@@ -7499,8 +7498,10 @@ function renderHrTable(){
       <td style="font-weight:600;">${h.name}</td>
       <td style="text-align:center;font-size:11px;">${h.project||'-'}</td>
       <td style="font-size:11px;">${h.dept||''} ${h.team||''}</td>
-      <td style="text-align:center;font-size:12px;">${dateStr}</td>
-      <td style="text-align:center;font-size:12px;">${h.status==='예정'?ddayStr:'-'}</td>
+      <td style="text-align:center;font-size:12px;">${dateStr}${h.endDate?`<span style="color:var(--text3)"> ~ ${h.endDate.slice(2).replace(/-/g,'.')}</span>`:''}
+      </td>
+      <td style="text-align:center;font-size:12px;">${h.status==='예정'?ddayStr:'-'}${h.endDate&&h.status==='예정'?`<br><span style="font-size:10px;color:var(--text3);">(~${(()=>{const e=new Date(h.endDate);e.setHours(0,0,0,0);const d=Math.round((e-today)/(1000*60*60*24));return d>=0?'D-'+d:'종료'})()})</span>`:''}
+      </td>
       <td style="text-align:center;"><span style="background:${statBg};color:${statColor};border-radius:6px;padding:2px 8px;font-size:11px;">${h.status}</span></td>
       <td style="font-size:11px;color:var(--text3);">${h.note||'-'}</td>
       <td style="text-align:center;white-space:nowrap;">
@@ -7514,10 +7515,17 @@ function renderHrTable(){
 function updateHrForm(){
   const type=document.getElementById('hrType').value;
   const dateLabel=document.getElementById('hrDateLabel');
+  const endDateDiv=document.getElementById('hrEndDateDiv');
+  const endDateLabel=document.getElementById('hrEndDateLabel');
   const probDiv=document.getElementById('hrProbEndDiv');
   const addHealthDiv=document.getElementById('hrAddHealthDiv');
-  const labelMap={new:'입사 예정일 *',out:'퇴직 예정일 *',leave:'휴직 예정일 *',return:'복직 예정일 *'};
+  const labelMap={new:'입사 예정일 *',out:'퇴직 예정일 *',leave:'휴직 시작일 *',remote:'재택 시작일 *'};
+  const endLabelMap={leave:'휴직 종료(복직) 예정일',remote:'재택 종료 예정일'};
   if(dateLabel) dateLabel.textContent=labelMap[type]||'예정일 *';
+  // 종료 예정일 — 휴직·재택만 표시
+  const showEnd=type==='leave'||type==='remote';
+  if(endDateDiv) endDateDiv.style.display=showEnd?'':'none';
+  if(endDateLabel) endDateLabel.textContent=endLabelMap[type]||'종료 예정일';
   if(probDiv) probDiv.style.display=type==='new'?'':'none';
   if(addHealthDiv) addHealthDiv.style.display=type==='new'?'':'none';
 }
@@ -7535,6 +7543,7 @@ function openHrModal(id){
     document.getElementById('hrDept').value=h.dept||'';
     document.getElementById('hrTeam').value=h.team||'';
     document.getElementById('hrDate').value=h.date||'';
+    document.getElementById('hrEndDate').value=h.endDate||'';
     document.getElementById('hrProbEnd').value=h.probEnd||'';
     document.getElementById('hrNote').value=h.note||'';
     document.getElementById('hrAddHealth').checked=h.addToHealth!==false;
@@ -7550,12 +7559,13 @@ function openHrModal(id){
     document.getElementById('hrDept').value='';
     document.getElementById('hrTeam').value='';
     document.getElementById('hrDate').value='';
+    document.getElementById('hrEndDate').value='';
     document.getElementById('hrProbEnd').value='';
     document.getElementById('hrNote').value='';
     document.getElementById('hrAddHealth').checked=true;
     if(document.getElementById('hrHasProb')) document.getElementById('hrHasProb').checked=true;
     if(document.getElementById('hrNoProb')) document.getElementById('hrNoProb').checked=false;
-    const titleMap={new:'🆕 입사 등록',out:'👋 퇴직 등록',leave:'🚫 휴직 등록',return:'✅ 복직 등록'};
+    const titleMap={new:'🆕 입사 등록',out:'👋 퇴직 등록',leave:'🚫 휴직 등록',remote:'🏠 재택 등록'};
     document.getElementById('hrModalTitle').textContent=titleMap[document.getElementById('hrType').value]||'👤 인사일정 등록';
   }
   updateHrForm();
@@ -7586,6 +7596,7 @@ function saveHrEntry(){
     dept:document.getElementById('hrDept').value.trim(),
     team:document.getElementById('hrTeam').value.trim(),
     date,
+    endDate:document.getElementById('hrEndDate').value||'',
     probEnd:document.getElementById('hrProbEnd').value,
     note:document.getElementById('hrNote').value.trim(),
     addToHealth:document.getElementById('hrAddHealth').checked,
@@ -7655,7 +7666,7 @@ function completeHrStatus(id,status){
   const all=loadHrEntries();
   const h=all.find(x=>String(x.id)===String(id));
   if(!h)return;
-  const label=h.type==='leave'?'휴직':h.type==='return'?'복직':'처리';
+  const label=h.type==='leave'||h.type==='return'?'휴직':'처리';
   if(!confirm(`${h.name} ${label} 처리하시겠습니까?`))return;
   h.status=status;
   saveHrEntries(all);
@@ -8654,11 +8665,10 @@ function uploadRosterExcel(){
       <div class="form-row">
         <div class="form-group">
           <label>구분 *</label>
-          <select id="hrType" onchange="updateHrForm();const tm={new:'🆕 입사 등록',out:'👋 퇴직 등록',leave:'🚫 휴직 등록',return:'✅ 복직 등록',remote:'🏠 재택 등록'};document.getElementById('hrModalTitle').textContent=tm[this.value]||'👤 인사일정 등록';">
+          <select id="hrType" onchange="updateHrForm();const tm={new:'🆕 입사 등록',out:'👋 퇴직 등록',leave:'🚫 휴직 등록',remote:'🏠 재택 등록'};document.getElementById('hrModalTitle').textContent=tm[this.value]||'👤 인사일정 등록';">
             <option value="new">🆕 입사</option>
             <option value="out">👋 퇴직</option>
             <option value="leave">🚫 휴직</option>
-            <option value="return">✅ 복직</option>
             <option value="remote">🏠 재택</option>
           </select>
         </div>
@@ -8699,6 +8709,10 @@ function uploadRosterExcel(){
         <div class="form-group">
           <label id="hrDateLabel">입사 예정일 *</label>
           <input type="date" id="hrDate">
+        </div>
+        <div class="form-group" id="hrEndDateDiv" style="display:none;">
+          <label id="hrEndDateLabel">종료 예정일</label>
+          <input type="date" id="hrEndDate">
         </div>
         <div class="form-group" id="hrProbEndDiv">
           <label>수습종료 예정일</label>
