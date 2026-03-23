@@ -7436,6 +7436,8 @@ function renderHrAlertBanner(){
     return diff>=0&&diff<=7;
   });
   if(!soon.length){el.innerHTML='';return;}
+  // D-day 오름차순 정렬 (가까운 순)
+  soon.sort((a,b)=>new Date(a.date)-new Date(b.date));
   const typeLabel={new:'🆕 입사',out:'👋 퇴직',leave:'🚫 휴직',return:'✅ 복직',remote:'🏠 재택'};
   el.innerHTML=`<div style="background:#fef9c3;border:1px solid #fbbf24;border-radius:var(--radius);padding:12px 16px;">
     <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ 7일 이내 인사 예정 ${soon.length}건</div>
