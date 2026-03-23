@@ -8112,6 +8112,10 @@ function renderRoster(){
   const resignedCnt=document.getElementById('rosterResignedCnt');
   const resigned=getRosterResigned();
   if(resignedCnt)resignedCnt.textContent=resigned.length?`(${resigned.length}명)`:'';
+  // F5 후에도 업로드 날짜 표시 복원
+  const dateEl=document.getElementById('rosterUploadDate');
+  const uploadDate=localStorage.getItem('roster_upload_date');
+  if(dateEl&&uploadDate)dateEl.textContent='기준: '+uploadDate+' (업로드됨) · 재직자 '+data.length+'명';
   renderRosterTable();
 }
 
@@ -8393,12 +8397,27 @@ function uploadRosterExcel(){
             });
           }
         }
-        // localStorage 저장
-        try{
+        // localStorage 저장 (용량 초과 시 PDF 캐시 자동 정리 후 재시도)
+        function tryRosterSave(){
           localStorage.setItem('roster_active',JSON.stringify(activeData));
           localStorage.setItem('roster_resigned',JSON.stringify(resignedData));
           localStorage.setItem('roster_upload_date',new Date().toLocaleDateString('ko-KR'));
-        }catch(e){showToast('저장 용량 초과. 일부 데이터만 적용됩니다.','error');}
+        }
+        try{
+          tryRosterSave();
+        }catch(e){
+          // 용량 초과 → 규정 PDF 캐시 자동 정리 후 재시도
+          let freed=0;
+          Object.keys(localStorage).forEach(k=>{
+            if(k.startsWith('reg_pdf_')){freed++;localStorage.removeItem(k);}
+          });
+          try{
+            tryRosterSave();
+            if(freed>0)showToast(`💾 PDF 캐시 ${freed}건 정리 후 저장 완료`,'info');
+          }catch(e2){
+            showToast('⚠️ 저장 공간 부족! 새로고침 시 데이터가 사라질 수 있습니다. 불필요한 데이터를 삭제해주세요.','error');
+          }
+        }
         _rosterActiveData=activeData;
         _rosterResignedData=resignedData;
         // 실 필터 리셋
