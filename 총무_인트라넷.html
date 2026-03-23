@@ -625,6 +625,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <button class="nav-group-item" id="navVoucher" onclick="showPage('voucher');closeNavGroups()">🎁 상품권</button>
         <button class="nav-group-item" id="navHr" onclick="showPage('hr');closeNavGroups()">👤 인사일정</button>
         <button class="nav-group-item" id="navAsset" onclick="showPage('asset');closeNavGroups()">📦 자산관리</button>
+        <button class="nav-group-item" id="navCar" onclick="showPage('car');closeNavGroups()">🚗 법인차</button>
       </div>
     </div>
     <!-- 업무문서 드롭다운 -->
@@ -2076,6 +2077,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 </div>
 
 <div id="toast"></div>
+<!-- 직원명부 이름 자동완성용 datalist (공유) -->
+<datalist id="rosterNameDatalist"></datalist>
 
 <script>
 // ============================================================
@@ -2176,9 +2179,9 @@ function showToast(msg){
 // ============================================================
 // 페이지 전환 (F5/새로고침 시 현재 탭 유지)
 // ============================================================
-const PAGES=['home','calendar','sateak','health','links','notice','checklist','manual','regulation','parking','voucher','vendor','hr','orgchart','roster','contract','asset'];
+const PAGES=['home','calendar','sateak','health','links','notice','checklist','manual','regulation','parking','voucher','vendor','hr','orgchart','roster','contract','asset','car'];
 // 드롭다운 그룹에 속하는 페이지 목록
-const NAV_GROUP_SYSTEM=['sateak','parking','health','voucher','hr','asset'];
+const NAV_GROUP_SYSTEM=['sateak','parking','health','voucher','hr','asset','car'];
 const NAV_GROUP_DOC=['manual','regulation','vendor','orgchart','roster','contract'];
 function toggleNavGroup(id,e){
   e.stopPropagation();
@@ -2224,6 +2227,7 @@ function showPage(name){
   if(name==='orgchart') renderOrgchart();
   if(name==='roster') renderRoster();
   if(name==='contract') renderContracts();
+  if(name==='car') renderCars();
   if(name==='asset'){
     const savedView=sessionStorage.getItem('intra_asset_view')||'list';
     if(savedView!==_assetView) setAssetView(savedView);
@@ -5513,6 +5517,12 @@ function openAddSateakModal(){
   document.getElementById('sateakInstSummary').textContent='';
   document.getElementById('sateakModalTitle').textContent='🏠 사택 추가';
   openModal('addSateakModal');
+  setTimeout(()=>{
+    attachNameAutocomplete(document.getElementById('sateakTenant'),function(r){
+      const dept=[r.dept,r.team].filter(Boolean).join(' ');
+      if(dept){const el=document.getElementById('sateakDept');if(el)el.value=dept;}
+    });
+  },0);
 }
 function openEditSateakModal(id){
   const all=loadSateaks();
@@ -5553,6 +5563,12 @@ function openEditSateakModal(id){
   }
   document.getElementById('sateakModalTitle').textContent='✏️ 사택 수정';
   openModal('addSateakModal');
+  setTimeout(()=>{
+    attachNameAutocomplete(document.getElementById('sateakTenant'),function(r){
+      const dept=[r.dept,r.team].filter(Boolean).join(' ');
+      if(dept){const el=document.getElementById('sateakDept');if(el)el.value=dept;}
+    });
+  },0);
 }
 function toggleSateakPayFields(){
   const isInst=document.getElementById('sateakPayType').value==='분할';
@@ -6016,6 +6032,13 @@ function openAddHealthEmpModal(){
   const _ab=document.getElementById('editHealthActivateBtn');if(_ab)_ab.style.display='none';
   _renderEditHealthYearFields(null);
   openModal('editHealthModal');
+  setTimeout(()=>{
+    attachNameAutocomplete(document.getElementById('editHealthEmpName'),function(r){
+      if(r.project){const el=document.getElementById('editHealthProject');if(el)el.value=r.project;}
+      if(r.dept){const el=document.getElementById('editHealthDept');if(el)el.value=r.dept;}
+      if(r.team){const el=document.getElementById('editHealthTeam');if(el)el.value=r.team;}
+    });
+  },0);
 }
 
 function openEditHealthModal(id){
@@ -6508,6 +6531,12 @@ function openAddEmpModal(){
   const sel=document.getElementById('empLot');
   sel.innerHTML=loadParkingLots().map(l=>`<option value="${l.name}">${l.name}</option>`).join('');
   openModal('addEmpModal');
+  setTimeout(()=>{
+    attachNameAutocomplete(document.getElementById('empName'),function(r){
+      const dept=[r.dept,r.team].filter(Boolean).join(' ');
+      if(dept){const el=document.getElementById('empDept');if(el)el.value=dept;}
+    });
+  },0);
 }
 function openEditEmpModal(id){
   const emps=loadParkingEmps();
@@ -6528,6 +6557,12 @@ function openEditEmpModal(id){
   sel.innerHTML=loadParkingLots().map(l=>`<option value="${l.name}" ${l.name===emp.lot?'selected':''}>${l.name}</option>`).join('');
   sel.value=emp.lot||'';
   openModal('addEmpModal');
+  setTimeout(()=>{
+    attachNameAutocomplete(document.getElementById('empName'),function(r){
+      const dept=[r.dept,r.team].filter(Boolean).join(' ');
+      if(dept){const el=document.getElementById('empDept');if(el)el.value=dept;}
+    });
+  },0);
 }
 function saveEmp(){
   const name=document.getElementById('empName').value.trim();
@@ -7314,13 +7349,55 @@ function autoFillHealth(name){
   if(emp.team){const el=document.getElementById('editHealthTeam');if(el)el.value=emp.team;}
 }
 function autoFillHrOut(name){
-  // 퇴직/휴직/복직은 기존 직원 → 자동완성. 입사예정은 새 직원이므로 스킵
-  const type=document.getElementById('hrType')?.value;
-  if(type==='new')return;
   const emp=findEmpByName(name);if(!emp)return;
   if(emp.project){const el=document.getElementById('hrProject');if(el)el.value=emp.project;}
   if(emp.dept){const el=document.getElementById('hrDept');if(el)el.value=emp.dept;}
   if(emp.team){const el=document.getElementById('hrTeam');if(el)el.value=emp.team;}
+}
+
+// ============================================================
+// 이름 자동완성 - HTML datalist 방식 (브라우저 기본, z-index 문제 없음)
+// ============================================================
+
+function populateRosterDatalist(){
+  var dl=document.getElementById('rosterNameDatalist');
+  if(!dl) return;
+  var files=LS.get(ROSTER_KEY)||[];
+  var names=[];var seen={};
+  for(var fi=0;fi<files.length;fi++){
+    var file=files[fi];
+    var sheet=(file.sheets||[])[(file.activeSheet||0)]||(file.sheets||[])[0];
+    if(!sheet) continue;
+    var headers=(sheet.headers||[]).map(function(h){return String(h||'').trim();});
+    var nameIdx=headers.findIndex(function(h){return h==='성명'||h==='이름'||h==='Name'||h.includes('성명')||h.includes('이름');});
+    if(nameIdx===-1) continue;
+    var rows=sheet.rows||[];
+    for(var ri=0;ri<rows.length;ri++){
+      var nm=String(rows[ri][nameIdx]||'').trim();
+      if(nm&&!seen[nm]){seen[nm]=1;names.push(nm);}
+    }
+    break;
+  }
+  dl.innerHTML=names.map(function(n){return'<option value="'+n.replace(/[<>"&]/g,function(c){return({'<':'&lt;','>':'&gt;','"':'&quot;','&':'&amp;'}[c]);})+'">'; }).join('');
+}
+
+function attachNameAutocomplete(inputEl, fillFn){
+  if(!inputEl) return;
+  inputEl.setAttribute('list','rosterNameDatalist');
+  inputEl._rosterFill=fillFn||null;
+  if(!inputEl._rosterBound){
+    inputEl._rosterBound=true;
+    var handler=function(){
+      var nm=(inputEl.value||'').trim();
+      if(!nm||!inputEl._rosterFill) return;
+      var emp=findEmpByName(nm);
+      if(emp) inputEl._rosterFill(emp);
+    };
+    inputEl.addEventListener('change',handler);
+    // input 이벤트는 한글 조합 완료 후에도 발생 → 약간의 딜레이로 확정된 값 사용
+    inputEl.addEventListener('input',function(){setTimeout(handler,50);});
+  }
+  populateRosterDatalist();
 }
 
 // ============================================================
@@ -7379,8 +7456,14 @@ function renderHrTable(){
   else if(_hrTab==='leave') filtered=all.filter(h=>(h.type==='leave'||h.type==='return')&&h.status==='예정');
   else if(_hrTab==='done') filtered=all.filter(h=>h.status==='완료'||h.status==='취소');
   
-  // 날짜순 정렬
-  filtered.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  // D-day 순 정렬: 예정 항목은 D-day 가까운 순(날짜 오름차순), 완료/취소는 최하단
+  filtered.sort((a,b)=>{
+    const aActive=a.status==='예정';
+    const bActive=b.status==='예정';
+    if(aActive&&!bActive) return -1;
+    if(!aActive&&bActive) return 1;
+    return new Date(a.date)-new Date(b.date);
+  });
   
   const tbody=document.getElementById('hrTbody');
   if(!tbody)return;
@@ -7467,11 +7550,19 @@ function openHrModal(id){
     document.getElementById('hrAddHealth').checked=true;
     if(document.getElementById('hrHasProb')) document.getElementById('hrHasProb').checked=true;
     if(document.getElementById('hrNoProb')) document.getElementById('hrNoProb').checked=false;
-    const titleMap={new:'🆕 입사 예정 등록',out:'👋 퇴직 예정 등록',leave:'🚫 휴직 예정 등록',return:'✅ 복직 예정 등록'};
+    const titleMap={new:'🆕 입사 등록',out:'👋 퇴직 등록',leave:'🚫 휴직 등록',return:'✅ 복직 등록'};
     document.getElementById('hrModalTitle').textContent=titleMap[document.getElementById('hrType').value]||'👤 인사일정 등록';
   }
   updateHrForm();
   openModal('hrModal');
+  // 이름 자동완성 연결
+  setTimeout(()=>{
+    attachNameAutocomplete(document.getElementById('hrName'),function(r){
+      if(r.project){const el=document.getElementById('hrProject');if(el)el.value=r.project;}
+      if(r.dept){const el=document.getElementById('hrDept');if(el)el.value=r.dept;}
+      if(r.team){const el=document.getElementById('hrTeam');if(el)el.value=r.team;}
+    });
+  },0);
 }
 
 function saveHrEntry(){
@@ -8470,8 +8561,8 @@ function uploadRosterExcel(){
   <!-- 필터 탭 -->
   <div style="display:flex;gap:8px;margin-bottom:12px;">
     <button class="btn btn-sm" id="hrTab_all" onclick="setHrTab('all')" style="background:var(--primary);color:#fff;">전체</button>
-    <button class="btn btn-sm btn-secondary" id="hrTab_new" onclick="setHrTab('new')">🆕 입사예정</button>
-    <button class="btn btn-sm btn-secondary" id="hrTab_out" onclick="setHrTab('out')">👋 퇴직예정</button>
+    <button class="btn btn-sm btn-secondary" id="hrTab_new" onclick="setHrTab('new')">🆕 입사</button>
+    <button class="btn btn-sm btn-secondary" id="hrTab_out" onclick="setHrTab('out')">👋 퇴직</button>
     <button class="btn btn-sm btn-secondary" id="hrTab_leave" onclick="setHrTab('leave')">🚫 휴직/복직</button>
     <button class="btn btn-sm btn-secondary" id="hrTab_done" onclick="setHrTab('done')">✅ 완료</button>
   </div>
@@ -8510,9 +8601,9 @@ function uploadRosterExcel(){
       <div class="form-row">
         <div class="form-group">
           <label>구분 *</label>
-          <select id="hrType" onchange="updateHrForm();const tm={new:'🆕 입사 예정 등록',out:'👋 퇴직 예정 등록',leave:'🚫 휴직 예정 등록',return:'✅ 복직 예정 등록'};document.getElementById('hrModalTitle').textContent=tm[this.value]||'👤 인사일정 등록';">
-            <option value="new">🆕 입사예정</option>
-            <option value="out">👋 퇴직예정</option>
+          <select id="hrType" onchange="updateHrForm();const tm={new:'🆕 입사 등록',out:'👋 퇴직 등록',leave:'🚫 휴직 등록',return:'✅ 복직 등록'};document.getElementById('hrModalTitle').textContent=tm[this.value]||'👤 인사일정 등록';">
+            <option value="new">🆕 입사</option>
+            <option value="out">👋 퇴직</option>
             <option value="leave">🚫 휴직</option>
             <option value="return">✅ 복직</option>
           </select>
@@ -8749,6 +8840,93 @@ function uploadRosterExcel(){
     </div>
   </div>
 </div>
+</div>
+
+<!-- ===== 법인차 페이지 ===== -->
+<div class="page" id="pageCar">
+<div class="container">
+  <div class="card-header" style="margin-bottom:16px;">
+    <div class="card-title"><span class="icon" style="background:#dbeafe;">🚗</span> 법인차 현황</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="openCarModal()">＋ 차량 등록</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportCarCSV()">⬇ CSV</button>
+    </div>
+  </div>
+  <!-- 만료 알림 배너 -->
+  <div id="carAlertBanner" style="margin-bottom:12px;"></div>
+  <!-- 필터 탭 -->
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+    <button class="btn btn-sm" id="carTab_all" onclick="setCarTab('all')" style="background:var(--primary);color:#fff;">전체</button>
+    <button class="btn btn-sm btn-secondary" id="carTab_active" onclick="setCarTab('active')">🟢 운행중</button>
+    <button class="btn btn-sm btn-secondary" id="carTab_repair" onclick="setCarTab('repair')">🔧 수리중</button>
+    <button class="btn btn-sm btn-secondary" id="carTab_done" onclick="setCarTab('done')">📦 매각/반납</button>
+  </div>
+  <!-- 차량 카드 그리드 -->
+  <div id="carGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;"></div>
+</div>
+</div>
+
+<!-- 법인차 등록/수정 모달 -->
+<div class="modal-overlay" id="carModal">
+  <div class="modal" style="max-width:640px;">
+    <h3 id="carModalTitle">🚗 차량 등록</h3>
+    <input type="hidden" id="carEditId">
+    <div class="form-row">
+      <div class="form-group"><label>차량명 *</label><input type="text" id="carName" placeholder="예: BMW M2"></div>
+      <div class="form-group" style="max-width:160px;"><label>차량번호 *</label><input type="text" id="carPlate" placeholder="228누8294"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>차종/색상</label><input type="text" id="carType" placeholder="예: SUV, 흰색"></div>
+      <div class="form-group" style="max-width:140px;"><label>연식</label><input type="text" id="carYear" placeholder="2023"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>상태</label>
+        <select id="carStatus">
+          <option value="운행중">🟢 운행중</option>
+          <option value="수리중">🔧 수리중</option>
+          <option value="매각">📤 매각</option>
+          <option value="반납">📦 반납</option>
+        </select>
+      </div>
+      <div class="form-group"><label>담당자</label><input type="text" id="carManager" placeholder="홍길동"></div>
+      <div class="form-group"><label>주사용자</label><input type="text" id="carUser" placeholder="김철수"></div>
+    </div>
+    <hr style="margin:14px 0;border:none;border-top:1px solid var(--border);">
+    <div style="font-size:12px;font-weight:700;color:var(--text3);margin-bottom:8px;">📋 취득 정보</div>
+    <div class="form-row">
+      <div class="form-group"><label>취득방식</label>
+        <select id="carAcquireType">
+          <option value="구매">구매</option>
+          <option value="리스">리스</option>
+          <option value="할부">할부</option>
+        </select>
+      </div>
+      <div class="form-group"><label>취득일</label><input type="date" id="carAcquireDate"></div>
+      <div class="form-group"><label>취득가/리스금액 (원)</label><input type="number" id="carAcquirePrice" placeholder="50000000"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>리스/할부 종료일</label><input type="date" id="carLeaseEnd"></div>
+      <div class="form-group"><label>월 납입액 (원)</label><input type="number" id="carMonthlyFee" placeholder="500000"></div>
+    </div>
+    <hr style="margin:14px 0;border:none;border-top:1px solid var(--border);">
+    <div style="font-size:12px;font-weight:700;color:var(--text3);margin-bottom:8px;">🛡 보험 정보</div>
+    <div class="form-row">
+      <div class="form-group"><label>보험사</label><input type="text" id="carInsurer" placeholder="삼성화재"></div>
+      <div class="form-group"><label>보험 시작일</label><input type="date" id="carInsureStart"></div>
+      <div class="form-group"><label>보험 만기일</label><input type="date" id="carInsureEnd"></div>
+    </div>
+    <hr style="margin:14px 0;border:none;border-top:1px solid var(--border);">
+    <div style="font-size:12px;font-weight:700;color:var(--text3);margin-bottom:8px;">🔍 검사 정보</div>
+    <div class="form-row">
+      <div class="form-group"><label>정기검사 만기일</label><input type="date" id="carInspectEnd"></div>
+      <div class="form-group"><label>비고</label><input type="text" id="carNote" placeholder="특이사항"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="carDeleteBtn" style="display:none;margin-right:auto;" onclick="deleteCar(document.getElementById('carEditId').value)">삭제</button>
+      <button class="btn btn-ghost" onclick="closeModal('carModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveCar()">저장</button>
+    </div>
+  </div>
 </div>
 
 <!-- ===== 자산관리 페이지 ===== -->
@@ -10179,6 +10357,229 @@ function exportAuditCSV(){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`자산실사_${yr}_${new Date().toISOString().slice(0,10)}.csv`;a.click();
 }
 // ===== 자산관리 끝 =====
+
+// ============================================================
+// 법인차 관리
+// ============================================================
+const CAR_KEY = 'intra_cars';
+
+const CAR_SEED = [
+  {id:'car1',name:'BMW M2',plateNum:'228누8294',type:'',color:'',year:'',status:'운행중',manager:'',user:'',acquireType:'구매',acquireDate:'',acquirePrice:'',leaseEnd:'',monthlyFee:'',insurer:'',insureStart:'',insureEnd:'',inspectEnd:'',note:''},
+  {id:'car2',name:'EV6',plateNum:'',type:'',color:'',year:'',status:'매각',manager:'',user:'',acquireType:'구매',acquireDate:'',acquirePrice:'',leaseEnd:'',monthlyFee:'',insurer:'',insureStart:'',insureEnd:'',inspectEnd:'',note:'판매완'},
+  {id:'car3',name:'GV80',plateNum:'179조9291',type:'',color:'',year:'',status:'운행중',manager:'',user:'',acquireType:'구매',acquireDate:'',acquirePrice:'',leaseEnd:'',monthlyFee:'',insurer:'',insureStart:'',insureEnd:'',inspectEnd:'',note:''},
+  {id:'car4',name:'GV80 (구)',plateNum:'179조9291',type:'',color:'',year:'',status:'매각',manager:'',user:'',acquireType:'구매',acquireDate:'',acquirePrice:'',leaseEnd:'',monthlyFee:'',insurer:'',insureStart:'',insureEnd:'',inspectEnd:'',note:'판매완'},
+  {id:'car5',name:'ID4',plateNum:'',type:'',color:'',year:'',status:'운행중',manager:'',user:'',acquireType:'구매',acquireDate:'',acquirePrice:'',leaseEnd:'',monthlyFee:'',insurer:'',insureStart:'',insureEnd:'',inspectEnd:'',note:''},
+  {id:'car6',name:'그랜저',plateNum:'356무2967',type:'',color:'',year:'',status:'반납',manager:'',user:'',acquireType:'구매',acquireDate:'',acquirePrice:'',leaseEnd:'',monthlyFee:'',insurer:'',insureStart:'',insureEnd:'',inspectEnd:'',note:'이전완'},
+  {id:'car7',name:'미니쿠퍼',plateNum:'256모3889',type:'',color:'',year:'',status:'운행중',manager:'',user:'',acquireType:'구매',acquireDate:'',acquirePrice:'',leaseEnd:'',monthlyFee:'',insurer:'',insureStart:'',insureEnd:'',inspectEnd:'',note:''},
+  {id:'car8',name:'벤츠 스프린터',plateNum:'170부3533',type:'',color:'',year:'',status:'운행중',manager:'',user:'',acquireType:'구매',acquireDate:'',acquirePrice:'',leaseEnd:'',monthlyFee:'',insurer:'',insureStart:'',insureEnd:'',inspectEnd:'',note:''},
+];
+
+function loadCars(){
+  const d=LS.get(CAR_KEY);
+  if(d&&d.length) return d;
+  LS.set(CAR_KEY,JSON.parse(JSON.stringify(CAR_SEED)));
+  return JSON.parse(JSON.stringify(CAR_SEED));
+}
+function saveCars(arr){LS.set(CAR_KEY,arr);}
+
+let _carTab='all';
+function setCarTab(tab){
+  _carTab=tab;
+  ['all','active','repair','done'].forEach(t=>{
+    const btn=document.getElementById('carTab_'+t);
+    if(!btn)return;
+    if(t===tab){btn.style.background='var(--primary)';btn.style.color='#fff';btn.classList.remove('btn-secondary');}
+    else{btn.style.background='';btn.style.color='';btn.classList.add('btn-secondary');}
+  });
+  renderCarGrid();
+}
+
+function renderCars(){
+  renderCarAlertBanner();
+  renderCarGrid();
+}
+
+function renderCarAlertBanner(){
+  const el=document.getElementById('carAlertBanner');
+  if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const cars=loadCars().filter(c=>c.status==='운행중'||c.status==='수리중');
+  const alerts=[];
+  cars.forEach(c=>{
+    // 보험 만기
+    if(c.insureEnd){
+      const d=new Date(c.insureEnd);d.setHours(0,0,0,0);
+      const diff=Math.round((d-today)/(1000*60*60*24));
+      if(diff<=30) alerts.push({car:c,type:'보험',diff,date:c.insureEnd});
+    }
+    // 정기검사 만기
+    if(c.inspectEnd){
+      const d=new Date(c.inspectEnd);d.setHours(0,0,0,0);
+      const diff=Math.round((d-today)/(1000*60*60*24));
+      if(diff<=30) alerts.push({car:c,type:'정기검사',diff,date:c.inspectEnd});
+    }
+    // 리스/할부 종료
+    if(c.leaseEnd){
+      const d=new Date(c.leaseEnd);d.setHours(0,0,0,0);
+      const diff=Math.round((d-today)/(1000*60*60*24));
+      if(diff<=60) alerts.push({car:c,type:'리스만료',diff,date:c.leaseEnd});
+    }
+  });
+  if(!alerts.length){el.innerHTML='';return;}
+  alerts.sort((a,b)=>a.diff-b.diff);
+  el.innerHTML=`<div style="background:#fef9c3;border:1px solid #fbbf24;border-radius:var(--radius);padding:12px 16px;">
+    <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ 만료 임박 ${alerts.length}건</div>
+    ${alerts.map(a=>{
+      const col=a.diff<=0?'#dc2626':a.diff<=7?'#b45309':'#92400e';
+      const dstr=a.diff<0?`<b style="color:#dc2626;">만료됨</b>`:a.diff===0?`<b style="color:#dc2626;">오늘!</b>`:`D-${a.diff}`;
+      return`<div style="font-size:12px;color:${col};margin-top:2px;">${a.car.name}${a.car.plateNum?` (${a.car.plateNum})`:''} - ${a.type} ${dstr} (${a.date})</div>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderCarGrid(){
+  const grid=document.getElementById('carGrid');
+  if(!grid)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  let cars=loadCars();
+  if(_carTab==='active') cars=cars.filter(c=>c.status==='운행중');
+  else if(_carTab==='repair') cars=cars.filter(c=>c.status==='수리중');
+  else if(_carTab==='done') cars=cars.filter(c=>c.status==='매각'||c.status==='반납');
+
+  if(!cars.length){
+    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);">등록된 차량이 없습니다</div>`;
+    return;
+  }
+
+  const statusColor={운행중:'#15803d',수리중:'#b45309',매각:'#6b7280',반납:'#6b7280'};
+  const statusBg={운행중:'#dcfce7',수리중:'#fef9c3',매각:'#f3f4f6',반납:'#f3f4f6'};
+  const statusIcon={운행중:'🟢',수리중:'🔧',매각:'📤',반납:'📦'};
+
+  grid.innerHTML=cars.map(c=>{
+    const isDone=c.status==='매각'||c.status==='반납';
+    // 만료 경고 계산
+    const warns=[];
+    const addWarn=(label,dateStr,limitDays)=>{
+      if(!dateStr)return;
+      const d=new Date(dateStr);d.setHours(0,0,0,0);
+      const diff=Math.round((d-today)/(1000*60*60*24));
+      if(diff<=limitDays) warns.push({label,diff});
+    };
+    if(!isDone){
+      addWarn('보험',c.insureEnd,30);
+      addWarn('정기검사',c.inspectEnd,30);
+      addWarn('리스만료',c.leaseEnd,60);
+    }
+
+    const warnHtml=warns.length?`<div style="margin-top:8px;">${warns.map(w=>`<span style="background:#fee2e2;color:#b91c1c;font-size:10px;border-radius:4px;padding:2px 6px;margin-right:4px;">${w.label} D-${w.diff}</span>`).join('')}</div>`:'';
+
+    const rows=[];
+    if(c.manager||c.user) rows.push(`<div style="display:flex;gap:12px;"><span style="color:var(--text3);font-size:11px;min-width:40px;">담당</span><span style="font-size:12px;">${[c.manager,c.user].filter(Boolean).join(' / ')}</span></div>`);
+    if(c.acquireType) rows.push(`<div style="display:flex;gap:12px;"><span style="color:var(--text3);font-size:11px;min-width:40px;">취득</span><span style="font-size:12px;">${c.acquireType}${c.acquireDate?' · '+c.acquireDate.slice(0,7):''}${c.acquirePrice?' · '+Number(c.acquirePrice).toLocaleString()+'원':''}</span></div>`);
+    if(c.leaseEnd) rows.push(`<div style="display:flex;gap:12px;"><span style="color:var(--text3);font-size:11px;min-width:40px;">만료</span><span style="font-size:12px;">${c.leaseEnd}${c.monthlyFee?' · 월 '+Number(c.monthlyFee).toLocaleString()+'원':''}</span></div>`);
+    if(c.insureEnd) rows.push(`<div style="display:flex;gap:12px;"><span style="color:var(--text3);font-size:11px;min-width:40px;">보험</span><span style="font-size:12px;">${c.insurer?c.insurer+' · ':''} ~${c.insureEnd}</span></div>`);
+    if(c.inspectEnd) rows.push(`<div style="display:flex;gap:12px;"><span style="color:var(--text3);font-size:11px;min-width:40px;">검사</span><span style="font-size:12px;">~${c.inspectEnd}</span></div>`);
+    if(c.note) rows.push(`<div style="font-size:11px;color:var(--text3);margin-top:4px;">${c.note}</div>`);
+
+    return`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;opacity:${isDone?.6:1};" onclick="openCarModal('${c.id}')">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+        <div>
+          <div style="font-size:15px;font-weight:700;">${c.name}${c.year?` <span style="font-size:12px;font-weight:400;color:var(--text3);">${c.year}년식</span>`:''}</div>
+          <div style="font-size:13px;color:var(--text3);margin-top:2px;">${c.plateNum||'번호판 미등록'}${c.type?' · '+c.type:''}</div>
+        </div>
+        <span style="background:${statusBg[c.status]};color:${statusColor[c.status]};font-size:11px;font-weight:700;border-radius:6px;padding:3px 9px;white-space:nowrap;">${statusIcon[c.status]} ${c.status}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">${rows.join('')}</div>
+      ${warnHtml}
+    </div>`;
+  }).join('');
+}
+
+function openCarModal(id){
+  document.getElementById('carEditId').value=id||'';
+  document.getElementById('carDeleteBtn').style.display=id?'':'none';
+  if(id){
+    const c=loadCars().find(x=>x.id===id);
+    if(!c)return;
+    document.getElementById('carModalTitle').textContent='✏️ 차량 정보 수정';
+    document.getElementById('carName').value=c.name||'';
+    document.getElementById('carPlate').value=c.plateNum||'';
+    document.getElementById('carType').value=c.type||'';
+    document.getElementById('carYear').value=c.year||'';
+    document.getElementById('carStatus').value=c.status||'운행중';
+    document.getElementById('carManager').value=c.manager||'';
+    document.getElementById('carUser').value=c.user||'';
+    document.getElementById('carAcquireType').value=c.acquireType||'구매';
+    document.getElementById('carAcquireDate').value=c.acquireDate||'';
+    document.getElementById('carAcquirePrice').value=c.acquirePrice||'';
+    document.getElementById('carLeaseEnd').value=c.leaseEnd||'';
+    document.getElementById('carMonthlyFee').value=c.monthlyFee||'';
+    document.getElementById('carInsurer').value=c.insurer||'';
+    document.getElementById('carInsureStart').value=c.insureStart||'';
+    document.getElementById('carInsureEnd').value=c.insureEnd||'';
+    document.getElementById('carInspectEnd').value=c.inspectEnd||'';
+    document.getElementById('carNote').value=c.note||'';
+  } else {
+    document.getElementById('carModalTitle').textContent='🚗 차량 등록';
+    ['carName','carPlate','carType','carYear','carManager','carUser','carAcquireDate',
+     'carAcquirePrice','carLeaseEnd','carMonthlyFee','carInsurer','carInsureStart',
+     'carInsureEnd','carInspectEnd','carNote'].forEach(id=>{document.getElementById(id).value='';});
+    document.getElementById('carStatus').value='운행중';
+    document.getElementById('carAcquireType').value='구매';
+  }
+  openModal('carModal');
+}
+
+function saveCar(){
+  const id=document.getElementById('carEditId').value;
+  const name=document.getElementById('carName').value.trim();
+  if(!name){showToast('차량명을 입력하세요','error');return;}
+  const obj={
+    id:id||(Date.now()+''),
+    name,
+    plateNum:document.getElementById('carPlate').value.trim(),
+    type:document.getElementById('carType').value.trim(),
+    year:document.getElementById('carYear').value.trim(),
+    status:document.getElementById('carStatus').value,
+    manager:document.getElementById('carManager').value.trim(),
+    user:document.getElementById('carUser').value.trim(),
+    acquireType:document.getElementById('carAcquireType').value,
+    acquireDate:document.getElementById('carAcquireDate').value,
+    acquirePrice:document.getElementById('carAcquirePrice').value,
+    leaseEnd:document.getElementById('carLeaseEnd').value,
+    monthlyFee:document.getElementById('carMonthlyFee').value,
+    insurer:document.getElementById('carInsurer').value.trim(),
+    insureStart:document.getElementById('carInsureStart').value,
+    insureEnd:document.getElementById('carInsureEnd').value,
+    inspectEnd:document.getElementById('carInspectEnd').value,
+    note:document.getElementById('carNote').value.trim(),
+  };
+  const all=loadCars();
+  if(id){const idx=all.findIndex(x=>x.id===id);if(idx>=0)all[idx]=obj;else all.push(obj);}
+  else all.push(obj);
+  saveCars(all);
+  closeModal('carModal');
+  renderCars();
+  showToast('저장되었습니다');
+}
+
+function deleteCar(id){
+  if(!id||!confirm('이 차량을 삭제하시겠습니까?'))return;
+  saveCars(loadCars().filter(x=>x.id!==id));
+  closeModal('carModal');
+  renderCars();
+  showToast('삭제되었습니다');
+}
+
+function exportCarCSV(){
+  const cars=loadCars();
+  const header='차량명,차량번호,차종/색상,연식,상태,담당자,주사용자,취득방식,취득일,취득가격,리스종료일,월납입액,보험사,보험시작,보험만기,정기검사만기,비고';
+  const rows=cars.map(c=>[c.name,c.plateNum,c.type,c.year,c.status,c.manager,c.user,c.acquireType,c.acquireDate,c.acquirePrice,c.leaseEnd,c.monthlyFee,c.insurer,c.insureStart,c.insureEnd,c.inspectEnd,c.note].map(v=>String(v||'').includes(',')?`"${v}"`:v||'').join(','));
+  const csv=[header,...rows].join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`법인차현황_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+// ===== 법인차 끝 =====
 
 
 </script>
