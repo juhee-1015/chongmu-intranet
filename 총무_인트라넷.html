@@ -7502,32 +7502,49 @@ function renderHrAlertBanner(){
   </div>`;
 }
 
+let _hrDoneCollapsed=true; // 완료 항목 기본 숨김
+
+function _hrGetDday(h,today){
+  // 진행중이면 종료일 기준, 나머지는 시작일 기준
+  if(h.status==='진행중'&&h.endDate){
+    const e=new Date(h.endDate);e.setHours(0,0,0,0);
+    return Math.round((e-today)/(1000*60*60*24));
+  }
+  const d=new Date(h.date);d.setHours(0,0,0,0);
+  return Math.round((d-today)/(1000*60*60*24));
+}
+
+function toggleHrDone(){
+  _hrDoneCollapsed=!_hrDoneCollapsed;
+  renderHrTable();
+}
+
 function renderHrTable(){
   const all=loadHrEntries();
   const today=new Date();today.setHours(0,0,0,0);
   let filtered=all;
+  const isDoneTab=_hrTab==='done';
+
   if(_hrTab==='new') filtered=all.filter(h=>h.type==='new'&&h.status==='예정');
   else if(_hrTab==='out') filtered=all.filter(h=>h.type==='out'&&h.status==='예정');
   else if(_hrTab==='leave') filtered=all.filter(h=>(h.type==='leave'||h.type==='return')&&(h.status==='예정'||h.status==='진행중'));
   else if(_hrTab==='remote') filtered=all.filter(h=>h.type==='remote'&&(h.status==='예정'||h.status==='진행중'));
-  else if(_hrTab==='done') filtered=all.filter(h=>h.status==='완료'||h.status==='취소');
+  else if(isDoneTab) filtered=all.filter(h=>h.status==='완료'||h.status==='취소');
 
-  // D-day 순 정렬: 예정·진행중은 날짜 오름차순, 완료·취소는 최하단
-  filtered.sort((a,b)=>{
-    const aActive=a.status==='예정'||a.status==='진행중';
-    const bActive=b.status==='예정'||b.status==='진행중';
-    if(aActive&&!bActive) return -1;
-    if(!aActive&&bActive) return 1;
-    return new Date(a.date)-new Date(b.date);
-  });
-  
+  // active / done 분리
+  const activeItems=isDoneTab?[...filtered]:filtered.filter(h=>h.status==='예정'||h.status==='진행중');
+  const doneItems=isDoneTab?[]:filtered.filter(h=>h.status==='완료'||h.status==='취소');
+
+  // D-day 오름차순 정렬 (진행중=종료일, 예정=시작일)
+  activeItems.sort((a,b)=>_hrGetDday(a,today)-_hrGetDday(b,today));
+  // 완료는 최근 완료순
+  doneItems.sort((a,b)=>new Date(b.date)-new Date(a.date));
+
   const tbody=document.getElementById('hrTbody');
   if(!tbody)return;
-  if(!filtered.length){
-    tbody.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text3);">등록된 일정이 없습니다</td></tr>`;
-    return;
-  }
-  tbody.innerHTML=filtered.map(h=>{
+
+  // 행 렌더링 함수
+  function renderRow(h,isDone){
     const d=new Date(h.date);d.setHours(0,0,0,0);
     const diff=Math.round((d-today)/(1000*60*60*24));
     const ddayStr=diff===0?'<span style="color:#dc2626;font-weight:700;">D-day</span>':diff>0?'<span style="color:#2563eb;">D-'+diff+'</span>':'<span style="color:#6b7280;">D+'+Math.abs(diff)+'</span>';
@@ -7536,7 +7553,6 @@ function renderHrTable(){
     const statColor=h.status==='완료'?'#15803d':h.status==='취소'?'#6b7280':h.status==='진행중'?'#0369a1':'#92400e';
     const statBg=h.status==='완료'?'#dcfce7':h.status==='취소'?'#f3f4f6':h.status==='진행중'?'#e0f2fe':'#fef9c3';
     const dateStr=h.date?h.date.replace(/-/g,'.').slice(2):'';
-    // 입사완료 처리 버튼
     const completeBtn=(h.type==='new'&&h.status==='예정')
       ?`<button class="btn btn-xs btn-success" onclick="completeNewHire('${h.id}')" style="font-size:10px;">입사완료</button>`
       :(h.type==='out'&&h.status==='예정')
@@ -7550,34 +7566,63 @@ function renderHrTable(){
       :(h.type==='remote'&&h.status==='진행중')
       ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#dcfce7;color:#15803d;border:1px solid #86efac;">✓ 재택완료</button>`
       :'';
-    return`<tr style="${h.status==='취소'?'opacity:0.5;':''}">
+    const ddayCell=(()=>{
+      if(h.status==='예정') return ddayStr;
+      if(h.status==='진행중'&&(h.type==='leave'||h.type==='return'||h.type==='remote')&&h.endDate){
+        const e=new Date(h.endDate);e.setHours(0,0,0,0);
+        const ed=Math.round((e-today)/(1000*60*60*24));
+        const lbl=h.type==='remote'?'종료':'복직';
+        if(ed>0) return`<span style="color:#0369a1;font-size:11px;white-space:nowrap;">${lbl} D-${ed}</span>`;
+        if(ed===0) return`<span style="color:#dc2626;font-weight:700;font-size:11px;white-space:nowrap;">${lbl} 오늘!</span>`;
+        return`<span style="color:#dc2626;font-size:11px;white-space:nowrap;">${lbl} D+${Math.abs(ed)}</span>`;
+      }
+      return'-';
+    })();
+    const rowBg=isDone?'background:#fafafa;':'';
+    return`<tr style="${h.status==='취소'?'opacity:0.45;':''}${rowBg}">
       <td style="text-align:center;overflow:hidden;">${typeBadge}</td>
       <td style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.name}</td>
       <td style="text-align:center;font-size:11px;overflow:hidden;white-space:nowrap;">${h.project||'-'}</td>
       <td style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.dept||''} ${h.team||''}</td>
       <td style="text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;">${dateStr}${h.endDate?`<span style="color:var(--text3)"> ~ ${h.endDate.slice(2).replace(/-/g,'.')}</span>`:''}</td>
-      <td style="text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;">${(()=>{
-        if(h.status==='예정'){
-          return ddayStr;
-        }
-        if(h.status==='진행중'&&(h.type==='leave'||h.type==='return'||h.type==='remote')&&h.endDate){
-          const e=new Date(h.endDate);e.setHours(0,0,0,0);
-          const ed=Math.round((e-today)/(1000*60*60*24));
-          const lbl=h.type==='remote'?'종료':'복직';
-          if(ed>0)return`<span style="color:#0369a1;font-size:11px;white-space:nowrap;">${lbl} D-${ed}</span>`;
-          if(ed===0)return`<span style="color:#dc2626;font-weight:700;font-size:11px;white-space:nowrap;">${lbl} 오늘!</span>`;
-          return`<span style="color:#dc2626;font-size:11px;white-space:nowrap;">${lbl} D+${Math.abs(ed)}</span>`;
-        }
-        return'-';
-      })()}</td>
+      <td style="text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;">${ddayCell}</td>
       <td style="text-align:center;overflow:hidden;"><span style="background:${statBg};color:${statColor};border-radius:6px;padding:2px 7px;font-size:11px;white-space:nowrap;display:inline-block;">${h.status}</span></td>
       <td style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.note||'-'}</td>
-      <td style="text-align:center;white-space:nowrap;">
-        ${completeBtn}
-        <button class="btn btn-xs btn-ghost" onclick="openHrModal('${h.id}')">수정</button>
-      </td>
+      <td style="text-align:center;white-space:nowrap;">${completeBtn}<button class="btn btn-xs btn-ghost" onclick="openHrModal('${h.id}')">수정</button></td>
     </tr>`;
-  }).join('');
+  }
+
+  let html='';
+
+  if(isDoneTab){
+    // 완료 탭: 전체 표시
+    html=filtered.length
+      ? filtered.map(h=>renderRow(h,true)).join('')
+      :`<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text3);">완료된 일정이 없습니다</td></tr>`;
+  } else {
+    // 진행 중 항목
+    html=activeItems.length
+      ? activeItems.map(h=>renderRow(h,false)).join('')
+      :`<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text3);">등록된 일정이 없습니다</td></tr>`;
+
+    // 완료·취소 항목 아코디언
+    if(doneItems.length){
+      html+=`<tr>
+        <td colspan="9" style="padding:0;">
+          <button onclick="toggleHrDone()" style="width:100%;padding:8px 16px;border:none;border-top:2px dashed var(--border2);background:var(--bg2);cursor:pointer;font-size:12px;color:var(--text3);font-weight:600;text-align:left;display:flex;align-items:center;gap:6px;">
+            ${_hrDoneCollapsed
+              ? `<span style="color:#15803d;">▼</span> 완료·취소 ${doneItems.length}건 보기`
+              : `<span style="color:#6b7280;">▲</span> 완료·취소 접기`}
+          </button>
+        </td>
+      </tr>`;
+      if(!_hrDoneCollapsed){
+        html+=doneItems.map(h=>renderRow(h,true)).join('');
+      }
+    }
+  }
+
+  tbody.innerHTML=html;
 }
 
 function updateHrForm(){
