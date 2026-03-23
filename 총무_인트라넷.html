@@ -7771,26 +7771,29 @@ function uploadExcelFile(type, input){
   reader.readAsArrayBuffer(file);
 }
 
-// _excelViewState: sessionStorage로 F5 후에도 선택 시트/파일 유지
-function _loadExcelViewState(){
-  const def={orgchart:{fileId:null,sheetIdx:0,search:''},roster:{fileId:null,sheetIdx:0,search:''}};
-  try{
-    const raw=sessionStorage.getItem('intra_excel_view');
-    return raw ? JSON.parse(raw) : def;
-  }catch(e){ return def; }
+/// 시트 선택을 파일 객체의 activeSheet에 영구 저장 (localStorage)
+function setExcelActiveSheet(type, fileId, sheetIdx){
+  const files=loadExcelFiles(type);
+  const f=files.find(x=>x.id===fileId);
+  if(!f) return;
+  f.activeSheet=sheetIdx;
+  saveExcelFiles(type,files);
 }
-function _saveExcelViewState(){
-  try{ sessionStorage.setItem('intra_excel_view',JSON.stringify(_excelViewState)); }catch(e){}
+// 현재 선택된 파일 ID를 localStorage에 저장
+function setExcelActiveFile(type, fileId){
+  LS.set('intra_excel_active_'+type, fileId);
 }
-let _excelViewState=_loadExcelViewState();
+function getExcelActiveFile(type){
+  return LS.get('intra_excel_active_'+type)||null;
+}
+let _excelSearch={orgchart:'',roster:''};
 
 function renderExcelPage(type){
   renderExcelFileList(type);
   const files=loadExcelFiles(type);
-  if(files.length&&!_excelViewState[type].fileId){
-    _excelViewState[type].fileId=files[0].id;
-    _excelViewState[type].sheetIdx=0;
-    _saveExcelViewState();
+  // 저장된 파일ID 복원, 없으면 첫 번째 파일
+  if(files.length && !getExcelActiveFile(type)){
+    setExcelActiveFile(type, files[0].id);
   }
   renderExcelViewer(type);
 }
@@ -7800,9 +7803,10 @@ function renderExcelFileList(type){
   if(!el)return;
   const files=loadExcelFiles(type);
   if(!files.length){el.innerHTML='<div style="color:var(--text3);font-size:13px;">업로드된 파일이 없습니다.</div>';return;}
+  const activeId=getExcelActiveFile(type);
   el.innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:8px;">
     ${files.map(f=>{
-      const isActive=_excelViewState[type].fileId===f.id;
+      const isActive=activeId===f.id;
       return`<div style="display:flex;align-items:center;gap:6px;background:${isActive?'var(--primary)':'var(--bg2)'};color:${isActive?'#fff':'var(--text)'};border-radius:var(--radius-sm);padding:6px 12px;cursor:pointer;font-size:12px;border:1px solid ${isActive?'transparent':'var(--border)'};"
         onclick="selectExcelFile('${type}','${f.id}')">
         <span>📄 ${f.fileName}</span>
@@ -7814,10 +7818,8 @@ function renderExcelFileList(type){
 }
 
 function selectExcelFile(type,id){
-  _excelViewState[type].fileId=id;
-  _excelViewState[type].sheetIdx=0;
-  _excelViewState[type].search='';
-  _saveExcelViewState();
+  setExcelActiveFile(type, id);
+  _excelSearch[type]='';
   renderExcelPage(type);
 }
 
@@ -7825,10 +7827,8 @@ function deleteExcelFile(type,id){
   if(!confirm('파일을 삭제하시겠습니까?'))return;
   const all=loadExcelFiles(type).filter(f=>f.id!==id);
   saveExcelFiles(type,all);
-  if(_excelViewState[type].fileId===id){
-    _excelViewState[type].fileId=all.length?all[0].id:null;
-    _excelViewState[type].sheetIdx=0;
-    _saveExcelViewState();
+  if(getExcelActiveFile(type)===id){
+    setExcelActiveFile(type, all.length?all[0].id:null);
   }
   renderExcelPage(type);
   showToast('삭제되었습니다');
@@ -7838,22 +7838,23 @@ function renderExcelViewer(type){
   const el=document.getElementById(type+'Viewer');
   if(!el)return;
   const files=loadExcelFiles(type);
-  const fileId=_excelViewState[type].fileId;
+  const fileId=getExcelActiveFile(type);
   const file=files.find(f=>f.id===fileId);
   if(!file){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3);">파일을 선택하거나 업로드하세요.</div>';return;}
-  
-  const sheetIdx=_excelViewState[type].sheetIdx;
+
+  // activeSheet는 파일 객체 안에 저장 → F5해도 유지
+  const sheetIdx=file.activeSheet||0;
   const sheet=file.sheets[sheetIdx];
-  const search=_excelViewState[type].search||'';
-  
+  const search=_excelSearch[type]||'';
+
   // 시트 탭
   const sheetTabs=file.sheets.length>1?`<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
-    ${file.sheets.map((s,i)=>`<button class="btn btn-sm" onclick="_excelViewState['${type}'].sheetIdx=${i};_saveExcelViewState();renderExcelViewer('${type}')" style="background:${i===sheetIdx?'var(--primary)':'var(--bg2)'};color:${i===sheetIdx?'#fff':'var(--text)'};">${s.name}</button>`).join('')}
+    ${file.sheets.map((s,i)=>`<button class="btn btn-sm" onclick="setExcelActiveSheet('${type}','${fileId}',${i});renderExcelViewer('${type}')" style="background:${i===sheetIdx?'var(--primary)':'var(--bg2)'};color:${i===sheetIdx?'#fff':'var(--text)'};">${s.name}</button>`).join('')}
   </div>`:'';
   
   // 검색
   const searchBar=`<div style="margin-bottom:10px;display:flex;gap:8px;align-items:center;">
-    <input type="text" placeholder="🔍 검색..." value="${search}" oninput="_excelViewState['${type}'].search=this.value;renderExcelViewer('${type}')"
+    <input type="text" placeholder="🔍 검색..." value="${search}" oninput="_excelSearch['${type}']=this.value;renderExcelViewer('${type}')"
       style="padding:6px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;width:240px;">
     <span style="font-size:12px;color:var(--text3);">${sheet.rows.length}행</span>
   </div>`;
@@ -8053,7 +8054,7 @@ function setOrgSheet(idx){
 // 직원명부 동적 데이터 (localStorage 우선, 없으면 SC_EMPLOYEES 사용)
 let _rosterActiveData = null;
 let _rosterResignedData = [];
-let _rosterTab = 'active'; // 'active' | 'resigned'
+let _rosterTab = sessionStorage.getItem('intra_roster_tab') || 'active'; // 'active' | 'resigned'
 
 function getRosterData(){
   if(_rosterActiveData) return _rosterActiveData;
@@ -8075,6 +8076,7 @@ function getRosterResigned(){
 
 function setRosterTab(tab){
   _rosterTab = tab;
+  sessionStorage.setItem('intra_roster_tab', tab);
   ['active','resigned'].forEach(t=>{
     const btn=document.getElementById('rosterTab_'+t);
     if(btn){ btn.style.background=(t===tab)?'var(--primary)':''; btn.style.color=(t===tab)?'#fff':''; }
@@ -8086,6 +8088,18 @@ function setRosterTab(tab){
 }
 
 function renderRoster(){
+  // sessionStorage에 저장된 탭 상태 복원 (F5 후에도 유지)
+  const savedTab = sessionStorage.getItem('intra_roster_tab');
+  if(savedTab && savedTab !== _rosterTab) _rosterTab = savedTab;
+  // 탭 버튼 활성화 상태 복원
+  ['active','resigned'].forEach(t=>{
+    const btn=document.getElementById('rosterTab_'+t);
+    if(btn){ btn.style.background=(t===_rosterTab)?'var(--primary)':''; btn.style.color=(t===_rosterTab)?'#fff':''; }
+  });
+  // 퇴직자 탭에서는 필터 숨김
+  const filters = document.getElementById('rosterFilters');
+  if(filters) filters.style.display = (_rosterTab==='active') ? '' : 'none';
+
   const data = getRosterData();
   // 실 필터 옵션 채우기
   const deptSel=document.getElementById('rosterDeptFilter');
