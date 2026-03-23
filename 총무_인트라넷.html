@@ -597,6 +597,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>if(typeof pdfjsLib!=='undefined')pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 </head>
 <body>
 
@@ -7506,14 +7508,14 @@ function renderHrTable(){
   let filtered=all;
   if(_hrTab==='new') filtered=all.filter(h=>h.type==='new'&&h.status==='예정');
   else if(_hrTab==='out') filtered=all.filter(h=>h.type==='out'&&h.status==='예정');
-  else if(_hrTab==='leave') filtered=all.filter(h=>(h.type==='leave'||h.type==='return')&&h.status==='예정');
-  else if(_hrTab==='remote') filtered=all.filter(h=>h.type==='remote'&&h.status==='예정');
+  else if(_hrTab==='leave') filtered=all.filter(h=>(h.type==='leave'||h.type==='return')&&(h.status==='예정'||h.status==='진행중'));
+  else if(_hrTab==='remote') filtered=all.filter(h=>h.type==='remote'&&(h.status==='예정'||h.status==='진행중'));
   else if(_hrTab==='done') filtered=all.filter(h=>h.status==='완료'||h.status==='취소');
-  
-  // D-day 순 정렬: 예정 항목은 D-day 가까운 순(날짜 오름차순), 완료/취소는 최하단
+
+  // D-day 순 정렬: 예정·진행중은 날짜 오름차순, 완료·취소는 최하단
   filtered.sort((a,b)=>{
-    const aActive=a.status==='예정';
-    const bActive=b.status==='예정';
+    const aActive=a.status==='예정'||a.status==='진행중';
+    const bActive=b.status==='예정'||b.status==='진행중';
     if(aActive&&!bActive) return -1;
     if(!aActive&&bActive) return 1;
     return new Date(a.date)-new Date(b.date);
@@ -9055,11 +9057,18 @@ function uploadRosterExcel(){
 <div class="container">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
     <h2 style="font-size:17px;font-weight:800;color:var(--text);margin:0;">📝 계약서 관리</h2>
+    <!-- 탭 -->
+    <div style="display:flex;gap:4px;background:var(--bg2);border-radius:var(--radius-sm);padding:3px;">
+      <button id="contractTabList" onclick="setContractTab('list')" style="padding:4px 14px;font-size:12px;font-weight:600;border-radius:4px;border:none;cursor:pointer;background:var(--primary);color:#fff;transition:all .15s;">📋 계약서 목록</button>
+      <button id="contractTabReview" onclick="setContractTab('review')" style="padding:4px 14px;font-size:12px;font-weight:600;border-radius:4px;border:none;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;">🤖 AI 검토 보조</button>
+    </div>
     <span id="contractTotalBadge" style="font-size:12px;color:var(--text3);"></span>
-    <div style="margin-left:auto;display:flex;gap:8px;">
+    <div id="contractListBtns" style="margin-left:auto;display:flex;gap:8px;">
       <button class="btn btn-primary btn-sm" onclick="openContractAdd()">+ 새 계약서 등록</button>
     </div>
   </div>
+  <!-- 목록 섹션 -->
+  <div id="contractSectionList">
 
   <!-- 필터 바 -->
   <div class="card" style="margin-bottom:14px;">
@@ -9113,6 +9122,157 @@ function uploadRosterExcel(){
       </div>
     </div>
   </div>
+  </div><!-- /contractSectionList -->
+
+  <!-- ===== AI 검토 보조 섹션 ===== -->
+  <div id="contractSectionReview" style="display:none;">
+
+    <!-- 회사 기본정보 카드 -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-body" style="padding:14px 16px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;" onclick="toggleReviewCompanyInfo()">
+          <span style="font-size:13px;font-weight:700;color:var(--text);">🏢 우리 회사 기본정보</span>
+          <span id="reviewCompanyToggleIcon" style="font-size:11px;color:var(--text3);">▼ 펼치기</span>
+          <span style="font-size:11px;color:var(--text3);margin-left:auto;">검토 시 계약서 내 정보 오류 확인에 사용됩니다</span>
+        </div>
+        <div id="reviewCompanyInfoBody" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="form-group" style="margin:0;">
+              <label style="font-size:11px;">회사명</label>
+              <input type="text" id="reviewCompanyName" placeholder="(주)슈퍼크리에이티브" oninput="saveReviewCompanyInfo()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;width:100%;box-sizing:border-box;">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label style="font-size:11px;">사업자등록번호</label>
+              <input type="text" id="reviewBizNo" placeholder="000-00-00000" oninput="saveReviewCompanyInfo()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;width:100%;box-sizing:border-box;">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label style="font-size:11px;">대표자명</label>
+              <input type="text" id="reviewCeoName" placeholder="홍길동" oninput="saveReviewCompanyInfo()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;width:100%;box-sizing:border-box;">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label style="font-size:11px;">회사 주소</label>
+              <input type="text" id="reviewAddress" placeholder="서울시 강남구..." oninput="saveReviewCompanyInfo()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;width:100%;box-sizing:border-box;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 계약서 입력 카드 -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-body" style="padding:14px 16px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+          <span style="font-size:13px;font-weight:700;color:var(--text);">📄 계약서 입력</span>
+          <select id="reviewContractType" style="padding:5px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;margin-left:auto;">
+            <option value="용역계약서">용역계약서</option>
+            <option value="구매/납품계약서">구매/납품계약서</option>
+            <option value="임대차계약서">임대차계약서</option>
+            <option value="MOU/업무협약서">MOU/업무협약서</option>
+            <option value="위탁운영계약서">위탁운영계약서</option>
+            <option value="기밀유지계약서(NDA)">기밀유지계약서(NDA)</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <!-- 입력 방식 탭 -->
+        <div style="display:flex;gap:0;margin-bottom:10px;border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden;width:fit-content;">
+          <button id="reviewInputTabText" onclick="setReviewInputTab('text')" style="padding:5px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:var(--primary);color:#fff;">✏️ 텍스트 붙여넣기</button>
+          <button id="reviewInputTabPdf" onclick="setReviewInputTab('pdf')" style="padding:5px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:var(--bg2);color:var(--text3);">📎 PDF 업로드</button>
+        </div>
+        <!-- 텍스트 입력 -->
+        <div id="reviewInputText">
+          <textarea id="reviewContractText" placeholder="계약서 내용을 여기에 붙여넣으세요...&#10;&#10;PDF에서 복사하거나, Word에서 Ctrl+A → Ctrl+C 후 붙여넣기 하시면 됩니다." style="width:100%;height:280px;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;line-height:1.6;resize:vertical;font-family:inherit;box-sizing:border-box;" oninput="updateReviewCharCount()"></textarea>
+          <div style="text-align:right;font-size:11px;color:var(--text3);margin-top:4px;"><span id="reviewCharCount">0</span>자 입력됨</div>
+        </div>
+        <!-- PDF 입력 -->
+        <div id="reviewInputPdf" style="display:none;">
+          <div id="reviewPdfDrop" onclick="document.getElementById('reviewPdfFileInput').click()" style="border:2px dashed var(--border2);border-radius:var(--radius);padding:32px;text-align:center;cursor:pointer;background:var(--bg2);transition:border-color .15s;" ondragover="event.preventDefault();this.style.borderColor='var(--primary)';" ondragleave="this.style.borderColor='var(--border2)';" ondrop="handleReviewPdfDrop(event)">
+            <div style="font-size:32px;margin-bottom:8px;">📎</div>
+            <div style="font-size:13px;color:var(--text3);">클릭하거나 PDF 파일을 드래그하세요</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:4px;">텍스트 추출 후 검토에 사용됩니다</div>
+          </div>
+          <input type="file" id="reviewPdfFileInput" accept=".pdf" style="display:none;" onchange="handleReviewPdfUpload(this)">
+          <div id="reviewPdfStatus" style="font-size:12px;color:var(--text3);margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 검토 항목 카드 -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-body" style="padding:14px 16px;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">🔍 검토 중점 항목 <span style="font-size:11px;font-weight:400;color:var(--text3);">(해당 항목을 선택하면 더 집중해서 검토합니다)</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);">
+            <input type="checkbox" id="chk_toxic" checked style="accent-color:var(--primary);">
+            <span>⚠️ 독소조항 / 일방적 불리 조항</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);">
+            <input type="checkbox" id="chk_info" checked style="accent-color:var(--primary);">
+            <span>🏢 회사 정보 정확성 (회사명·사업자번호·주소)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);">
+            <input type="checkbox" id="chk_missing" checked style="accent-color:var(--primary);">
+            <span>📋 누락된 표준 조항</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);">
+            <input type="checkbox" id="chk_penalty" checked style="accent-color:var(--primary);">
+            <span>💰 손해배상 / 위약금 조항</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);">
+            <input type="checkbox" id="chk_termination" style="accent-color:var(--primary);">
+            <span>🚪 계약 해지 및 갱신 조건</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);">
+            <input type="checkbox" id="chk_nda" style="accent-color:var(--primary);">
+            <span>🔒 기밀유지(NDA) 조항</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);">
+            <input type="checkbox" id="chk_ip" style="accent-color:var(--primary);">
+            <span>💡 지식재산권 귀속</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);">
+            <input type="checkbox" id="chk_payment" style="accent-color:var(--primary);">
+            <span>💳 대금 지급 조건 및 일정</span>
+          </label>
+        </div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:12px;color:var(--text2);font-weight:600;">검토 수준:</span>
+          <label style="font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;"><input type="radio" name="reviewDepth" value="quick" style="accent-color:var(--primary);"> 빠른 검토 (핵심만)</label>
+          <label style="font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;"><input type="radio" name="reviewDepth" value="deep" checked style="accent-color:var(--primary);"> 상세 검토 (조항별)</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 생성 버튼 -->
+    <div style="text-align:center;margin-bottom:14px;">
+      <button onclick="generateReviewPrompt()" style="padding:12px 32px;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(99,102,241,.3);transition:transform .1s;" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        🤖 AI 검토 프롬프트 생성
+      </button>
+      <div style="font-size:11px;color:var(--text3);margin-top:8px;">생성된 프롬프트를 Claude에 붙여넣어 검토를 받으세요</div>
+    </div>
+
+    <!-- 생성된 프롬프트 결과 -->
+    <div id="reviewPromptResult" style="display:none;">
+      <div class="card">
+        <div class="card-body" style="padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:13px;font-weight:700;color:var(--text);">✅ 검토 프롬프트 생성 완료</span>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+              <button onclick="copyReviewPrompt()" class="btn btn-sm btn-primary">📋 클립보드 복사</button>
+              <button onclick="window.open('https://claude.ai/new','_blank')" class="btn btn-sm btn-ghost">↗ Claude.ai 열기</button>
+            </div>
+          </div>
+          <div style="background:#f8fafc;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:12px;max-height:320px;overflow-y:auto;">
+            <pre id="reviewPromptText" style="font-size:11px;line-height:1.7;white-space:pre-wrap;word-break:break-word;margin:0;font-family:inherit;color:var(--text);"></pre>
+          </div>
+          <div style="margin-top:10px;padding:10px 12px;background:#fffbeb;border:1px solid #fbbf24;border-radius:var(--radius-sm);font-size:11px;color:#92400e;">
+            ⚠️ <b>법무 검토 병행 안내:</b> AI 검토는 1차 보조 도구입니다. 중요한 계약은 반드시 법무팀 또는 변호사의 최종 검토를 받으시기 바랍니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /contractSectionReview -->
+
 </div>
 </div>
 
@@ -9737,6 +9897,175 @@ const CONTRACT_STATUS_COLOR={
   '최종':'background:#dcfce7;color:#166534;',
   '만료':'background:#f4f4f5;color:#71717a;'
 };
+
+// ── 계약서 탭 전환 ──
+let _contractTab='list';
+function setContractTab(tab){
+  _contractTab=tab;
+  const isList=tab==='list';
+  document.getElementById('contractSectionList').style.display=isList?'':'none';
+  document.getElementById('contractSectionReview').style.display=isList?'none':'block';
+  document.getElementById('contractListBtns').style.display=isList?'flex':'none';
+  const tl=document.getElementById('contractTabList');
+  const tr=document.getElementById('contractTabReview');
+  if(tl){tl.style.background=isList?'var(--primary)':'transparent';tl.style.color=isList?'#fff':'var(--text3)';}
+  if(tr){tr.style.background=isList?'transparent':'var(--primary)';tr.style.color=isList?'var(--text3)':'#fff';}
+  if(isList)renderContracts();
+  else{loadReviewCompanyInfo();updateReviewCharCount();}
+}
+
+// ── 회사정보 저장/로드 ──
+const REVIEW_CO_KEY='intra_review_company';
+function saveReviewCompanyInfo(){
+  const d={name:document.getElementById('reviewCompanyName')?.value||'',bizNo:document.getElementById('reviewBizNo')?.value||'',ceo:document.getElementById('reviewCeoName')?.value||'',address:document.getElementById('reviewAddress')?.value||''};
+  localStorage.setItem(REVIEW_CO_KEY,JSON.stringify(d));
+}
+function loadReviewCompanyInfo(){
+  const d=JSON.parse(localStorage.getItem(REVIEW_CO_KEY)||'{}');
+  if(document.getElementById('reviewCompanyName'))document.getElementById('reviewCompanyName').value=d.name||'';
+  if(document.getElementById('reviewBizNo'))document.getElementById('reviewBizNo').value=d.bizNo||'';
+  if(document.getElementById('reviewCeoName'))document.getElementById('reviewCeoName').value=d.ceo||'';
+  if(document.getElementById('reviewAddress'))document.getElementById('reviewAddress').value=d.address||'';
+}
+function toggleReviewCompanyInfo(){
+  const body=document.getElementById('reviewCompanyInfoBody');
+  const icon=document.getElementById('reviewCompanyToggleIcon');
+  const isHidden=body.style.display==='none';
+  body.style.display=isHidden?'block':'none';
+  icon.textContent=isHidden?'▲ 접기':'▼ 펼치기';
+}
+
+// ── 입력 탭 전환 ──
+function setReviewInputTab(tab){
+  const isText=tab==='text';
+  document.getElementById('reviewInputText').style.display=isText?'block':'none';
+  document.getElementById('reviewInputPdf').style.display=isText?'none':'block';
+  const bt=document.getElementById('reviewInputTabText');
+  const bp=document.getElementById('reviewInputTabPdf');
+  if(bt){bt.style.background=isText?'var(--primary)':'var(--bg2)';bt.style.color=isText?'#fff':'var(--text3)';}
+  if(bp){bp.style.background=isText?'var(--bg2)':'var(--primary)';bp.style.color=isText?'var(--text3)':'#fff';}
+}
+function updateReviewCharCount(){
+  const len=(document.getElementById('reviewContractText')?.value||'').length;
+  const el=document.getElementById('reviewCharCount');
+  if(el)el.textContent=len.toLocaleString();
+}
+
+// ── PDF 업로드 / 드래그앤드롭 ──
+function handleReviewPdfDrop(e){
+  e.preventDefault();
+  document.getElementById('reviewPdfDrop').style.borderColor='var(--border2)';
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type==='application/pdf')extractPdfText(file);
+  else showToast('PDF 파일만 가능합니다','error');
+}
+function handleReviewPdfUpload(input){
+  const file=input.files[0];
+  if(file)extractPdfText(file);
+  input.value='';
+}
+async function extractPdfText(file){
+  const statusEl=document.getElementById('reviewPdfStatus');
+  if(statusEl)statusEl.textContent='⏳ PDF 텍스트 추출 중...';
+  try{
+    if(typeof pdfjsLib==='undefined')throw new Error('PDF.js 로드 안됨');
+    const ab=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+    let text='';
+    for(let i=1;i<=pdf.numPages;i++){
+      const page=await pdf.getPage(i);
+      const content=await page.getTextContent();
+      text+=content.items.map(s=>s.str).join(' ')+'\n';
+    }
+    // 텍스트 탭으로 자동 전환
+    setReviewInputTab('text');
+    const ta=document.getElementById('reviewContractText');
+    if(ta){ta.value=text.trim();updateReviewCharCount();}
+    if(statusEl)statusEl.textContent=`✅ ${pdf.numPages}페이지 추출 완료 (${text.length.toLocaleString()}자)`;
+    showToast(`✅ PDF 텍스트 추출 완료 (${pdf.numPages}p)`);
+  }catch(err){
+    if(statusEl)statusEl.textContent='⚠️ 텍스트 추출 실패 — 계약서를 직접 복사해서 텍스트 탭에 붙여넣어 주세요';
+    showToast('PDF 추출 실패: 텍스트 탭에 직접 붙여넣기 해주세요','error');
+  }
+}
+
+// ── 프롬프트 생성 ──
+function generateReviewPrompt(){
+  const text=(document.getElementById('reviewContractText')?.value||'').trim();
+  if(!text){showToast('계약서 내용을 먼저 입력하세요','error');return;}
+  if(text.length<100){showToast('계약서 내용이 너무 짧습니다','error');return;}
+
+  const coName=document.getElementById('reviewCompanyName')?.value||'(미입력)';
+  const bizNo=document.getElementById('reviewBizNo')?.value||'(미입력)';
+  const ceo=document.getElementById('reviewCeoName')?.value||'(미입력)';
+  const address=document.getElementById('reviewAddress')?.value||'(미입력)';
+  const contractType=document.getElementById('reviewContractType')?.value||'계약서';
+  const depth=document.querySelector('input[name="reviewDepth"]:checked')?.value||'deep';
+
+  const chkMap={
+    chk_toxic:'⚠️ 독소조항 및 일방적 불리 조항',
+    chk_info:'🏢 회사 정보 정확성 (회사명·사업자번호·주소)',
+    chk_missing:'📋 누락된 표준 조항',
+    chk_penalty:'💰 손해배상 / 위약금 조항',
+    chk_termination:'🚪 계약 해지 및 갱신 조건',
+    chk_nda:'🔒 기밀유지(NDA) 조항',
+    chk_ip:'💡 지식재산권 귀속',
+    chk_payment:'💳 대금 지급 조건 및 일정'
+  };
+  const checked=Object.entries(chkMap).filter(([id])=>document.getElementById(id)?.checked).map(([,lbl])=>'- '+lbl);
+  if(!checked.length){showToast('검토 항목을 1개 이상 선택하세요','error');return;}
+
+  const depthGuide=depth==='quick'
+    ? '각 항목에서 문제가 되는 부분만 요약해서 간결하게 작성해주세요.'
+    : '각 문제 조항을 조항 번호와 함께 인용하고, 문제점과 구체적인 수정 제안 문구를 작성해주세요.';
+
+  const prompt=`당신은 기업 법무·계약서 검토 전문 어시스턴트입니다. 아래 계약서를 검토해 주세요.
+
+━━━ 우리 회사 기본정보 ━━━
+• 회사명: ${coName}
+• 사업자등록번호: ${bizNo}
+• 대표자: ${ceo}
+• 주소: ${address}
+
+━━━ 계약 유형 ━━━
+${contractType}
+
+━━━ 검토 요청 항목 ━━━
+${checked.join('\n')}
+
+━━━ 검토 방식 ━━━
+${depthGuide}
+
+각 항목에 대해 다음 형식으로 작성해 주세요:
+① 발견된 문제 조항 (해당 없으면 "이상 없음"으로 표시)
+② 문제점 설명
+③ 수정 제안 방향 또는 문구
+
+마지막에 [종합 의견] 섹션에서:
+1. 전체 위험도 평가 (낮음/중간/높음)
+2. 상대방에게 반드시 수정 요청해야 할 상위 3개 항목
+3. 협상 포인트 제안
+
+━━━ 계약서 원문 ━━━
+${text}`;
+
+  document.getElementById('reviewPromptText').textContent=prompt;
+  document.getElementById('reviewPromptResult').style.display='block';
+  document.getElementById('reviewPromptResult').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function copyReviewPrompt(){
+  const text=document.getElementById('reviewPromptText')?.textContent||'';
+  navigator.clipboard.writeText(text).then(()=>{
+    showToast('📋 프롬프트가 클립보드에 복사됐습니다! Claude.ai에서 붙여넣기 하세요');
+  }).catch(()=>{
+    // fallback
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    showToast('📋 복사 완료');
+  });
+}
 
 function renderContracts(){
   const q=(document.getElementById('contractSearch')?.value||'').toLowerCase();
