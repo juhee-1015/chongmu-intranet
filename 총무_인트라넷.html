@@ -7771,15 +7771,26 @@ function uploadExcelFile(type, input){
   reader.readAsArrayBuffer(file);
 }
 
-let _excelViewState={orgchart:{fileId:null,sheetIdx:0,search:''},roster:{fileId:null,sheetIdx:0,search:''}};
+// _excelViewState: sessionStorage로 F5 후에도 선택 시트/파일 유지
+function _loadExcelViewState(){
+  const def={orgchart:{fileId:null,sheetIdx:0,search:''},roster:{fileId:null,sheetIdx:0,search:''}};
+  try{
+    const raw=sessionStorage.getItem('intra_excel_view');
+    return raw ? JSON.parse(raw) : def;
+  }catch(e){ return def; }
+}
+function _saveExcelViewState(){
+  try{ sessionStorage.setItem('intra_excel_view',JSON.stringify(_excelViewState)); }catch(e){}
+}
+let _excelViewState=_loadExcelViewState();
 
 function renderExcelPage(type){
   renderExcelFileList(type);
-  // 현재 파일이 없으면 최신 파일 자동 선택
   const files=loadExcelFiles(type);
   if(files.length&&!_excelViewState[type].fileId){
     _excelViewState[type].fileId=files[0].id;
     _excelViewState[type].sheetIdx=0;
+    _saveExcelViewState();
   }
   renderExcelViewer(type);
 }
@@ -7806,6 +7817,7 @@ function selectExcelFile(type,id){
   _excelViewState[type].fileId=id;
   _excelViewState[type].sheetIdx=0;
   _excelViewState[type].search='';
+  _saveExcelViewState();
   renderExcelPage(type);
 }
 
@@ -7816,6 +7828,7 @@ function deleteExcelFile(type,id){
   if(_excelViewState[type].fileId===id){
     _excelViewState[type].fileId=all.length?all[0].id:null;
     _excelViewState[type].sheetIdx=0;
+    _saveExcelViewState();
   }
   renderExcelPage(type);
   showToast('삭제되었습니다');
@@ -7835,7 +7848,7 @@ function renderExcelViewer(type){
   
   // 시트 탭
   const sheetTabs=file.sheets.length>1?`<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
-    ${file.sheets.map((s,i)=>`<button class="btn btn-sm" onclick="_excelViewState['${type}'].sheetIdx=${i};renderExcelViewer('${type}')" style="background:${i===sheetIdx?'var(--primary)':'var(--bg2)'};color:${i===sheetIdx?'#fff':'var(--text)'};">${s.name}</button>`).join('')}
+    ${file.sheets.map((s,i)=>`<button class="btn btn-sm" onclick="_excelViewState['${type}'].sheetIdx=${i};_saveExcelViewState();renderExcelViewer('${type}')" style="background:${i===sheetIdx?'var(--primary)':'var(--bg2)'};color:${i===sheetIdx?'#fff':'var(--text)'};">${s.name}</button>`).join('')}
   </div>`:'';
   
   // 검색
