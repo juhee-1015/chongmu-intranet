@@ -6679,6 +6679,39 @@ window.addEventListener('popstate',(e)=>{
 });
 window.onload=init;
 
+// ── 조직도 이미지 붙여넣기 (Ctrl+V) ──
+document.addEventListener('paste',function(e){
+  // 텍스트 입력 중이면 무시 (검색창, 폼 등)
+  const tag=(document.activeElement||{}).tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;
+  // 조직도 페이지가 아니면 무시
+  const page=sessionStorage.getItem('intra_current_page');
+  if(page!=='orgchart')return;
+  const items=e.clipboardData&&e.clipboardData.items;
+  if(!items)return;
+  for(let i=0;i<items.length;i++){
+    if(items[i].type.startsWith('image/')){
+      const blob=items[i].getAsFile();
+      if(!blob)continue;
+      const rd=new FileReader();
+      rd.onload=function(ev){
+        try{
+          localStorage.setItem(ORG_IMG_KEY,ev.target.result);
+          localStorage.setItem(ORG_IMG_KEY+'_date',new Date().toLocaleDateString('ko-KR')+' (붙여넣기)');
+          _orgImgScale=1;
+          showToast('✅ 조직도 이미지 붙여넣기 완료');
+          // 이미지 탭이 아니면 자동 전환
+          if(_orgTab!=='img')setOrgTab('img');
+          else renderOrgImg();
+        }catch(err){showToast('저장 오류 - 이미지가 너무 클 수 있습니다','error');}
+      };
+      rd.readAsDataURL(blob);
+      e.preventDefault();
+      break;
+    }
+  }
+});
+
 // ============================================================
 // 전역 검색 (Ctrl+K / Cmd+K)
 // ============================================================
@@ -7429,23 +7462,40 @@ function renderHrAlertBanner(){
   if(!el)return;
   const all=loadHrEntries();
   const today=new Date();today.setHours(0,0,0,0);
-  const soon=all.filter(h=>{
+  // 예정: 시작일 7일 이내
+  const soonStart=all.filter(h=>{
     if(h.status!=='예정')return false;
     const d=new Date(h.date);d.setHours(0,0,0,0);
     const diff=Math.round((d-today)/(1000*60*60*24));
     return diff>=0&&diff<=7;
-  });
+  }).map(h=>({...h,_bannerType:'start'}));
+  // 진행중: 종료 예정일 7일 이내
+  const soonEnd=all.filter(h=>{
+    if(h.status!=='진행중')return false;
+    if(!h.endDate)return false;
+    const e=new Date(h.endDate);e.setHours(0,0,0,0);
+    const diff=Math.round((e-today)/(1000*60*60*24));
+    return diff>=0&&diff<=7;
+  }).map(h=>({...h,_bannerType:'end'}));
+  const soon=[...soonStart,...soonEnd];
   if(!soon.length){el.innerHTML='';return;}
-  // D-day 오름차순 정렬 (가까운 순)
-  soon.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  // D-day 오름차순 정렬
+  soon.sort((a,b)=>{
+    const da=a._bannerType==='end'?new Date(a.endDate):new Date(a.date);
+    const db=b._bannerType==='end'?new Date(b.endDate):new Date(b.date);
+    return da-db;
+  });
   const typeLabel={new:'🆕 입사',out:'👋 퇴직',leave:'🚫 휴직',remote:'🏠 재택'};
   el.innerHTML=`<div style="background:#fef9c3;border:1px solid #fbbf24;border-radius:var(--radius);padding:12px 16px;">
-    <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ 7일 이내 인사 예정 ${soon.length}건</div>
+    <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ 7일 이내 인사 예정/종료 ${soon.length}건</div>
     ${soon.map(h=>{
-      const d=new Date(h.date);d.setHours(0,0,0,0);
+      const isEnd=h._bannerType==='end';
+      const refDate=isEnd?h.endDate:h.date;
+      const d=new Date(refDate);d.setHours(0,0,0,0);
       const diff=Math.round((d-today)/(1000*60*60*24));
-      const endStr=h.endDate?` ~ ${h.endDate.slice(2).replace(/-/g,'.')}`:''
-      return`<div style="font-size:12px;color:#78350f;">${typeLabel[h.type]||h.type} <b>${h.name}</b> (${h.project||''} ${h.dept||''}) ${h.date.slice(5).replace('-','.')}${endStr} - ${diff===0?'<b style="color:#dc2626;">오늘!</b>':'D-'+diff}</div>`;
+      const endStr=h.endDate&&!isEnd?` ~ ${h.endDate.slice(2).replace(/-/g,'.')}`:''
+      const label=isEnd?`${typeLabel[h.type]||h.type} <b style="color:#0369a1;">[종료예정]</b>`:(typeLabel[h.type]||h.type);
+      return`<div style="font-size:12px;color:#78350f;">${label} <b>${h.name}</b> (${h.project||''} ${h.dept||''}) ${refDate.slice(5).replace('-','.')}${endStr} - ${diff===0?'<b style="color:#dc2626;">오늘!</b>':'D-'+diff}</div>`;
     }).join('')}
   </div>`;
 }
@@ -7480,18 +7530,22 @@ function renderHrTable(){
     const diff=Math.round((d-today)/(1000*60*60*24));
     const ddayStr=diff===0?'<span style="color:#dc2626;font-weight:700;">D-day</span>':diff>0?'<span style="color:#2563eb;">D-'+diff+'</span>':'<span style="color:#6b7280;">D+'+Math.abs(diff)+'</span>';
     const typeBadge=h.type==='new'?'<span style="background:#dcfce7;color:#15803d;border-radius:6px;padding:2px 8px;font-size:11px;">🆕 입사</span>':h.type==='out'?'<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:2px 8px;font-size:11px;">👋 퇴직</span>':(h.type==='leave'||h.type==='return')?'<span style="background:#fef9c3;color:#92400e;border-radius:6px;padding:2px 8px;font-size:11px;">🚫 휴직</span>':h.type==='remote'?'<span style="background:#ede9fe;color:#7c3aed;border-radius:6px;padding:2px 8px;font-size:11px;">🏠 재택</span>':`<span style="background:#f3f4f6;color:#374151;border-radius:6px;padding:2px 8px;font-size:11px;">${h.type}</span>`;
-    const statColor=h.status==='완료'?'#15803d':h.status==='취소'?'#6b7280':'#92400e';
-    const statBg=h.status==='완료'?'#dcfce7':h.status==='취소'?'#f3f4f6':'#fef9c3';
+    const statColor=h.status==='완료'?'#15803d':h.status==='취소'?'#6b7280':h.status==='진행중'?'#0369a1':'#92400e';
+    const statBg=h.status==='완료'?'#dcfce7':h.status==='취소'?'#f3f4f6':h.status==='진행중'?'#e0f2fe':'#fef9c3';
     const dateStr=h.date?h.date.replace(/-/g,'.').slice(2):'';
     // 입사완료 처리 버튼
     const completeBtn=(h.type==='new'&&h.status==='예정')
       ?`<button class="btn btn-xs btn-success" onclick="completeNewHire('${h.id}')" style="font-size:10px;">입사완료</button>`
       :(h.type==='out'&&h.status==='예정')
       ?`<button class="btn btn-xs" onclick="openRetireModal('${h.id}')" style="font-size:10px;background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;">퇴직처리</button>`
-      :(h.type==='leave'&&h.status==='예정')
-      ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#fef9c3;color:#92400e;border:1px solid #fcd34d;">휴직처리</button>`
+      :((h.type==='leave'||h.type==='return')&&h.status==='예정')
+      ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','진행중')" style="font-size:10px;background:#fef9c3;color:#92400e;border:1px solid #fcd34d;">▶ 진행 시작</button>`
+      :((h.type==='leave'||h.type==='return')&&h.status==='진행중')
+      ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#dcfce7;color:#15803d;border:1px solid #86efac;">✓ 복직완료</button>`
       :(h.type==='remote'&&h.status==='예정')
-      ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#ede9fe;color:#7c3aed;border:1px solid #c4b5fd;">재택완료</button>`
+      ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','진행중')" style="font-size:10px;background:#ede9fe;color:#7c3aed;border:1px solid #c4b5fd;">▶ 진행 시작</button>`
+      :(h.type==='remote'&&h.status==='진행중')
+      ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#dcfce7;color:#15803d;border:1px solid #86efac;">✓ 재택완료</button>`
       :'';
     return`<tr style="${h.status==='취소'?'opacity:0.5;':''}">
       <td style="text-align:center;">${typeBadge}</td>
@@ -7914,9 +7968,12 @@ const ORG_PDF_KEY='intra_orgchart_pdf';
 let _orgPdfBlobUrl=null;
 
 function renderOrgchart(){
+  // 탭에 따라 분기
+  if(_orgTab==='img'){renderOrgImg();return;}
   const pdfViewer=document.getElementById('orgPdfViewer');
   const emptyState=document.getElementById('orgEmptyState');
   if(!pdfViewer||!emptyState)return;
+  const dateEl=document.getElementById('orgHeaderDate');
   const b64=localStorage.getItem(ORG_PDF_KEY);
   if(b64){
     // PDF 불러오기
@@ -7931,8 +7988,8 @@ function renderOrgchart(){
       emptyState.style.display='none';
       // 날짜 표시
       const savedDate=localStorage.getItem(ORG_PDF_KEY+'_date');
-      const dateEl=document.getElementById('orgHeaderDate');
       if(dateEl&&savedDate)dateEl.textContent='등록: '+savedDate;
+      else if(dateEl)dateEl.textContent='PDF 파일 등록됨';
     }catch(e){pdfViewer.style.display='none';emptyState.style.display='flex';}
   } else {
     pdfViewer.style.display='none';
@@ -7974,6 +8031,101 @@ function deleteOrgPdf(){
 }
 
 function orgOpenNewTab(){if(_orgPdfBlobUrl)window.open(_orgPdfBlobUrl,'_blank');}
+
+// ── 조직도 탭 전환 ──
+let _orgTab='pdf';
+let _orgImgScale=1;
+
+function setOrgTab(tab){
+  _orgTab=tab;
+  const isPdf=tab==='pdf';
+  document.getElementById('orgSectionPdf').style.display=isPdf?'':'none';
+  document.getElementById('orgSectionImg').style.display=isPdf?'none':'block';
+  document.getElementById('orgBtnsPdf').style.display=isPdf?'flex':'none';
+  document.getElementById('orgBtnsImg').style.display=isPdf?'none':'flex';
+  const tabPdf=document.getElementById('orgTabPdf');
+  const tabImg=document.getElementById('orgTabImg');
+  if(tabPdf){tabPdf.style.background=isPdf?'var(--primary)':'transparent';tabPdf.style.color=isPdf?'#fff':'var(--text3)';}
+  if(tabImg){tabImg.style.background=isPdf?'transparent':'var(--primary)';tabImg.style.color=isPdf?'var(--text3)':'#fff';}
+  if(!isPdf)renderOrgImg();
+  else renderOrgchart();
+}
+
+// ── 이미지 모드 ──
+const ORG_IMG_KEY='intra_orgchart_img';
+
+function renderOrgImg(){
+  const b64=localStorage.getItem(ORG_IMG_KEY);
+  const empty=document.getElementById('orgImgEmpty');
+  const viewer=document.getElementById('orgImgViewer');
+  const imgEl=document.getElementById('orgImgEl');
+  const dateEl=document.getElementById('orgHeaderDate');
+  if(b64){
+    imgEl.src=b64;
+    imgEl.style.transform=`scale(${_orgImgScale})`;
+    if(empty)empty.style.display='none';
+    if(viewer)viewer.style.display='flex';
+    const savedDate=localStorage.getItem(ORG_IMG_KEY+'_date');
+    if(dateEl&&savedDate)dateEl.textContent='등록: '+savedDate;
+  } else {
+    if(empty)empty.style.display='flex';
+    if(viewer){viewer.style.display='none';}
+    if(dateEl)dateEl.textContent='이미지를 붙여넣거나 파일을 등록하세요';
+  }
+}
+
+function uploadOrgImg(){
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='image/*';
+  inp.onchange=function(ev){
+    const file=ev.target.files[0];if(!file)return;
+    const rd=new FileReader();
+    rd.onload=function(e){
+      try{
+        localStorage.setItem(ORG_IMG_KEY,e.target.result);
+        localStorage.setItem(ORG_IMG_KEY+'_date',new Date().toLocaleDateString('ko-KR')+' ('+file.name+')');
+        _orgImgScale=1;
+        showToast('✅ 조직도 이미지 등록 완료');
+        renderOrgImg();
+      }catch(err){showToast('저장 오류: '+err.message,'error');}
+    };
+    rd.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+function deleteOrgImg(){
+  if(!confirm('등록된 조직도 이미지를 삭제하시겠습니까?'))return;
+  localStorage.removeItem(ORG_IMG_KEY);
+  localStorage.removeItem(ORG_IMG_KEY+'_date');
+  _orgImgScale=1;
+  renderOrgImg();
+  showToast('조직도 이미지가 삭제되었습니다');
+}
+
+function orgImgZoom(delta){
+  const imgEl=document.getElementById('orgImgEl');
+  if(!imgEl)return;
+  if(delta===0){
+    // 맞춤: 뷰어 폭에 맞게
+    const viewer=document.getElementById('orgImgViewer');
+    const viewerW=viewer?viewer.clientWidth-24:800;
+    _orgImgScale=Math.max(0.1,viewerW/imgEl.naturalWidth);
+  } else {
+    _orgImgScale=Math.max(0.1,Math.min(5,_orgImgScale+delta));
+  }
+  imgEl.style.transform=`scale(${_orgImgScale})`;
+  imgEl.style.transformOrigin='top left';
+  // 줌 레이블 업데이트
+  const lbl=document.getElementById('orgImgZoomLabel');
+  if(lbl)lbl.textContent=Math.round(_orgImgScale*100)+'%';
+  // 뷰어 높이 조정
+  const viewer=document.getElementById('orgImgViewer');
+  if(viewer&&imgEl.naturalHeight){
+    const scaledH=imgEl.naturalHeight*_orgImgScale;
+    viewer.style.minHeight=Math.max(400,scaledH+40)+'px';
+  }
+}
 
 function uploadOrgExcel(){
   // 업로드 시 xlsx2html 방식으로 처리 불가 (client-side)
@@ -8676,6 +8828,7 @@ function uploadRosterExcel(){
           <label>상태</label>
           <select id="hrStatus">
             <option value="예정">예정</option>
+            <option value="진행중">진행중</option>
             <option value="완료">완료</option>
             <option value="취소">취소</option>
           </select>
@@ -8757,23 +8910,57 @@ function uploadRosterExcel(){
   <!-- 헤더 -->
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
     <h2 style="font-size:17px;font-weight:800;color:var(--text);margin:0;">🏢 조직도</h2>
-    <span id="orgHeaderDate" style="font-size:12px;color:var(--text3);">PDF 파일을 등록하세요</span>
-    <div style="margin-left:auto;display:flex;gap:8px;">
+    <span id="orgHeaderDate" style="font-size:12px;color:var(--text3);"></span>
+    <!-- 모드 탭 -->
+    <div style="display:flex;gap:4px;background:var(--bg2);border-radius:var(--radius-sm);padding:3px;">
+      <button id="orgTabPdf" onclick="setOrgTab('pdf')" style="padding:4px 12px;font-size:12px;font-weight:600;border-radius:4px;border:none;cursor:pointer;background:var(--primary);color:#fff;transition:all .15s;">📄 PDF</button>
+      <button id="orgTabImg" onclick="setOrgTab('img')" style="padding:4px 12px;font-size:12px;font-weight:600;border-radius:4px;border:none;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;">🖼️ 이미지 캡처</button>
+    </div>
+    <!-- PDF 버튼 -->
+    <div id="orgBtnsPdf" style="margin-left:auto;display:flex;gap:8px;">
       <button class="btn btn-sm btn-ghost" onclick="orgOpenNewTab()">↗ 새 탭</button>
       <button class="btn btn-sm btn-ghost" onclick="deleteOrgPdf()" style="color:#dc2626;">🗑 삭제</button>
       <button class="btn btn-sm btn-primary" onclick="uploadOrgPdf()">📂 PDF 등록</button>
     </div>
+    <!-- 이미지 버튼 -->
+    <div id="orgBtnsImg" style="margin-left:auto;display:none;gap:8px;">
+      <button class="btn btn-sm btn-ghost" onclick="orgImgZoom(-0.2)" title="축소">🔍−</button>
+      <span id="orgImgZoomLabel" style="font-size:12px;color:var(--text3);align-self:center;">100%</span>
+      <button class="btn btn-sm btn-ghost" onclick="orgImgZoom(0.2)" title="확대">🔍+</button>
+      <button class="btn btn-sm btn-ghost" onclick="orgImgZoom(0)" title="원래 크기">⊡ 맞춤</button>
+      <button class="btn btn-sm btn-ghost" onclick="deleteOrgImg()" style="color:#dc2626;">🗑 삭제</button>
+      <button class="btn btn-sm btn-primary" onclick="uploadOrgImg()">📂 이미지 파일</button>
+    </div>
   </div>
-  <!-- 빈 상태 -->
-  <div id="orgEmptyState" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:16px;border:2px dashed var(--border2);border-radius:var(--radius);background:#f8fafc;">
-    <div style="font-size:48px;">📄</div>
-    <div style="font-size:15px;color:var(--text3);font-weight:600;">등록된 조직도 PDF가 없습니다</div>
-    <div style="font-size:12px;color:var(--text3);">PDF 파일을 등록하면 여기서 바로 볼 수 있습니다</div>
-    <button class="btn btn-primary" onclick="uploadOrgPdf()">📂 PDF 파일 등록</button>
+
+  <!-- ── PDF 섹션 ── -->
+  <div id="orgSectionPdf">
+    <div id="orgEmptyState" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:16px;border:2px dashed var(--border2);border-radius:var(--radius);background:#f8fafc;">
+      <div style="font-size:48px;">📄</div>
+      <div style="font-size:15px;color:var(--text3);font-weight:600;">등록된 조직도 PDF가 없습니다</div>
+      <div style="font-size:12px;color:var(--text3);">PDF 파일을 등록하면 여기서 바로 볼 수 있습니다</div>
+      <button class="btn btn-primary" onclick="uploadOrgPdf()">📂 PDF 파일 등록</button>
+    </div>
+    <div id="orgPdfViewer" style="display:none;">
+      <iframe id="orgPdfFrame" style="width:100%;height:80vh;border:1px solid var(--border2);border-radius:var(--radius);display:block;"></iframe>
+    </div>
   </div>
-  <!-- PDF 뷰어 -->
-  <div id="orgPdfViewer" style="display:none;">
-    <iframe id="orgPdfFrame" style="width:100%;height:80vh;border:1px solid var(--border2);border-radius:var(--radius);display:block;"></iframe>
+
+  <!-- ── 이미지 캡처 섹션 ── -->
+  <div id="orgSectionImg" style="display:none;">
+    <!-- 빈 상태: 붙여넣기 안내 -->
+    <div id="orgImgEmpty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:16px;border:2px dashed var(--border2);border-radius:var(--radius);background:#f8fafc;cursor:pointer;" onclick="document.getElementById('orgImgEmpty').focus();" tabindex="0">
+      <div style="font-size:48px;">🖼️</div>
+      <div style="font-size:15px;color:var(--text3);font-weight:600;">조직도 이미지를 붙여넣으세요</div>
+      <div style="font-size:12px;color:var(--text3);text-align:center;line-height:1.8;">
+        조직도 캡처 후 <kbd style="background:#e5e7eb;padding:2px 6px;border-radius:4px;font-size:11px;">Ctrl+V</kbd> 로 바로 붙여넣기<br>
+        또는 <b style="color:var(--primary);cursor:pointer;" onclick="uploadOrgImg()">이미지 파일 선택</b>
+      </div>
+    </div>
+    <!-- 이미지 뷰어 -->
+    <div id="orgImgViewer" style="display:none;overflow:auto;border:1px solid var(--border2);border-radius:var(--radius);background:#f1f5f9;min-height:60vh;display:flex;align-items:flex-start;justify-content:flex-start;padding:12px;">
+      <img id="orgImgEl" style="transform-origin:top left;transition:transform .2s;max-width:none;display:block;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.12);">
+    </div>
   </div>
 </div>
 </div>
