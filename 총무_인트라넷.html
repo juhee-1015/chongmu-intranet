@@ -3401,8 +3401,8 @@ function renderHomeDdaySummary(){
       if(diff>=-3&&diff<=60){
         items.push({
           type:'hr',
-          icon:h.type==='new'?'🆕':h.type==='out'?'👋':h.type==='leave'?'🚫':'✅',
-          label:h.name+' '+(h.type==='new'?'입사':h.type==='out'?'퇴직':h.type==='leave'?'휴직':'복직'),
+          icon:h.type==='new'?'🆕':h.type==='out'?'👋':h.type==='leave'?'🚫':h.type==='remote'?'🏠':'✅',
+          label:h.name+' '+(h.type==='new'?'입사':h.type==='out'?'퇴직':h.type==='leave'?'휴직':h.type==='remote'?'재택':'복직'),
           diff,
           color:diff<=0?'#dc2626':diff<=7?'#f59e0b':'#6366f1',
           bg:diff<=0?'#fee2e2':diff<=7?'#fef9c3':'#ede9fe',
@@ -7410,7 +7410,7 @@ function saveHrEntries(arr){ LS.set(HR_KEY,arr); }
 let _hrTab = 'all';
 function setHrTab(tab){
   _hrTab = tab;
-  ['all','new','out','leave','done'].forEach(t=>{
+  ['all','new','out','leave','remote','done'].forEach(t=>{
     const btn=document.getElementById('hrTab_'+t);
     if(!btn)return;
     if(t===tab){btn.style.background='var(--primary)';btn.style.color='#fff';btn.classList.remove('btn-secondary');}
@@ -7436,7 +7436,7 @@ function renderHrAlertBanner(){
     return diff>=0&&diff<=7;
   });
   if(!soon.length){el.innerHTML='';return;}
-  const typeLabel={new:'🆕 입사',out:'👋 퇴직',leave:'🚫 휴직',return:'✅ 복직'};
+  const typeLabel={new:'🆕 입사',out:'👋 퇴직',leave:'🚫 휴직',return:'✅ 복직',remote:'🏠 재택'};
   el.innerHTML=`<div style="background:#fef9c3;border:1px solid #fbbf24;border-radius:var(--radius);padding:12px 16px;">
     <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ 7일 이내 인사 예정 ${soon.length}건</div>
     ${soon.map(h=>{
@@ -7454,6 +7454,7 @@ function renderHrTable(){
   if(_hrTab==='new') filtered=all.filter(h=>h.type==='new'&&h.status==='예정');
   else if(_hrTab==='out') filtered=all.filter(h=>h.type==='out'&&h.status==='예정');
   else if(_hrTab==='leave') filtered=all.filter(h=>(h.type==='leave'||h.type==='return')&&h.status==='예정');
+  else if(_hrTab==='remote') filtered=all.filter(h=>h.type==='remote'&&h.status==='예정');
   else if(_hrTab==='done') filtered=all.filter(h=>h.status==='완료'||h.status==='취소');
   
   // D-day 순 정렬: 예정 항목은 D-day 가까운 순(날짜 오름차순), 완료/취소는 최하단
@@ -7475,7 +7476,7 @@ function renderHrTable(){
     const d=new Date(h.date);d.setHours(0,0,0,0);
     const diff=Math.round((d-today)/(1000*60*60*24));
     const ddayStr=diff===0?'<span style="color:#dc2626;font-weight:700;">D-day</span>':diff>0?'<span style="color:#2563eb;">D-'+diff+'</span>':'<span style="color:#6b7280;">D+'+Math.abs(diff)+'</span>';
-    const typeBadge=h.type==='new'?'<span style="background:#dcfce7;color:#15803d;border-radius:6px;padding:2px 8px;font-size:11px;">🆕 입사</span>':h.type==='out'?'<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:2px 8px;font-size:11px;">👋 퇴직</span>':h.type==='leave'?'<span style="background:#fef9c3;color:#92400e;border-radius:6px;padding:2px 8px;font-size:11px;">🚫 휴직</span>':'<span style="background:#e0f2fe;color:#0369a1;border-radius:6px;padding:2px 8px;font-size:11px;">✅ 복직</span>';
+    const typeBadge=h.type==='new'?'<span style="background:#dcfce7;color:#15803d;border-radius:6px;padding:2px 8px;font-size:11px;">🆕 입사</span>':h.type==='out'?'<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:2px 8px;font-size:11px;">👋 퇴직</span>':h.type==='leave'?'<span style="background:#fef9c3;color:#92400e;border-radius:6px;padding:2px 8px;font-size:11px;">🚫 휴직</span>':h.type==='remote'?'<span style="background:#ede9fe;color:#7c3aed;border-radius:6px;padding:2px 8px;font-size:11px;">🏠 재택</span>':'<span style="background:#e0f2fe;color:#0369a1;border-radius:6px;padding:2px 8px;font-size:11px;">✅ 복직</span>';
     const statColor=h.status==='완료'?'#15803d':h.status==='취소'?'#6b7280':'#92400e';
     const statBg=h.status==='완료'?'#dcfce7':h.status==='취소'?'#f3f4f6':'#fef9c3';
     const dateStr=h.date?h.date.replace(/-/g,'.').slice(2):'';
@@ -7488,6 +7489,8 @@ function renderHrTable(){
       ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#fef9c3;color:#92400e;border:1px solid #fcd34d;">휴직처리</button>`
       :(h.type==='return'&&h.status==='예정')
       ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;">복직처리</button>`
+      :(h.type==='remote'&&h.status==='예정')
+      ?`<button class="btn btn-xs" onclick="completeHrStatus('${h.id}','완료')" style="font-size:10px;background:#ede9fe;color:#7c3aed;border:1px solid #c4b5fd;">재택완료</button>`
       :'';
     return`<tr style="${h.status==='취소'?'opacity:0.5;':''}">
       <td style="text-align:center;">${typeBadge}</td>
@@ -8211,8 +8214,8 @@ function renderRosterTable(){
         </td>
       </tr>`;
       if(!collapsed){
-        rowsHtml+=members.map((e,i)=>`<tr style="background:#fff5f5;">
-          <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
+        rowsHtml+=members.map((e,mi)=>{const rIdx=getRosterResigned().indexOf(e);return`<tr style="background:#fff5f5;cursor:pointer;" onclick="openEmpProfile(${rIdx==-1?`'${e.name}'`:`${rIdx}`},'resigned')" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fff5f5'">
+          <td style="font-size:11px;color:var(--text3);text-align:center;">${mi+1}</td>
           <td style="font-family:monospace;font-size:11px;color:var(--text3);text-align:center;">${e.sc_id||'-'}</td>
           <td style="font-weight:600;color:#b91c1c;">${e.name||'-'}</td>
           <td style="text-align:center;"><span class="park-badge ${e.project==='E7'?'paid':e.project==='SSR'?'free':'active'}" style="font-size:10px;">${e.project||'-'}</span></td>
@@ -8224,7 +8227,7 @@ function renderRosterTable(){
           <td style="text-align:center;font-size:11px;color:#b91c1c;font-weight:600;">${e.resign_date||'-'}</td>
           <td style="text-align:center;font-size:11px;color:var(--text3);">${e.phone||'-'}</td>
           <td style="text-align:center;font-size:11px;color:#6366f1;">${e.slack_id?'@'+e.slack_id:'-'}</td>
-        </tr>`).join('');
+        </tr>`;}).join('');
       }
     });
     tbody.innerHTML=rowsHtml;
@@ -8251,7 +8254,8 @@ function renderRosterTable(){
     const typeColor=e.emp_type==='계약직'?'#b91c1c':e.emp_type==='임원'?'#6d28d9':'#15803d';
     const typeBg=e.emp_type==='계약직'?'#fee2e2':e.emp_type==='임원'?'#ede9fe':'#f0fdf4';
     const projBadge=e.project==='E7'?'paid':e.project==='SSR'?'free':'active';
-    return`<tr>
+    const fullIdx=getRosterData().indexOf(e);
+    return`<tr data-idx="${fullIdx}" onclick="openEmpProfile(${fullIdx},'active')" style="cursor:pointer;" onmouseover="this.style.background='var(--hover)'" onmouseout="this.style.background=''">
       <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
       <td style="font-family:monospace;font-size:11px;color:var(--text3);text-align:center;">${e.sc_id||'-'}</td>
       <td style="font-weight:700;">${e.name}${isProbActive?'<span style="font-size:9px;background:#fef9c3;color:#92400e;border-radius:4px;padding:0 4px;margin-left:3px;vertical-align:middle;">수습</span>':''}</td>
@@ -8610,6 +8614,7 @@ function uploadRosterExcel(){
     <button class="btn btn-sm btn-secondary" id="hrTab_new" onclick="setHrTab('new')">🆕 입사</button>
     <button class="btn btn-sm btn-secondary" id="hrTab_out" onclick="setHrTab('out')">👋 퇴직</button>
     <button class="btn btn-sm btn-secondary" id="hrTab_leave" onclick="setHrTab('leave')">🚫 휴직/복직</button>
+    <button class="btn btn-sm btn-secondary" id="hrTab_remote" onclick="setHrTab('remote')">🏠 재택</button>
     <button class="btn btn-sm btn-secondary" id="hrTab_done" onclick="setHrTab('done')">✅ 완료</button>
   </div>
 
@@ -8647,11 +8652,12 @@ function uploadRosterExcel(){
       <div class="form-row">
         <div class="form-group">
           <label>구분 *</label>
-          <select id="hrType" onchange="updateHrForm();const tm={new:'🆕 입사 등록',out:'👋 퇴직 등록',leave:'🚫 휴직 등록',return:'✅ 복직 등록'};document.getElementById('hrModalTitle').textContent=tm[this.value]||'👤 인사일정 등록';">
+          <select id="hrType" onchange="updateHrForm();const tm={new:'🆕 입사 등록',out:'👋 퇴직 등록',leave:'🚫 휴직 등록',return:'✅ 복직 등록',remote:'🏠 재택 등록'};document.getElementById('hrModalTitle').textContent=tm[this.value]||'👤 인사일정 등록';">
             <option value="new">🆕 입사</option>
             <option value="out">👋 퇴직</option>
             <option value="leave">🚫 휴직</option>
             <option value="return">✅ 복직</option>
+            <option value="remote">🏠 재택</option>
           </select>
         </div>
         <div class="form-group">
@@ -8759,12 +8765,15 @@ function uploadRosterExcel(){
 <!-- ===== 직원명부 페이지 ===== -->
 <div class="page" id="pageRoster">
 <div class="container">
+  <!-- 수습만료 알림 배너 -->
+  <div id="rosterProbBanner" style="margin-bottom:10px;"></div>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
     <h2 style="font-size:17px;font-weight:800;color:var(--text);margin:0;">📋 직원명부</h2>
     <span id="rosterUploadDate" style="font-size:12px;color:var(--text3);">기준: 2026. 3. 20. (업로드됨) · 재직자 <b id="rosterTotalCnt">327</b>명</span>
-    <button class="btn btn-sm btn-secondary" onclick="uploadRosterExcel()" style="margin-left:auto;display:flex;align-items:center;gap:6px;">
-      <span>📂</span> 엑셀 업로드
-    </button>
+    <div style="margin-left:auto;display:flex;gap:8px;">
+      <button class="btn btn-ghost btn-sm" onclick="exportRosterExcel()" style="display:flex;align-items:center;gap:5px;">📥 엑셀 내보내기</button>
+      <button class="btn btn-sm btn-secondary" onclick="uploadRosterExcel()" style="display:flex;align-items:center;gap:6px;"><span>📂</span> 업로드</button>
+    </div>
   </div>
   <!-- 탭 -->
   <div style="display:flex;gap:8px;margin-bottom:12px;">
@@ -8891,24 +8900,48 @@ function uploadRosterExcel(){
 <!-- ===== 법인차 페이지 ===== -->
 <div class="page" id="pageCar">
 <div class="container">
-  <div class="card-header" style="margin-bottom:16px;">
+  <div class="card-header" style="margin-bottom:12px;">
     <div class="card-title"><span class="icon" style="background:#dbeafe;">🚗</span> 법인차 현황</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <button class="btn btn-primary" onclick="openCarModal()">＋ 차량 등록</button>
-      <button class="btn btn-ghost btn-sm" onclick="exportCarCSV()">⬇ CSV</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportCarExcel()">📥 엑셀</button>
+      <span id="carBulkActions" style="display:none;gap:6px;">
+        <button class="btn btn-danger btn-sm" onclick="deleteSelectedCars()">🗑 선택삭제</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportSelectedCarsExcel()">📥 선택 엑셀</button>
+      </span>
+      <span id="carSelectedCount" style="font-size:12px;color:var(--text3);display:none;"></span>
     </div>
   </div>
   <!-- 만료 알림 배너 -->
-  <div id="carAlertBanner" style="margin-bottom:12px;"></div>
+  <div id="carAlertBanner" style="margin-bottom:10px;"></div>
   <!-- 필터 탭 -->
-  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
     <button class="btn btn-sm" id="carTab_all" onclick="setCarTab('all')" style="background:var(--primary);color:#fff;">전체</button>
     <button class="btn btn-sm btn-secondary" id="carTab_active" onclick="setCarTab('active')">🟢 운행중</button>
     <button class="btn btn-sm btn-secondary" id="carTab_repair" onclick="setCarTab('repair')">🔧 수리중</button>
     <button class="btn btn-sm btn-secondary" id="carTab_done" onclick="setCarTab('done')">📦 매각/반납</button>
   </div>
-  <!-- 차량 카드 그리드 -->
-  <div id="carGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;"></div>
+  <!-- 차량 테이블 -->
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;" id="carTable">
+      <thead>
+        <tr style="background:var(--surface2);border-bottom:2px solid var(--border);">
+          <th style="padding:8px;width:36px;text-align:center;"><input type="checkbox" id="carCheckAll" onchange="toggleAllCars(this.checked)" style="cursor:pointer;width:15px;height:15px;"></th>
+          <th style="padding:8px 10px;text-align:left;font-weight:700;">차량명</th>
+          <th style="padding:8px 10px;text-align:left;font-weight:700;">번호판</th>
+          <th style="padding:8px 10px;text-align:left;font-weight:700;">상태</th>
+          <th style="padding:8px 10px;text-align:left;font-weight:700;">담당자</th>
+          <th style="padding:8px 10px;text-align:left;font-weight:700;">보험만기</th>
+          <th style="padding:8px 10px;text-align:left;font-weight:700;">정기검사</th>
+          <th style="padding:8px 10px;text-align:left;font-weight:700;">리스/만료</th>
+          <th style="padding:8px 10px;text-align:left;font-weight:700;">비고</th>
+          <th style="padding:8px 10px;text-align:center;font-weight:700;">운행일지</th>
+          <th style="padding:8px 10px;text-align:center;font-weight:700;">수정</th>
+        </tr>
+      </thead>
+      <tbody id="carTbody"></tbody>
+    </table>
+  </div>
 </div>
 </div>
 
@@ -8972,6 +9005,54 @@ function uploadRosterExcel(){
       <button class="btn btn-ghost" onclick="closeModal('carModal')">취소</button>
       <button class="btn btn-primary" onclick="saveCar()">저장</button>
     </div>
+  </div>
+</div>
+
+<!-- ===== 법인차 운행일지 모달 ===== -->
+<div class="modal-overlay" id="carLogModal">
+  <div class="modal" style="max-width:900px;width:96vw;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+      <h3 id="carLogModalTitle" style="margin:0;">🚗 운행일지</h3>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="addCarLogRow()">＋ 행 추가</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportCarLogExcel()">📥 엑셀 내보내기</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('carLogModal')">✕ 닫기</button>
+      </div>
+    </div>
+    <!-- 합계 요약 -->
+    <div id="carLogSummary" style="display:flex;gap:16px;background:var(--surface2);border-radius:var(--radius-sm);padding:8px 14px;margin-bottom:10px;font-size:12px;flex-wrap:wrap;"></div>
+    <!-- 스프레드시트 테이블 -->
+    <div style="overflow-x:auto;max-height:55vh;overflow-y:auto;">
+      <table id="carLogTable" style="width:100%;border-collapse:collapse;font-size:12px;min-width:780px;">
+        <thead style="position:sticky;top:0;z-index:2;">
+          <tr style="background:#e0e7ff;border-bottom:2px solid #c7d2fe;">
+            <th style="padding:6px 8px;width:30px;text-align:center;font-weight:700;">#</th>
+            <th style="padding:6px 8px;min-width:90px;font-weight:700;">날짜 <span style="font-weight:400;font-size:10px;color:#6366f1;">(MM.DD)</span></th>
+            <th style="padding:6px 8px;min-width:80px;font-weight:700;">운전자</th>
+            <th style="padding:6px 8px;min-width:90px;font-weight:700;">출발지</th>
+            <th style="padding:6px 8px;min-width:90px;font-weight:700;">도착지</th>
+            <th style="padding:6px 8px;min-width:80px;font-weight:700;text-align:right;">출발km</th>
+            <th style="padding:6px 8px;min-width:80px;font-weight:700;text-align:right;">도착km</th>
+            <th style="padding:6px 8px;min-width:80px;font-weight:700;text-align:right;background:#f0fdf4;">주행거리</th>
+            <th style="padding:6px 8px;min-width:80px;font-weight:700;text-align:right;">주유비(원)</th>
+            <th style="padding:6px 8px;min-width:100px;font-weight:700;">목적/비고</th>
+            <th style="padding:6px 8px;width:28px;text-align:center;font-weight:700;"></th>
+          </tr>
+        </thead>
+        <tbody id="carLogTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 직원 상세 프로필 모달 ===== -->
+<div class="modal-overlay" id="empProfileModal">
+  <div class="modal" style="max-width:480px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h3 style="margin:0;" id="empProfileName">직원 상세</h3>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('empProfileModal')">✕</button>
+    </div>
+    <div id="empProfileBody"></div>
   </div>
 </div>
 
@@ -10627,6 +10708,483 @@ function exportCarCSV(){
 }
 // ===== 법인차 끝 =====
 
+// ============================================================
+// 법인차 테이블형 렌더링 (체크박스 + 전체선택)
+// ============================================================
+function renderCarGrid(){ renderCarTable(); } // 기존 호출 호환
+
+function renderCarTable(){
+  const tbody=document.getElementById('carTbody');
+  if(!tbody) return;
+  const today=new Date();today.setHours(0,0,0,0);
+  let cars=loadCars();
+  if(_carTab==='active') cars=cars.filter(c=>c.status==='운행중');
+  else if(_carTab==='repair') cars=cars.filter(c=>c.status==='수리중');
+  else if(_carTab==='done') cars=cars.filter(c=>c.status==='매각'||c.status==='반납');
+
+  if(!cars.length){
+    tbody.innerHTML=`<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--text3);">등록된 차량이 없습니다</td></tr>`;
+    return;
+  }
+
+  const statusBadge={
+    운행중:'<span style="background:#dcfce7;color:#15803d;font-size:10px;border-radius:5px;padding:2px 7px;font-weight:700;">🟢 운행중</span>',
+    수리중:'<span style="background:#fef9c3;color:#b45309;font-size:10px;border-radius:5px;padding:2px 7px;font-weight:700;">🔧 수리중</span>',
+    매각:'<span style="background:#f3f4f6;color:#6b7280;font-size:10px;border-radius:5px;padding:2px 7px;font-weight:700;">📤 매각</span>',
+    반납:'<span style="background:#f3f4f6;color:#6b7280;font-size:10px;border-radius:5px;padding:2px 7px;font-weight:700;">📦 반납</span>'
+  };
+
+  const warnBadge=(dateStr,limitDays,label)=>{
+    if(!dateStr) return '';
+    const d=new Date(dateStr);d.setHours(0,0,0,0);
+    const diff=Math.round((d-today)/(1000*60*60*24));
+    const txt=diff<0?'만료됨':diff===0?'오늘!':'D-'+diff;
+    if(diff>limitDays) return`<span style="font-size:11px;color:var(--text2);">${dateStr}</span>`;
+    const col=diff<=0?'#dc2626':diff<=7?'#b45309':'#d97706';
+    return`<span style="font-size:11px;color:${col};font-weight:700;">${dateStr} <span style="background:#fee2e2;color:#dc2626;border-radius:4px;padding:0 4px;">${txt}</span></span>`;
+  };
+
+  tbody.innerHTML=cars.map(c=>{
+    const isDone=c.status==='매각'||c.status==='반납';
+    return`<tr style="border-bottom:1px solid var(--border);${isDone?'opacity:.6;':''}" onmouseover="this.style.background='var(--hover)'" onmouseout="this.style.background=''">
+      <td style="padding:8px;text-align:center;"><input type="checkbox" class="car-check" data-id="${c.id}" onchange="updateCarBulkUI()" style="cursor:pointer;width:15px;height:15px;"></td>
+      <td style="padding:8px 10px;font-weight:600;">${c.name}${c.year?`<span style="font-size:10px;color:var(--text3);margin-left:4px;">${c.year}년식</span>`:''}</td>
+      <td style="padding:8px 10px;font-family:monospace;font-size:12px;">${c.plateNum||'<span style="color:var(--text3)">-</span>'}</td>
+      <td style="padding:8px 10px;">${statusBadge[c.status]||c.status}</td>
+      <td style="padding:8px 10px;font-size:12px;">${[c.manager,c.user].filter(Boolean).join(' / ')||'-'}</td>
+      <td style="padding:8px 10px;">${isDone?'<span style="color:var(--text3)">-</span>':warnBadge(c.insureEnd,30,'보험')}</td>
+      <td style="padding:8px 10px;">${isDone?'<span style="color:var(--text3)">-</span>':warnBadge(c.inspectEnd,30,'검사')}</td>
+      <td style="padding:8px 10px;">${isDone?'<span style="color:var(--text3)">-</span>':warnBadge(c.leaseEnd,60,'리스')}</td>
+      <td style="padding:8px 10px;font-size:11px;color:var(--text3);">${c.note||'-'}</td>
+      <td style="padding:8px;text-align:center;"><button class="btn btn-xs" style="background:#e0e7ff;color:#4f46e5;border:none;padding:3px 9px;border-radius:5px;cursor:pointer;font-size:11px;" onclick="event.stopPropagation();openCarLogModal('${c.id}')">📋 일지</button></td>
+      <td style="padding:8px;text-align:center;"><button class="btn btn-xs btn-ghost" style="font-size:11px;padding:3px 9px;" onclick="event.stopPropagation();openCarModal('${c.id}')">✏️</button></td>
+    </tr>`;
+  }).join('');
+
+  // 전체선택 체크박스 초기화
+  const all=document.getElementById('carCheckAll');
+  if(all) all.checked=false;
+  updateCarBulkUI();
+}
+
+function toggleAllCars(checked){
+  document.querySelectorAll('.car-check').forEach(cb=>cb.checked=checked);
+  updateCarBulkUI();
+}
+
+function updateCarBulkUI(){
+  const checks=[...document.querySelectorAll('.car-check')];
+  const sel=checks.filter(c=>c.checked);
+  const bulkEl=document.getElementById('carBulkActions');
+  const cntEl=document.getElementById('carSelectedCount');
+  const allCb=document.getElementById('carCheckAll');
+  if(bulkEl) bulkEl.style.display=sel.length?'flex':'none';
+  if(cntEl){cntEl.style.display=sel.length?'':'none';cntEl.textContent=sel.length+'대 선택';}
+  if(allCb) allCb.indeterminate=sel.length>0&&sel.length<checks.length;
+}
+
+function getSelectedCarIds(){
+  return [...document.querySelectorAll('.car-check:checked')].map(c=>c.dataset.id);
+}
+
+function deleteSelectedCars(){
+  const ids=getSelectedCarIds();
+  if(!ids.length||!confirm(`선택한 ${ids.length}대를 삭제하시겠습니까?`)) return;
+  saveCars(loadCars().filter(c=>!ids.includes(c.id)));
+  renderCars();
+  showToast(`${ids.length}대 삭제 완료`);
+}
+
+// ============================================================
+// 법인차 엑셀 내보내기 (SheetJS)
+// ============================================================
+function exportCarExcel(){ _exportCarsToExcel(loadCars(),'법인차현황'); }
+function exportSelectedCarsExcel(){
+  const ids=getSelectedCarIds();
+  if(!ids.length){showToast('선택한 차량이 없습니다','error');return;}
+  _exportCarsToExcel(loadCars().filter(c=>ids.includes(c.id)),'법인차현황_선택');
+}
+
+function _exportCarsToExcel(cars,filename){
+  if(typeof XLSX==='undefined'){showToast('SheetJS 로딩 필요','error');return;}
+  const headers=['차량명','번호판','차종/색상','연식','상태','담당자','주사용자','취득방식','취득일','취득금액(원)','리스/할부종료일','월납입액(원)','보험사','보험시작','보험만기','정기검사만기','비고'];
+  const rows=cars.map(c=>[c.name,c.plateNum,c.type,c.year,c.status,c.manager,c.user,c.acquireType,c.acquireDate,c.acquirePrice?Number(c.acquirePrice):'',c.leaseEnd,c.monthlyFee?Number(c.monthlyFee):'',c.insurer,c.insureStart,c.insureEnd,c.inspectEnd,c.note]);
+  const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
+  // 컬럼 너비
+  ws['!cols']=[14,12,12,7,7,10,10,8,11,13,13,11,10,11,11,13,16].map(w=>({wch:w}));
+  // 헤더 스타일링
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'법인차현황');
+
+  // 운행일지 시트 추가
+  cars.forEach(c=>{
+    const logs=loadCarLogs(c.id);
+    if(!logs.length) return;
+    const lHeaders=['날짜','운전자','출발지','도착지','출발km','도착km','주행거리(km)','주유비(원)','목적/비고'];
+    const lRows=logs.map(l=>[l.date,l.driver,l.from,l.to,l.startKm?Number(l.startKm):'',l.endKm?Number(l.endKm):'',l.dist?Number(l.dist):'',l.fuel?Number(l.fuel):'',l.note]);
+    const totalDist=logs.reduce((s,l)=>s+(Number(l.dist)||0),0);
+    const totalFuel=logs.reduce((s,l)=>s+(Number(l.fuel)||0),0);
+    lRows.push(['합계','','','','','',totalDist,totalFuel,'']);
+    const ws2=XLSX.utils.aoa_to_sheet([lHeaders,...lRows]);
+    ws2['!cols']=[11,9,10,10,9,9,10,10,14].map(w=>({wch:w}));
+    const sheetName=(c.name||'차량').slice(0,28)+'_일지';
+    XLSX.utils.book_append_sheet(wb,ws2,sheetName);
+  });
+
+  XLSX.writeFile(wb,`${filename}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  showToast('📥 엑셀 파일 다운로드 완료');
+}
+
+// ============================================================
+// 법인차 운행일지 (스프레드시트형)
+// ============================================================
+const CAR_LOG_PREFIX='intra_car_log_';
+let _carLogCarId='';
+
+function loadCarLogs(carId){ return LS.get(CAR_LOG_PREFIX+carId)||[]; }
+function saveCarLogs(carId,arr){ LS.set(CAR_LOG_PREFIX+carId,arr); }
+
+function openCarLogModal(carId){
+  _carLogCarId=carId;
+  const cars=loadCars();
+  const car=cars.find(c=>c.id===carId);
+  const title=document.getElementById('carLogModalTitle');
+  if(title) title.textContent=`📋 운행일지 — ${car?car.name:''}${car&&car.plateNum?' ('+car.plateNum+')':''}`;
+  renderCarLogTable();
+  openModal('carLogModal');
+}
+
+function renderCarLogTable(){
+  const logs=loadCarLogs(_carLogCarId);
+  const tbody=document.getElementById('carLogTbody');
+  if(!tbody) return;
+
+  // 합계 계산
+  const totalDist=logs.reduce((s,l)=>s+(Number(l.dist)||0),0);
+  const totalFuel=logs.reduce((s,l)=>s+(Number(l.fuel)||0),0);
+  const sumEl=document.getElementById('carLogSummary');
+  if(sumEl) sumEl.innerHTML=`
+    <span>📅 총 <b>${logs.length}</b>건</span>
+    <span>🛣 총 주행거리 <b style="color:#4f46e5;">${totalDist.toLocaleString()} km</b></span>
+    <span>⛽ 총 주유비 <b style="color:#15803d;">${totalFuel.toLocaleString()} 원</b></span>`;
+
+  if(!logs.length){
+    tbody.innerHTML=`<tr><td colspan="11" style="text-align:center;padding:28px;color:var(--text3);">운행 기록이 없습니다. ＋ 행 추가를 눌러 입력하세요</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML=logs.map((l,i)=>{
+    const cellStyle='padding:0;border:1px solid #e0e7ff;';
+    const inputStyle='width:100%;border:none;background:transparent;padding:5px 7px;font-size:12px;outline:none;box-sizing:border-box;';
+    const numStyle=inputStyle+'text-align:right;';
+    return`<tr data-logidx="${i}" style="border-bottom:1px solid var(--border);">
+      <td style="${cellStyle}text-align:center;padding:4px;font-size:11px;color:var(--text3);">${i+1}</td>
+      <td style="${cellStyle}position:relative;">
+        <input type="text" value="${l.date||''}" style="${inputStyle}" placeholder="03.23" title="MM.DD 또는 YYYY.MM.DD 입력" oninput="updateCarLogDate(${i},this.value)" onblur="formatCarLogDate(${i},this)" onkeydown="carLogKeyNav(event,${i},0)">
+      </td>
+      <td style="${cellStyle}"><input type="text" value="${l.driver||''}" style="${inputStyle}" placeholder="운전자" onchange="updateCarLog(${i},'driver',this.value)" onkeydown="carLogKeyNav(event,${i},1)"></td>
+      <td style="${cellStyle}"><input type="text" value="${l.from||''}" style="${inputStyle}" placeholder="출발지" onchange="updateCarLog(${i},'from',this.value)" onkeydown="carLogKeyNav(event,${i},2)"></td>
+      <td style="${cellStyle}"><input type="text" value="${l.to||''}" style="${inputStyle}" placeholder="도착지" onchange="updateCarLog(${i},'to',this.value)" onkeydown="carLogKeyNav(event,${i},3)"></td>
+      <td style="${cellStyle}"><input type="number" value="${l.startKm||''}" style="${numStyle}" placeholder="0" onchange="updateCarLog(${i},'startKm',this.value)" onkeydown="carLogKeyNav(event,${i},4)"></td>
+      <td style="${cellStyle}"><input type="number" value="${l.endKm||''}" style="${numStyle}" placeholder="0" onchange="updateCarLog(${i},'endKm',this.value)" onkeydown="carLogKeyNav(event,${i},5)"></td>
+      <td style="${cellStyle}background:#f0fdf4;"><input type="number" value="${l.dist||''}" style="${numStyle}color:#15803d;font-weight:600;" placeholder="자동" onchange="updateCarLog(${i},'dist',this.value)" onkeydown="carLogKeyNav(event,${i},6)"></td>
+      <td style="${cellStyle}"><input type="number" value="${l.fuel||''}" style="${numStyle}" placeholder="0" onchange="updateCarLog(${i},'fuel',this.value)" onkeydown="carLogKeyNav(event,${i},7)"></td>
+      <td style="${cellStyle}"><input type="text" value="${l.note||''}" style="${inputStyle}" placeholder="목적/비고" onchange="updateCarLog(${i},'note',this.value)" onkeydown="carLogKeyNav(event,${i},8)"></td>
+      <td style="padding:4px;text-align:center;"><button onclick="deleteCarLogRow(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:2px 5px;" title="행 삭제">×</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function updateCarLog(idx,field,val){
+  const logs=loadCarLogs(_carLogCarId);
+  if(!logs[idx]) return;
+  logs[idx][field]=val;
+  // 출발/도착km 입력 시 주행거리 자동 계산
+  if(field==='startKm'||field==='endKm'){
+    const s=Number(logs[idx].startKm)||0;
+    const e=Number(logs[idx].endKm)||0;
+    if(s>0&&e>s) logs[idx].dist=String(e-s);
+  }
+  saveCarLogs(_carLogCarId,logs);
+  // 주행거리 자동계산 시 dist 필드 즉시 반영
+  if(field==='startKm'||field==='endKm'){
+    const distInput=document.querySelector(`tr[data-logidx="${idx}"] input[placeholder="자동"]`);
+    if(distInput) distInput.value=logs[idx].dist||'';
+  }
+  // 합계 업데이트
+  const totalDist=logs.reduce((s,l)=>s+(Number(l.dist)||0),0);
+  const totalFuel=logs.reduce((s,l)=>s+(Number(l.fuel)||0),0);
+  const sumEl=document.getElementById('carLogSummary');
+  if(sumEl) sumEl.innerHTML=`
+    <span>📅 총 <b>${logs.length}</b>건</span>
+    <span>🛣 총 주행거리 <b style="color:#4f46e5;">${totalDist.toLocaleString()} km</b></span>
+    <span>⛽ 총 주유비 <b style="color:#15803d;">${totalFuel.toLocaleString()} 원</b></span>`;
+}
+
+function addCarLogRow(){
+  const logs=loadCarLogs(_carLogCarId);
+  const last=logs[logs.length-1]||{};
+  // 이전 행 날짜 그대로 복사 (날짜 재입력 불편 해소)
+  const newDate=last.date||new Date().toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}).replace(/ /g,'').replace('.','.').slice(0,-1);
+  logs.push({date:newDate,driver:last.driver||'',from:'',to:'',startKm:'',endKm:'',dist:'',fuel:'',note:''});
+  saveCarLogs(_carLogCarId,logs);
+  renderCarLogTable();
+  // 마지막 행의 첫 번째 입력에 포커스
+  setTimeout(()=>{
+    const rows=document.querySelectorAll('#carLogTbody tr');
+    if(rows.length){const inp=rows[rows.length-1].querySelector('input');if(inp)inp.focus();}
+  },50);
+}
+
+function deleteCarLogRow(idx){
+  const logs=loadCarLogs(_carLogCarId);
+  logs.splice(idx,1);
+  saveCarLogs(_carLogCarId,logs);
+  renderCarLogTable();
+}
+
+// Tab키 + Enter키 셀 이동 (엑셀처럼)
+function carLogKeyNav(e,rowIdx,colIdx){
+  const cols=9; // 0~8
+  if(e.key==='Tab'||e.key==='Enter'){
+    e.preventDefault();
+    const nextCol=e.shiftKey&&e.key==='Tab'?colIdx-1:colIdx+1;
+    if(nextCol>=0&&nextCol<cols){
+      const row=document.querySelector(`tr[data-logidx="${rowIdx}"]`);
+      if(row){const inp=row.querySelectorAll('input')[nextCol+1];if(inp){inp.focus();inp.select();}}
+    } else if(nextCol>=cols){
+      // 다음 행으로
+      const nextRow=document.querySelector(`tr[data-logidx="${rowIdx+1}"]`);
+      if(nextRow){const inp=nextRow.querySelectorAll('input')[1];if(inp){inp.focus();inp.select();}}
+      else if(e.key==='Tab') addCarLogRow();
+    }
+  }
+  // Ctrl+C: 해당 셀 값 클립보드 복사
+  if(e.ctrlKey&&e.key==='c'&&e.target.tagName==='INPUT'){
+    const val=e.target.value;
+    if(val) navigator.clipboard.writeText(val).then(()=>showToast('복사됨: '+val));
+  }
+}
+
+// 날짜 빠른입력 파싱 (3.23 / 03.23 / 03/23 / 0323 → 2026.03.23)
+function parseCarLogDate(raw){
+  if(!raw) return '';
+  const s=raw.trim().replace(/\//g,'.');
+  // YYYY.MM.DD 이미 완전한 형태
+  if(/^\d{4}\.\d{1,2}\.\d{1,2}$/.test(s)) return s;
+  // MM.DD 또는 M.D
+  const md=s.match(/^(\d{1,2})\.(\d{1,2})$/);
+  if(md){const y=new Date().getFullYear();return`${y}.${md[1].padStart(2,'0')}.${md[2].padStart(2,'0')}`;}
+  // MMDD (4자리)
+  const mmdd=s.match(/^(\d{2})(\d{2})$/);
+  if(mmdd){const y=new Date().getFullYear();return`${y}.${mmdd[1]}.${mmdd[2]}`;}
+  return s;
+}
+function updateCarLogDate(idx,val){
+  const logs=loadCarLogs(_carLogCarId);
+  if(!logs[idx]) return;
+  logs[idx].date=val; // 입력 중엔 raw 값 유지
+  saveCarLogs(_carLogCarId,logs);
+}
+function formatCarLogDate(idx,input){
+  const parsed=parseCarLogDate(input.value);
+  if(parsed&&parsed!==input.value){
+    input.value=parsed;
+    const logs=loadCarLogs(_carLogCarId);
+    if(logs[idx]){logs[idx].date=parsed;saveCarLogs(_carLogCarId,logs);}
+  }
+}
+
+function exportCarLogExcel(){
+  if(typeof XLSX==='undefined'){showToast('SheetJS 로딩 필요','error');return;}
+  const logs=loadCarLogs(_carLogCarId);
+  const cars=loadCars();
+  const car=cars.find(c=>c.id===_carLogCarId);
+  const carName=car?car.name:'차량';
+  const headers=['날짜','운전자','출발지','도착지','출발km','도착km','주행거리(km)','주유비(원)','목적/비고'];
+  const rows=logs.map(l=>[l.date,l.driver,l.from,l.to,l.startKm?Number(l.startKm):'',l.endKm?Number(l.endKm):'',l.dist?Number(l.dist):'',l.fuel?Number(l.fuel):'',l.note]);
+  const totalDist=logs.reduce((s,l)=>s+(Number(l.dist)||0),0);
+  const totalFuel=logs.reduce((s,l)=>s+(Number(l.fuel)||0),0);
+  rows.push(['합계','','','','','',totalDist,totalFuel,'']);
+  const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
+  ws['!cols']=[11,9,10,10,9,9,11,11,14].map(w=>({wch:w}));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'운행일지');
+  XLSX.writeFile(wb,`운행일지_${carName}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  showToast('📥 운행일지 엑셀 다운로드 완료');
+}
+
+// ============================================================
+// 직원 상세 프로필 모달 + 근속연수 계산
+// ============================================================
+function openEmpProfile(idx, tab){
+  const data = tab==='resigned' ? getRosterResigned() : getRosterData();
+  let e = typeof idx==='string' ? data.find(x=>x.name===idx) : data[idx];
+  if(!e) return;
+
+  // 근속연수 계산
+  const today=new Date();
+  let tenure='';
+  if(e.join_date){
+    const jd=new Date(e.join_date.replace(/\./g,'-'));
+    if(!isNaN(jd)){
+      const ms=today-jd;
+      const yrs=Math.floor(ms/(1000*60*60*24*365.25));
+      const mos=Math.floor((ms%(1000*60*60*24*365.25))/(1000*60*60*24*30.44));
+      tenure=yrs>0?`${yrs}년 ${mos}개월`:`${mos}개월`;
+    }
+  }
+
+  // 수습 만료 D-day
+  let probStr='';
+  if(e.prob_end){
+    const pd=new Date(e.prob_end.replace(/\./g,'-'));
+    if(!isNaN(pd)){
+      const diff=Math.round((pd-today)/(1000*60*60*24));
+      if(diff>0) probStr=`<span style="background:#fef9c3;color:#92400e;border-radius:5px;padding:2px 8px;font-size:12px;font-weight:700;">D-${diff} 수습중</span>`;
+      else if(diff===0) probStr=`<span style="background:#fee2e2;color:#dc2626;border-radius:5px;padding:2px 8px;font-size:12px;font-weight:700;">오늘 수습만료!</span>`;
+      else probStr=`<span style="background:#f3f4f6;color:#6b7280;border-radius:5px;padding:2px 8px;font-size:12px;">수습완료</span>`;
+    }
+  }
+
+  const rows=[
+    ['사번',e.sc_id||'-'],
+    ['소속/실',`${e.project||'-'} / ${e.dept||'-'}`],
+    ['팀',e.team||'-'],
+    ['고용형태',e.emp_type||'-'],
+    ['직책/직급',e.title||'-'],
+    ['입사일',e.join_date||'-'],
+    ['근속연수',tenure||'-'],
+    ['수습만료일',e.prob_end?`${e.prob_end} ${probStr}`:'-'],
+  ];
+  if(e.resign_date) rows.push(['퇴직일',e.resign_date]);
+  if(e.phone) rows.push(['연락처',e.phone]);
+  if(e.slack_id) rows.push(['슬랙 ID','@'+e.slack_id]);
+
+  const nm=document.getElementById('empProfileName');
+  if(nm) nm.textContent=`👤 ${e.name}`;
+
+  const body=document.getElementById('empProfileBody');
+  if(body) body.innerHTML=`
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      ${rows.map(([label,val])=>`
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:9px 12px;color:var(--text3);font-size:12px;white-space:nowrap;width:100px;">${label}</td>
+          <td style="padding:9px 12px;font-weight:500;">${val||'-'}</td>
+        </tr>`).join('')}
+    </table>`;
+
+  openModal('empProfileModal');
+}
+
+// ============================================================
+// 수습 만료 임박자 배너 (직원명부 상단)
+// ============================================================
+function renderRosterProbBanner(){
+  const el=document.getElementById('rosterProbBanner');
+  if(!el) return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const data=getRosterData();
+  const soon=[];
+  data.forEach(e=>{
+    if(!e.prob_end) return;
+    const d=new Date(e.prob_end.replace(/\./g,'-'));d.setHours(0,0,0,0);
+    const diff=Math.round((d-today)/(1000*60*60*24));
+    if(diff>=0&&diff<=30) soon.push({e,diff});
+  });
+  if(!soon.length){el.innerHTML='';return;}
+  soon.sort((a,b)=>a.diff-b.diff);
+  el.innerHTML=`<div style="background:#fef9c3;border:1px solid #f59e0b;border-radius:var(--radius);padding:10px 14px;">
+    <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;">⏰ 수습만료 임박 ${soon.length}명</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${soon.map(({e,diff})=>{
+        const col=diff<=7?'#dc2626':'#b45309';
+        const label=diff===0?'오늘!':'D-'+diff;
+        return`<span style="background:#fff;border:1px solid ${col};color:${col};border-radius:20px;padding:2px 10px;font-size:11px;font-weight:600;cursor:pointer;" onclick="openEmpProfile(${getRosterData().indexOf(e)},'active')">${e.name} <b>${label}</b></span>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// 직원명부 엑셀 내보내기
+// ============================================================
+function exportRosterExcel(){
+  if(typeof XLSX==='undefined'){showToast('SheetJS 로딩 필요','error');return;}
+  const active=getRosterData();
+  const resigned=getRosterResigned();
+
+  const aHeaders=['번호','사번','성명','소속','실','팀','고용형태','직책','입사일','수습만료일','연락처','슬랙ID'];
+  const aRows=active.map(e=>[e.no||'',e.sc_id,e.name,e.project,e.dept,e.team,e.emp_type,e.title,e.join_date,e.prob_end,e.phone||'',e.slack_id||'']);
+
+  const rHeaders=['번호','사번','성명','소속','실','팀','고용형태','직책','입사일','퇴직일'];
+  const rRows=resigned.map(e=>[e.no||'',e.sc_id,e.name,e.project,e.dept,e.team,e.emp_type,e.title,e.join_date,e.resign_date]);
+
+  const wb=XLSX.utils.book_new();
+  const ws1=XLSX.utils.aoa_to_sheet([aHeaders,...aRows]);
+  ws1['!cols']=[5,8,8,6,14,16,8,8,12,12,13,14].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,ws1,'재직자');
+
+  if(rRows.length){
+    const ws2=XLSX.utils.aoa_to_sheet([rHeaders,...rRows]);
+    ws2['!cols']=[5,8,8,6,14,16,8,8,12,12].map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb,ws2,'퇴직자');
+  }
+
+  XLSX.writeFile(wb,`직원명부_${new Date().toISOString().slice(0,10)}.xlsx`);
+  showToast(`📥 직원명부 엑셀 다운로드 완료 (재직자 ${active.length}명${rRows.length?', 퇴직자 '+rRows.length+'명':''})`);
+}
+
+// ============================================================
+// renderRoster() 수습 배너 연결
+// ============================================================
+const _origRenderRoster=typeof renderRoster==='function'?renderRoster:null;
+// renderRoster 오버라이드하여 수습 배너도 함께 렌더
+(function(){
+  const _orig=renderRoster;
+  renderRoster=function(){
+    _orig();
+    renderRosterProbBanner();
+  };
+})();
+
+// ============================================================
+// 홈 대시보드 강화 — 법인차 만료 + 수습 알림 통합
+// ============================================================
+const _origRenderHomeDdayBanner=renderHomeDdayBanner;
+renderHomeDdayBanner=function(){
+  _origRenderHomeDdayBanner();
+  // 법인차 만료 알림 → 홈 배너에도 통합
+  try{
+    const today=new Date();today.setHours(0,0,0,0);
+    const cars=loadCars().filter(c=>c.status==='운행중'||c.status==='수리중');
+    const carAlerts=[];
+    cars.forEach(c=>{
+      [[c.insureEnd,'보험'],[c.inspectEnd,'정기검사'],[c.leaseEnd,'리스만료']].forEach(([d,label])=>{
+        if(!d) return;
+        const dt=new Date(d);dt.setHours(0,0,0,0);
+        const diff=Math.round((dt-today)/(1000*60*60*24));
+        if(diff<=14) carAlerts.push({name:c.name,label,diff});
+      });
+    });
+    if(carAlerts.length){
+      const homeEl=document.getElementById('homeDdayBanner');
+      if(homeEl){
+        const extra=`<div style="background:#dbeafe;border:1px solid #93c5fd;border-radius:var(--radius);padding:10px 14px;margin-top:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:15px;">🚗</span>
+          <span style="font-size:12px;font-weight:700;color:#1d4ed8;">법인차 만료 임박 ${carAlerts.length}건</span>
+          ${carAlerts.sort((a,b)=>a.diff-b.diff).map(a=>{
+            const col=a.diff<=0?'#dc2626':'#1d4ed8';
+            const label=a.diff<=0?'만료됨':'D-'+a.diff;
+            return`<span style="background:#fff;border:1px solid #93c5fd;color:${col};border-radius:20px;padding:2px 10px;font-size:11px;font-weight:600;cursor:pointer;" onclick="showPage('car')">${a.name} ${a.label} <b>${label}</b></span>`;
+          }).join('')}
+          <button class="btn btn-xs" style="margin-left:auto;background:#3b82f6;color:#fff;border:none;padding:3px 9px;border-radius:5px;cursor:pointer;" onclick="showPage('car')">법인차 →</button>
+        </div>`;
+        homeEl.innerHTML+=extra;
+      }
+    }
+  }catch(e){}
+};
 
 </script>
 
