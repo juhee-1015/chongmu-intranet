@@ -7563,9 +7563,9 @@ function renderHrTable(){
           const e=new Date(h.endDate);e.setHours(0,0,0,0);
           const ed=Math.round((e-today)/(1000*60*60*24));
           const lbl=h.type==='remote'?'종료':'복직';
-          if(ed>0)return`<span style="color:#0369a1;font-size:11px;line-height:1.5;">${lbl}까지<br><b>D-${ed}</b></span>`;
-          if(ed===0)return`<span style="color:#dc2626;font-weight:700;font-size:11px;line-height:1.5;">${lbl}까지<br>오늘!</span>`;
-          return`<span style="color:#dc2626;font-size:11px;line-height:1.5;">${lbl}일<br>D+${Math.abs(ed)} 초과</span>`;
+          if(ed>0)return`<span style="color:#0369a1;font-size:11px;white-space:nowrap;">${lbl} D-${ed}</span>`;
+          if(ed===0)return`<span style="color:#dc2626;font-weight:700;font-size:11px;white-space:nowrap;">${lbl} 오늘!</span>`;
+          return`<span style="color:#dc2626;font-size:11px;white-space:nowrap;">${lbl} D+${Math.abs(ed)}</span>`;
         }
         return'-';
       })()}</td>
@@ -8803,7 +8803,7 @@ function uploadRosterExcel(){
         <thead><tr>
           <th style="width:60px;text-align:center;">구분</th>
           <th style="width:70px;">성명</th>
-          <th style="width:60px;">PJT</th>
+          <th style="width:60px;">소속</th>
           <th style="width:100px;">실/팀</th>
           <th style="width:100px;text-align:center;">예정일</th>
           <th style="width:70px;text-align:center;">D-day</th>
