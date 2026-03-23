@@ -1,6 +1,6 @@
 {
   "_version": 1,
-  "_date": "2026-03-23T05:23:24.999Z",
+  "_date": "2026-03-23T06:59:21.022Z",
   "_app": "총무대백과",
   "vouchers": [],
   "vendors": [
@@ -832,40 +832,7 @@
   ],
   "taskCompletions": {},
   "manuals": [],
-  "regulations": [
-    {
-      "id": "reg1773898189776",
-      "name": "구매규정",
-      "category": "슈크",
-      "history": [
-        {
-          "vid": "v1773898189776",
-          "type": "제정",
-          "date": "2024-12-09",
-          "note": "총무팀 담당",
-          "fileName": "[최종] 슈퍼크리에이티브 구매규정 제정.pdf",
-          "size": 1423571
-        }
-      ],
-      "createdAt": 1773898189782
-    },
-    {
-      "id": "reg1773898092795",
-      "name": "출장외근규정",
-      "category": "슈크",
-      "history": [
-        {
-          "vid": "v1773898092795",
-          "type": "제정",
-          "date": "2025-08-31",
-          "note": "인사팀 담당",
-          "fileName": "출장외근지침_250831 (1).pdf",
-          "size": 2262995
-        }
-      ],
-      "createdAt": 1773898092805
-    }
-  ],
+  "regulations": [],
   "parkingLots": [
     {
       "id": "mirae",
