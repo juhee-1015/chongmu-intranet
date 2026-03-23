@@ -8046,7 +8046,7 @@ function deleteOrgPdf(){
 function orgOpenNewTab(){if(_orgPdfBlobUrl)window.open(_orgPdfBlobUrl,'_blank');}
 
 // ── 조직도 탭 전환 ──
-let _orgTab='pdf';
+let _orgTab='img';
 let _orgImgScale=1;
 
 function setOrgTab(tab){
@@ -8074,12 +8074,16 @@ function renderOrgImg(){
   const imgEl=document.getElementById('orgImgEl');
   const dateEl=document.getElementById('orgHeaderDate');
   if(b64){
-    imgEl.src=b64;
-    imgEl.style.transform=`scale(${_orgImgScale})`;
     if(empty)empty.style.display='none';
     if(viewer)viewer.style.display='flex';
     const savedDate=localStorage.getItem(ORG_IMG_KEY+'_date');
     if(dateEl&&savedDate)dateEl.textContent='등록: '+savedDate;
+    // 이미지 로드 후 자동맞춤
+    imgEl.onload=function(){
+      _orgImgScale=1;
+      orgImgZoom(0);
+    };
+    imgEl.src=b64;
   } else {
     if(empty)empty.style.display='flex';
     if(viewer){viewer.style.display='none';}
@@ -8926,17 +8930,17 @@ function uploadRosterExcel(){
     <span id="orgHeaderDate" style="font-size:12px;color:var(--text3);"></span>
     <!-- 모드 탭 -->
     <div style="display:flex;gap:4px;background:var(--bg2);border-radius:var(--radius-sm);padding:3px;">
-      <button id="orgTabPdf" onclick="setOrgTab('pdf')" style="padding:4px 12px;font-size:12px;font-weight:600;border-radius:4px;border:none;cursor:pointer;background:var(--primary);color:#fff;transition:all .15s;">📄 PDF</button>
-      <button id="orgTabImg" onclick="setOrgTab('img')" style="padding:4px 12px;font-size:12px;font-weight:600;border-radius:4px;border:none;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;">🖼️ 이미지 캡처</button>
+      <button id="orgTabPdf" onclick="setOrgTab('pdf')" style="padding:4px 12px;font-size:12px;font-weight:600;border-radius:4px;border:none;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;">📄 PDF</button>
+      <button id="orgTabImg" onclick="setOrgTab('img')" style="padding:4px 12px;font-size:12px;font-weight:600;border-radius:4px;border:none;cursor:pointer;background:var(--primary);color:#fff;transition:all .15s;">🖼️ 이미지 캡처</button>
     </div>
     <!-- PDF 버튼 -->
-    <div id="orgBtnsPdf" style="margin-left:auto;display:flex;gap:8px;">
+    <div id="orgBtnsPdf" style="margin-left:auto;display:none;gap:8px;">
       <button class="btn btn-sm btn-ghost" onclick="orgOpenNewTab()">↗ 새 탭</button>
       <button class="btn btn-sm btn-ghost" onclick="deleteOrgPdf()" style="color:#dc2626;">🗑 삭제</button>
       <button class="btn btn-sm btn-primary" onclick="uploadOrgPdf()">📂 PDF 등록</button>
     </div>
     <!-- 이미지 버튼 -->
-    <div id="orgBtnsImg" style="margin-left:auto;display:none;gap:8px;">
+    <div id="orgBtnsImg" style="margin-left:auto;display:flex;gap:8px;">
       <button class="btn btn-sm btn-ghost" onclick="orgImgZoom(-0.2)" title="축소">🔍−</button>
       <span id="orgImgZoomLabel" style="font-size:12px;color:var(--text3);align-self:center;">100%</span>
       <button class="btn btn-sm btn-ghost" onclick="orgImgZoom(0.2)" title="확대">🔍+</button>
@@ -8947,7 +8951,7 @@ function uploadRosterExcel(){
   </div>
 
   <!-- ── PDF 섹션 ── -->
-  <div id="orgSectionPdf">
+  <div id="orgSectionPdf" style="display:none;">
     <div id="orgEmptyState" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:16px;border:2px dashed var(--border2);border-radius:var(--radius);background:#f8fafc;">
       <div style="font-size:48px;">📄</div>
       <div style="font-size:15px;color:var(--text3);font-weight:600;">등록된 조직도 PDF가 없습니다</div>
@@ -8960,7 +8964,7 @@ function uploadRosterExcel(){
   </div>
 
   <!-- ── 이미지 캡처 섹션 ── -->
-  <div id="orgSectionImg" style="display:none;">
+  <div id="orgSectionImg" style="display:block;">
     <!-- 빈 상태: 붙여넣기 안내 -->
     <div id="orgImgEmpty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:16px;border:2px dashed var(--border2);border-radius:var(--radius);background:#f8fafc;cursor:pointer;" onclick="document.getElementById('orgImgEmpty').focus();" tabindex="0">
       <div style="font-size:48px;">🖼️</div>
