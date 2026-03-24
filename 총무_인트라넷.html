@@ -5941,6 +5941,19 @@ function loadHealths(){
       return h;
     });
     if(migrated)LS.set(HEALTH_KEY,s);
+    // 마이그레이션2: 자동 예측으로 저장된 현재연도 수검금액 초기화 (confirmed 플래그 없는 것만)
+    if(!LS.get('health_mig2')){
+      const _cyr=new Date().getFullYear().toString().slice(-2);
+      let _m2=false;
+      s=s.map(h=>{
+        if((h['y'+_cyr]==='25만원'||h['y'+_cyr]==='50만원')&&!h['y'+_cyr+'_confirmed']){
+          h['y'+_cyr]='';_m2=true;
+        }
+        return h;
+      });
+      if(_m2)LS.set(HEALTH_KEY,s);
+      LS.set('health_mig2',true);
+    }
     return s;
   }
   LS.set(HEALTH_KEY,JSON.parse(JSON.stringify(HEALTH_DEFAULT)));
@@ -5960,7 +5973,10 @@ function _getRosterProbMap(){
   try{const stored=localStorage.getItem('roster_active');if(stored)roster=JSON.parse(stored);}catch(e){}
   if(!roster.length)roster=getRosterData()||[];
   _rosterProbCache={};
-  roster.forEach(r=>{if(r.name)_rosterProbCache[r.name.trim()]=r.prob_end||'';});
+  roster.forEach(r=>{
+    if(r.name)_rosterProbCache[r.name.trim()]=r.prob_end||'';
+    if(r.sc_id)_rosterProbCache['__id__'+String(r.sc_id).trim()]=r.prob_end||''; // ID 기반 fallback
+  });
   return _rosterProbCache;
 }
 function _clearRosterProbCache(){_rosterProbCache=null;}
@@ -5973,8 +5989,9 @@ function _isCurrentlyOnProb(h){
     const pd=new Date(h.probEndDate);pd.setHours(0,0,0,0);
     if(pd>today)return true;
   }
-  // 2. 직원명부 prob_end 실시간 참조 (YYYY.MM.DD → YYYY-MM-DD 변환)
-  const rProb=(_getRosterProbMap()[(h.name||'').trim()]||'').replace(/\./g,'-');
+  // 2. 직원명부 prob_end 실시간 참조 (이름 + ID 둘 다 시도)
+  const _pmap=_getRosterProbMap();
+  const rProb=(_pmap[(h.name||'').trim()]||_pmap['__id__'+String(h.id||'').trim()]||'').replace(/\./g,'-');
   if(rProb){
     const rd=new Date(rProb);rd.setHours(0,0,0,0);
     if(!isNaN(rd)&&rd>today)return true;
@@ -6052,12 +6069,13 @@ function applyHealthPredictions(){
   const all=loadHealths();
   let cnt=0;
   all.forEach(h=>{
-    const v=h['y'+currYr];
-    // 실 수령 확정값은 보호, 나머지(빈값·미수검·미대상·수습중)는 재계산
-    if(v!=='25만원'&&v!=='50만원'){
-      h['y'+currYr]=predictForYear(h,currYr,yrs);
-      cnt++;
-    }
+    // confirmed 플래그 있는 실 수령 확정값만 보호, 나머지 전부 재계산
+    if(h['y'+currYr+'_confirmed'])return;
+    const pred=predictForYear(h,currYr,yrs);
+    // 수검 금액(25만원/50만원) 예측은 빈칸으로 → (예정) 표시
+    // 상태값(미수검·수습중·미대상·대상아님)은 그대로 저장
+    const toSave=(pred==='25만원'||pred==='50만원')?'':pred;
+    if(h['y'+currYr]!==toSave){h['y'+currYr]=toSave;cnt++;}
   });
   LS.set(HEALTH_KEY,all);
   renderHealth();updateStatCards();
@@ -6189,11 +6207,9 @@ function renderHealthTable(){
       if(pred==='수습중')return'<span style="font-size:10px;color:#6b7280;background:#f3f4f6;border-radius:8px;padding:1px 6px;">수습중</span>';
       if(pred==='대상아님')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">대상아님</span>';
       if(pred==='미대상')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">미대상</span>';
-      // 저장값이 예측과 일치하는 경우만 확정 수령 뱃지
-      const storedMatchesPred=(baseV==='25만원'||baseV==='Y')&&pred==='25만원';
-      const stored50MatchesPred=baseV==='50만원'&&pred==='50만원';
-      if(storedMatchesPred)return'<span class="park-badge paid" style="font-size:10px;padding:1px 5px;">25만원 ✓</span>';
-      if(stored50MatchesPred)return'<span class="park-badge free" style="font-size:10px;padding:1px 5px;">50만원 ✓</span>';
+      // 수동 확인(confirmed) 플래그 있을 때만 확정 ✓ 뱃지
+      if((baseV==='25만원'||baseV==='Y')&&h['y'+yr+'_confirmed'])return'<span class="park-badge paid" style="font-size:10px;padding:1px 5px;">25만원 ✓</span>';
+      if(baseV==='50만원'&&h['y'+yr+'_confirmed'])return'<span class="park-badge free" style="font-size:10px;padding:1px 5px;">50만원 ✓</span>';
       // 저장값이 예측과 다르거나 미입력 → 예측 표시
       const predColor=pred==='미수검'?'#9ca3af':pred==='50만원'?'#7c3aed':'#2563eb';
       return`<span style="color:${predColor};font-size:10px;opacity:0.75;white-space:nowrap;">${pred}<span style="font-size:9px;opacity:0.8;">(예정)</span></span>`;
@@ -6370,7 +6386,17 @@ function saveHealthEdit(){
     all[idx].joinDate=document.getElementById('editHealthJoinDate').value;
     all[idx].probEndDate=document.getElementById('editHealthProbEnd').value;
     all[idx].checkPattern=document.getElementById('editHealthPattern').value;
-    yrs.forEach(yr=>{const sel=document.getElementById('editHealthY'+yr);if(sel)all[idx]['y'+yr]=sel.value;});
+    const _cyr=new Date().getFullYear().toString().slice(-2);
+    yrs.forEach(yr=>{
+      const sel=document.getElementById('editHealthY'+yr);if(!sel)return;
+      const val=sel.value;
+      all[idx]['y'+yr]=val;
+      // 현재 연도에 수검금액 직접 입력 시 confirmed 플래그 설정
+      if(yr===_cyr){
+        if(val==='25만원'||val==='50만원')all[idx]['y'+yr+'_confirmed']=true;
+        else delete all[idx]['y'+yr+'_confirmed'];
+      }
+    });
   }
   LS.set(HEALTH_KEY,all);
   closeModal('editHealthModal');
