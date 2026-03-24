@@ -951,6 +951,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
           <button class="btn btn-ghost btn-sm" onclick="exportHealthCSV()">⬇ CSV</button>
           <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importHealthFile').click()">⬆ CSV</button>
           <input type="file" id="importHealthFile" accept=".csv" style="display:none" onchange="importHealthCSV(this)">
+          <button class="btn btn-sm" style="background:#ecfdf5;color:#065f46;border:1px solid #6ee7b7;font-size:12px;" onclick="document.getElementById('importHealthExcelFile').click()" title="업체로부터 받은 검진예약현황 엑셀(.xlsx)을 업로드하면 수검 상태를 자동 업데이트합니다">📋 검진현황 엑셀</button>
+          <input type="file" id="importHealthExcelFile" accept=".xlsx,.xls" style="display:none" onchange="importHealthExcel(this)">
         </div>
       </div>
     </div>
@@ -1673,6 +1675,14 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 <!-- ===== 거래처 관리 ===== -->
 <div class="page" id="pageVendor">
 <div class="container">
+  <!-- 탭 네비게이션 -->
+  <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;">
+    <button id="vendorTab1" onclick="switchVendorTab('list')" style="padding:9px 22px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid var(--primary);margin-bottom:-2px;color:var(--primary);">🤝 거래처 목록</button>
+    <button id="vendorTab2" onclick="switchVendorTab('account')" style="padding:9px 22px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--text2);">🔐 계정 관리</button>
+  </div>
+
+  <!-- 거래처 목록 탭 -->
+  <div id="vendorTabList">
   <div class="card">
     <div class="card-header">
       <div class="card-title"><span class="icon icon-teal">🤝</span> 거래처 관리</div>
@@ -1709,6 +1719,42 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <tbody id="vendorTbody"></tbody>
       </table>
     </div>
+  </div>
+  </div>
+
+  <!-- 계정 관리 탭 -->
+  <div id="vendorTabAccount" style="display:none;">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="icon" style="background:#ede9fe;color:#6d28d9;">🔐</span> 계정 관리</div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input id="accountSearch" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text);outline:none;width:200px;" placeholder="🔍 업체명 / 서비스명 검색..." oninput="renderAccounts()">
+        <button class="btn btn-primary btn-sm" onclick="openAccountModal()">＋ 계정 추가</button>
+      </div>
+    </div>
+    <div style="padding:10px 16px;background:#faf5ff;border-bottom:1px solid #e9d5ff;font-size:11px;color:#7c3aed;display:flex;align-items:center;gap:6px;">
+      🔒 비밀번호는 이 기기의 로컬 저장소에 저장됩니다. 보안이 중요한 계정은 별도 보안 솔루션을 권장합니다.
+    </div>
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table class="tbl" style="min-width:900px;">
+        <thead>
+          <tr>
+            <th style="width:130px;">업체명</th>
+            <th style="min-width:130px;">서비스명</th>
+            <th style="min-width:160px;">접속 URL</th>
+            <th style="min-width:120px;">아이디</th>
+            <th style="min-width:120px;">비밀번호</th>
+            <th style="min-width:150px;">메모</th>
+            <th style="width:80px;white-space:nowrap;">수정일</th>
+            <th style="width:70px;">관리</th>
+          </tr>
+        </thead>
+        <tbody id="accountTbody">
+          <tr><td colspan="8" style="text-align:center;color:var(--text3);padding:32px;">등록된 계정이 없습니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   </div>
 </div>
 </div>
@@ -2039,6 +2085,32 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
   </div>
 </div>
 
+<!-- 모달: 계정 추가/수정 -->
+<div class="modal-overlay" id="accountModal">
+  <div class="modal" style="max-width:480px;">
+    <h3 id="accountModalTitle">🔐 계정 추가</h3>
+    <input type="hidden" id="accountEditId" value="">
+    <div class="form-row">
+      <div class="form-group"><label>업체명 *</label><input type="text" id="acVendor" placeholder="예: 아폴로헬스케어" list="acVendorList"><datalist id="acVendorList"></datalist></div>
+      <div class="form-group"><label>서비스명 *</label><input type="text" id="acService" placeholder="예: 검진예약시스템"></div>
+    </div>
+    <div class="form-group"><label>접속 URL</label><input type="text" id="acUrl" placeholder="https://..."></div>
+    <div class="form-group"><label>아이디</label><input type="text" id="acLoginId" placeholder="로그인 아이디" autocomplete="off"></div>
+    <div class="form-group" style="position:relative;">
+      <label>비밀번호</label>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input type="password" id="acPassword" placeholder="비밀번호" autocomplete="new-password" style="flex:1;">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="_toggleAcPw()" style="white-space:nowrap;min-width:52px;" id="acPwToggleBtn">보기</button>
+      </div>
+    </div>
+    <div class="form-group"><label>메모</label><textarea id="acMemo" rows="2" placeholder="갱신 주기, 담당자 등 메모"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('accountModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveAccount()">저장</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== 클라우드 동기화 모달 ===== -->
 <div class="modal-overlay" id="cloudModal">
   <div class="modal" style="max-width:580px;">
@@ -2207,6 +2279,8 @@ function loadVouchers(){return LS.get('intra_vouchers',[]);}
 function saveVouchers(d){LS.set('intra_vouchers',d);}
 function loadVendors(){return LS.get('intra_vendors',JSON.parse(JSON.stringify(VENDOR_DEFAULT)));}
 function saveVendors(d){LS.set('intra_vendors',d);}
+function loadAccounts(){return LS.get('intra_accounts',[]);}
+function saveAccounts(d){LS.set('intra_accounts',d);}
 function loadLinks(){return LS.get('intra_links',defaultLinks());}
 function saveLinks(d){LS.set('intra_links',d);}
 function loadNotices(){return LS.get('intra_notices',[]);}
@@ -2774,6 +2848,123 @@ function toggleVendorCat(cat){
   rows.forEach(r=>{r.style.display=_vendorCollapsed[cat]?'none':'';});
   const toggle=document.querySelector(`[data-cattoggle="${CSS.escape(cat)}"]`);
   if(toggle) toggle.classList.toggle('collapsed',!!_vendorCollapsed[cat]);
+}
+
+// ── 거래처 탭 전환 ─────────────────────────────────────────
+function switchVendorTab(tab){
+  const isList=tab==='list';
+  document.getElementById('vendorTabList').style.display=isList?'':'none';
+  document.getElementById('vendorTabAccount').style.display=isList?'none':'';
+  document.getElementById('vendorTab1').style.borderBottomColor=isList?'var(--primary)':'transparent';
+  document.getElementById('vendorTab1').style.color=isList?'var(--primary)':'var(--text2)';
+  document.getElementById('vendorTab2').style.borderBottomColor=isList?'transparent':'var(--primary)';
+  document.getElementById('vendorTab2').style.color=isList?'var(--text2)':'var(--primary)';
+  if(!isList)renderAccounts();
+}
+
+// ── 계정 관리 ───────────────────────────────────────────────
+function renderAccounts(){
+  const q=(document.getElementById('accountSearch')?.value||'').toLowerCase();
+  const all=loadAccounts();
+  const tbody=document.getElementById('accountTbody');
+  if(!tbody)return;
+  // 거래처 datalist 채우기
+  const vdList=document.getElementById('acVendorList');
+  if(vdList){
+    const vnames=[...new Set(loadVendors().map(v=>v.name||'').filter(Boolean))];
+    vdList.innerHTML=vnames.map(n=>`<option value="${n}">`).join('');
+  }
+  let filtered=all;
+  if(q)filtered=all.filter(a=>(a.vendorName||'').toLowerCase().includes(q)||(a.serviceName||'').toLowerCase().includes(q)||(a.loginId||'').toLowerCase().includes(q));
+  if(!filtered.length){tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:32px;">${q?'검색 결과가 없습니다.':'등록된 계정이 없습니다.'}</td></tr>`;return;}
+  tbody.innerHTML=filtered.map(a=>`<tr>
+    <td style="font-weight:600;">${a.vendorName||'-'}</td>
+    <td>${a.serviceName||'-'}</td>
+    <td style="font-size:11px;">${a.url?`<a href="${a.url}" target="_blank" style="color:var(--primary);text-decoration:underline;" title="${a.url}">${a.url.length>30?a.url.slice(0,30)+'…':a.url}</a>`:'-'}</td>
+    <td style="font-family:monospace;font-size:12px;">${a.loginId||'-'}</td>
+    <td style="font-family:monospace;font-size:12px;">
+      <span id="acpw_${a.id}" style="letter-spacing:2px;">••••••••</span>
+      <button class="btn btn-xs btn-ghost" onclick="_showAcPw('${a.id}','${(a.password||'').replace(/'/g,"\\'")}')" style="font-size:10px;padding:1px 5px;margin-left:4px;">보기</button>
+    </td>
+    <td style="font-size:11px;color:var(--text2);">${a.memo||'-'}</td>
+    <td style="font-size:10px;color:var(--text3);white-space:nowrap;">${a.updatedAt?a.updatedAt.slice(0,10):'-'}</td>
+    <td style="white-space:nowrap;">
+      <button class="btn btn-xs btn-ghost" onclick="openAccountModal('${a.id}')">수정</button>
+      <button class="btn btn-xs btn-danger" onclick="deleteAccount('${a.id}')" style="font-size:10px;">삭제</button>
+    </td>
+  </tr>`).join('');
+}
+function _showAcPw(id,pw){
+  const span=document.getElementById('acpw_'+id);
+  if(!span)return;
+  if(span.dataset.showing==='1'){span.textContent='••••••••';span.dataset.showing='0';}
+  else{span.textContent=pw||'(없음)';span.dataset.showing='1';setTimeout(()=>{if(span.dataset.showing==='1'){span.textContent='••••••••';span.dataset.showing='0';}},10000);}
+}
+function _toggleAcPw(){
+  const inp=document.getElementById('acPassword');
+  const btn=document.getElementById('acPwToggleBtn');
+  if(!inp)return;
+  const isHidden=inp.type==='password';
+  inp.type=isHidden?'text':'password';
+  if(btn)btn.textContent=isHidden?'숨김':'보기';
+}
+function openAccountModal(editId){
+  const all=loadAccounts();
+  const a=editId?all.find(x=>x.id===editId):null;
+  document.getElementById('accountModalTitle').textContent=a?'🔐 계정 수정':'🔐 계정 추가';
+  document.getElementById('accountEditId').value=a?a.id:'';
+  document.getElementById('acVendor').value=a?a.vendorName||'':'';
+  document.getElementById('acService').value=a?a.serviceName||'':'';
+  document.getElementById('acUrl').value=a?a.url||'':'';
+  document.getElementById('acLoginId').value=a?a.loginId||'':'';
+  document.getElementById('acPassword').value=a?a.password||'':'';
+  document.getElementById('acPassword').type='password';
+  const btn=document.getElementById('acPwToggleBtn');if(btn)btn.textContent='보기';
+  document.getElementById('acMemo').value=a?a.memo||'':'';
+  // 거래처 datalist 채우기
+  const vdList=document.getElementById('acVendorList');
+  if(vdList){
+    const vnames=[...new Set(loadVendors().map(v=>v.name||'').filter(Boolean))];
+    vdList.innerHTML=vnames.map(n=>`<option value="${n}">`).join('');
+  }
+  openModal('accountModal');
+}
+function saveAccount(){
+  const vd=document.getElementById('acVendor').value.trim();
+  const svc=document.getElementById('acService').value.trim();
+  if(!vd&&!svc){showToast('업체명 또는 서비스명을 입력하세요','error');return;}
+  const editId=document.getElementById('accountEditId').value;
+  const all=loadAccounts();
+  const now=new Date().toISOString();
+  if(editId){
+    const idx=all.findIndex(x=>x.id===editId);
+    if(idx>=0){
+      all[idx].vendorName=vd;all[idx].serviceName=svc;
+      all[idx].url=document.getElementById('acUrl').value.trim();
+      all[idx].loginId=document.getElementById('acLoginId').value.trim();
+      all[idx].password=document.getElementById('acPassword').value;
+      all[idx].memo=document.getElementById('acMemo').value.trim();
+      all[idx].updatedAt=now;
+    }
+  }else{
+    all.push({id:'ac'+Date.now(),vendorName:vd,serviceName:svc,
+      url:document.getElementById('acUrl').value.trim(),
+      loginId:document.getElementById('acLoginId').value.trim(),
+      password:document.getElementById('acPassword').value,
+      memo:document.getElementById('acMemo').value.trim(),
+      createdAt:now,updatedAt:now});
+  }
+  saveAccounts(all);
+  closeModal('accountModal');
+  renderAccounts();
+  showToast(editId?'계정이 수정되었습니다':'계정이 추가되었습니다');
+}
+function deleteAccount(id){
+  if(!confirm('이 계정을 삭제하시겠습니까?'))return;
+  const all=loadAccounts().filter(a=>a.id!==id);
+  saveAccounts(all);
+  renderAccounts();
+  showToast('삭제되었습니다');
 }
 
 function renderVendors(){
@@ -3956,6 +4147,7 @@ function exportAllJSON(){
     _version:1,_date:new Date().toISOString(),_app:'총무대백과',
     vouchers:loadVouchers(),
     vendors:loadVendors(),
+    accounts:loadAccounts(),
     links:loadLinks(),
     notices:loadNotices(),
     tasks:loadTasks(),
@@ -3977,6 +4169,7 @@ function importAllJSON(input){
       if(!confirm('현재 데이터를 백업 파일로 모두 교체합니다.\n기존 데이터는 사라집니다. 계속할까요?')) return;
       if(data.vouchers) saveVouchers(data.vouchers);
       if(data.vendors) saveVendors(data.vendors);
+      if(data.accounts) saveAccounts(data.accounts);
       if(data.links) saveLinks(data.links);
       if(data.notices) saveNotices(data.notices);
       if(data.tasks) saveTasks(data.tasks);
@@ -4051,6 +4244,7 @@ async function jbLoad(){
     if(!confirm('클라우드 데이터로 현재 브라우저를 업데이트합니다. 계속할까요?')) return;
     if(data.vouchers) saveVouchers(data.vouchers);
     if(data.vendors) saveVendors(data.vendors);
+    if(data.accounts) saveAccounts(data.accounts);
     if(data.links) saveLinks(data.links);
     if(data.notices) saveNotices(data.notices);
     if(data.tasks) saveTasks(data.tasks);
@@ -4931,6 +5125,7 @@ async function ghRestoreVersion(sha,dateStr){
     const data=JSON.parse(decoded);
     if(data.vouchers) LS.set('intra_vouchers',data.vouchers);
     if(data.vendors) LS.set('intra_vendors',data.vendors);
+    if(data.accounts) LS.set('intra_accounts',data.accounts);
     if(data.links) LS.set('intra_links',data.links);
     if(data.notices) LS.set('intra_notices',data.notices);
     if(data.tasks) LS.set('intra_tasks',data.tasks);
@@ -5242,7 +5437,7 @@ function regOpenNewTab(){if(_regViewerBlobUrl) window.open(_regViewerBlobUrl,'_b
 
 function gatherAllData(){
   return{_version:1,_date:new Date().toISOString(),_app:'총무대백과',
-    vouchers:loadVouchers(),vendors:loadVendors(),links:loadLinks(),
+    vouchers:loadVouchers(),vendors:loadVendors(),accounts:loadAccounts(),links:loadLinks(),
     notices:loadNotices(),tasks:loadTasks(),taskCompletions:loadCompletions(),
     manuals:loadManuals(),
     regulations:loadRegulations(),
@@ -6336,8 +6531,14 @@ function renderHealthTable(){
       if(pred==='대상아님')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">대상아님</span>';
       if(pred==='미대상')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">미대상</span>';
       // 수동 확인(confirmed) 플래그 있을 때만 확정 ✓ 뱃지
-      if((baseV==='25만원'||baseV==='Y')&&h['y'+yr+'_confirmed'])return'<span class="park-badge paid" style="font-size:10px;padding:1px 5px;">25만원 ✓</span>';
-      if(baseV==='50만원'&&h['y'+yr+'_confirmed'])return'<span class="park-badge free" style="font-size:10px;padding:1px 5px;">50만원 ✓</span>';
+      const chkDateTip=h['y'+yr+'_checkDate']?` title="${h['y'+yr+'_checkDate']}${h['y'+yr+'_center']?' / '+h['y'+yr+'_center']:''}"`:''
+      if((baseV==='25만원'||baseV==='Y')&&h['y'+yr+'_confirmed'])return`<span class="park-badge paid" style="font-size:10px;padding:1px 5px;"${chkDateTip}>25만원 ✓</span>`;
+      if(baseV==='50만원'&&h['y'+yr+'_confirmed'])return`<span class="park-badge free" style="font-size:10px;padding:1px 5px;"${chkDateTip}>50만원 ✓</span>`;
+      // 예약확정 뱃지 (confirmed 없는 경우)
+      if(h['y'+yr+'_reserved']){
+        const rTip=h['y'+yr+'_checkDate']?` title="예약일: ${h['y'+yr+'_checkDate']}${h['y'+yr+'_center']?' / '+h['y'+yr+'_center']:''}"`:''
+        return`<span style="font-size:10px;background:#d1fae5;color:#065f46;border-radius:8px;padding:1px 6px;font-weight:600;white-space:nowrap;"${rTip}>📅 예약확정</span>`;
+      }
       // 저장값이 예측과 다르거나 미입력 → 예측 표시
       const predColor=pred==='미수검'?'#9ca3af':pred==='50만원'?'#7c3aed':'#2563eb';
       return`<span style="color:${predColor};font-size:10px;opacity:0.75;white-space:nowrap;">${pred}<span style="font-size:9px;opacity:0.8;">(예정)</span></span>`;
@@ -6545,8 +6746,12 @@ function saveHealthEdit(){
       all[idx]['y'+yr]=val;
       // 현재 연도에 수검금액 직접 입력 시 confirmed 플래그 설정
       if(yr===_cyr){
-        if(val==='25만원'||val==='50만원')all[idx]['y'+yr+'_confirmed']=true;
-        else delete all[idx]['y'+yr+'_confirmed'];
+        if(val==='25만원'||val==='50만원'){
+          all[idx]['y'+yr+'_confirmed']=true;
+          delete all[idx]['y'+yr+'_reserved']; // 수동 입력 시 예약 플래그 제거
+        }else{
+          delete all[idx]['y'+yr+'_confirmed'];
+        }
       }
     });
   }
@@ -6636,6 +6841,114 @@ function importHealthCSV(input){
     }catch(err){showToast('파일 오류: '+err.message,'error');}
   };
   reader.readAsText(file,'UTF-8');
+}
+
+// ── 업체 검진현황 엑셀 import ──────────────────────────────────
+function importHealthExcel(input){
+  const file=input.files[0];if(!file)return;
+  if(typeof XLSX==='undefined'){showToast('XLSX 라이브러리 로딩 실패. 인터넷 연결 확인','error');input.value='';return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      // 'Simple' 시트 우선, 없으면 첫 번째 시트
+      const sheetName=wb.SheetNames.includes('Simple')?'Simple':wb.SheetNames[0];
+      const ws=wb.Sheets[sheetName];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      if(rows.length<2){showToast('데이터가 없습니다','error');input.value='';return;}
+
+      // 헤더 행 찾기 (사번, 성명, 진행상태 컬럼 탐색)
+      let headerRowIdx=0;
+      let colSaNo=-1,colName=-1,colStatus=-1,colDate=-1,colCenter=-1;
+      for(let ri=0;ri<Math.min(5,rows.length);ri++){
+        const r=rows[ri];
+        for(let ci=0;ci<r.length;ci++){
+          const v=String(r[ci]||'').trim();
+          const vn=v.replace(/\s+/g,''); // 공백 제거 정규화
+          if(vn==='사번'||vn==='사원번호')colSaNo=ci;
+          if(vn==='성명'||vn==='이름')colName=ci;
+          if(vn==='종합건강검진진행상태'||vn==='진행상태'||vn.includes('진행상태'))colStatus=ci;
+          if(vn==='종합건강검진일정'||vn==='검진일정'||(vn.includes('건강검진')&&vn.includes('일정')&&!vn.includes('진행')))colDate=ci;
+          if(vn==='종합건강검진검진센터'||vn==='검진센터'||(vn.includes('건강검진')&&vn.includes('센터')))colCenter=ci;
+        }
+        if(colSaNo>=0&&colStatus>=0){headerRowIdx=ri;break;}
+      }
+
+      // 헤더 자동탐색 실패 시 알려진 컬럼 인덱스 사용 (26년 검진.xlsx 기준)
+      if(colSaNo<0)colSaNo=7;
+      if(colName<0)colName=5;
+      if(colStatus<0)colStatus=13;
+      if(colDate<0)colDate=14;
+      if(colCenter<0)colCenter=15;
+
+      const currYr=new Date().getFullYear().toString().slice(-2);
+      const all=loadHealths();
+      // 사번 → 인덱스 맵
+      const idxById={};
+      const idxByName={};
+      all.forEach((h,i)=>{
+        if(h.id)idxById[String(h.id).trim()]=i;
+        if(h.name)idxByName[h.name.trim()]=i;
+      });
+
+      let matched=0,updated=0,notFound=[];
+      const dataRows=rows.slice(headerRowIdx+1);
+      dataRows.forEach(row=>{
+        const saNo=String(row[colSaNo]||'').trim().replace(/\.0$/,'');
+        const name=String(row[colName]||'').trim();
+        const status=String(row[colStatus]||'').trim();
+        if(!saNo&&!name)return;
+        if(!status||status==='nan'||status==='NaN'||status==='')return;
+
+        // 매칭: 사번 우선, 없으면 이름
+        let idx=-1;
+        if(saNo&&idxById[saNo]!==undefined)idx=idxById[saNo];
+        else if(name&&idxByName[name]!==undefined)idx=idxByName[name];
+
+        if(idx<0){
+          if(name)notFound.push(name);
+          return;
+        }
+        matched++;
+        const h=all[idx];
+        const checkDate=String(row[colDate]||'').trim();
+        const center=String(row[colCenter]||'').trim();
+
+        if(status==='검진실시'){
+          // 수검 완료 → 패턴에 따라 금액 확정
+          const pat=h.checkPattern||'25만원';
+          const amt=(pat==='50만원')?'50만원':'25만원';
+          h['y'+currYr]=amt;
+          h['y'+currYr+'_confirmed']=true;
+          if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
+          if(center)h['y'+currYr+'_center']=center;
+          updated++;
+        } else if(status==='예약확정'){
+          // 예약 확정 → 수검금액은 비워두되 예약일/센터 메모만 저장
+          // 이미 confirmed(수동 입력)인 경우 덮어쓰지 않음
+          if(!h['y'+currYr+'_confirmed']){
+            h['y'+currYr+'_reserved']=true;
+          }
+          if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
+          if(center)h['y'+currYr+'_center']=center;
+          updated++;
+        } else if(status==='예약취소'){
+          // 예약 취소 → 예약 메모 제거, 수검금액은 유지
+          delete h['y'+currYr+'_reserved'];
+          if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
+          updated++;
+        }
+      });
+
+      LS.set(HEALTH_KEY,all);
+      input.value='';
+      renderHealth();updateStatCards();
+      let msg=`매칭 ${matched}명, 상태 업데이트 ${updated}명`;
+      if(notFound.length>0)msg+=`\n미매칭 ${notFound.length}명: `+notFound.slice(0,5).join(', ')+(notFound.length>5?'…':'');
+      showToast(msg,notFound.length>0?'warning':'success');
+    }catch(err){showToast('파일 오류: '+err.message,'error');input.value='';}
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 const PARKING_LOT_KEY='intra_parking_lots';
