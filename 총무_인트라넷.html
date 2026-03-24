@@ -946,6 +946,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <span id="healthCount" style="font-size:12px;color:var(--text3);margin-left:4px;"></span>
         <div style="margin-left:auto;display:flex;gap:6px;">
           <button class="btn btn-primary btn-sm" onclick="openAddHealthEmpModal()">＋ 임직원 추가</button>
+          <button class="btn btn-sm" style="background:#ede9fe;color:#6d28d9;border:1px solid #c4b5fd;font-size:12px;" onclick="openRosterSyncModal()">👥 명부 동기화</button>
           <button class="btn btn-ghost btn-sm" onclick="applyHealthPredictions()" title="패턴 기반 올해 예정 일괄 적용">📊 예측 일괄 적용</button>
           <button class="btn btn-ghost btn-sm" onclick="exportHealthCSV()">⬇ CSV</button>
           <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importHealthFile').click()">⬆ CSV</button>
@@ -1018,6 +1019,25 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
         <button class="btn btn-ghost" onclick="closeModal('editHealthModal')">취소</button>
         <button class="btn btn-primary" onclick="saveHealthEdit()">저장</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 직원명부 → 건강검진 동기화 모달 ===== -->
+<div class="modal-overlay" id="rosterSyncModal" onclick="if(event.target===this)closeModal('rosterSyncModal')">
+  <div class="modal" style="max-width:620px;">
+    <h3>👥 직원명부 동기화</h3>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">건강검진에 없는 직원만 표시됩니다. 추가할 직원을 선택하세요.</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="checkbox" id="rosterSyncSelectAll" onchange="rosterSyncToggleAll(this)"> 전체 선택
+      </label>
+      <span id="rosterSyncCount" style="font-size:12px;color:var(--text3);margin-left:auto;"></span>
+    </div>
+    <div id="rosterSyncList" style="max-height:360px;overflow-y:auto;border:1px solid var(--border2);border-radius:8px;"></div>
+    <div class="modal-actions" style="margin-top:14px;">
+      <button class="btn btn-ghost" onclick="closeModal('rosterSyncModal')">취소</button>
+      <button class="btn btn-primary" onclick="importFromRoster()">✚ 선택 추가</button>
     </div>
   </div>
 </div>
@@ -6080,6 +6100,92 @@ function applyHealthPredictions(){
   LS.set(HEALTH_KEY,all);
   renderHealth();updateStatCards();
   showToast(cnt+'명에게 예정 구분이 적용되었습니다');
+}
+
+// ── 직원명부 → 건강검진 동기화 ──
+function openRosterSyncModal(){
+  const roster=getRosterData()||[];
+  const health=loadHealths();
+  // 건강검진에 이미 있는 이름/ID 집합
+  const healthNames=new Set(health.map(h=>(h.name||'').trim()));
+  const healthIds=new Set(health.map(h=>String(h.id||'').trim()));
+  // 직원명부에만 있는 직원 (퇴직자 제외, prob_end 기준 아님 - 현재 재직자 기준)
+  const missing=roster.filter(r=>{
+    if(!r.name)return false;
+    if(healthNames.has(r.name.trim()))return false;
+    if(r.sc_id&&healthIds.has(String(r.sc_id).trim()))return false;
+    return true;
+  });
+  const list=document.getElementById('rosterSyncList');
+  document.getElementById('rosterSyncSelectAll').checked=false;
+  document.getElementById('rosterSyncCount').textContent='미등록 '+missing.length+'명';
+  if(!missing.length){
+    list.innerHTML='<div style="padding:24px;text-align:center;color:var(--text3);">건강검진에 없는 직원이 없습니다 ✓</div>';
+    openModal('rosterSyncModal');return;
+  }
+  const today=new Date();today.setHours(0,0,0,0);
+  list.innerHTML=missing.map((r,i)=>{
+    const probStr=r.prob_end?`<span style="font-size:10px;color:#b45309;margin-left:4px;">수습 ${r.prob_end}</span>`:'';
+    return`<label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border2);cursor:pointer;font-size:12px;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+      <input type="checkbox" class="roster-sync-chk" value="${i}" onchange="rosterSyncUpdateCount()">
+      <span style="font-weight:600;min-width:70px;">${r.name}</span>
+      <span style="color:var(--text3);min-width:50px;">${r.sc_id||'-'}</span>
+      <span class="park-badge ${r.project==='E7'?'paid':r.project==='SSR'?'free':'active'}" style="font-size:10px;">${r.project||'-'}</span>
+      <span style="color:var(--text2);">${r.dept||''} ${r.team||''}</span>
+      <span style="color:var(--text3);margin-left:auto;">${r.join_date||''}${probStr}</span>
+    </label>`;
+  }).join('');
+  // missing 배열 저장 (importFromRoster에서 참조)
+  window._rosterSyncMissing=missing;
+  openModal('rosterSyncModal');
+}
+function rosterSyncToggleAll(el){
+  document.querySelectorAll('.roster-sync-chk').forEach(c=>c.checked=el.checked);
+  rosterSyncUpdateCount();
+}
+function rosterSyncUpdateCount(){
+  const sel=document.querySelectorAll('.roster-sync-chk:checked').length;
+  const total=document.querySelectorAll('.roster-sync-chk').length;
+  document.getElementById('rosterSyncCount').textContent=`미등록 ${total}명 · 선택 ${sel}명`;
+}
+function importFromRoster(){
+  const missing=window._rosterSyncMissing||[];
+  const checked=Array.from(document.querySelectorAll('.roster-sync-chk:checked')).map(c=>parseInt(c.value));
+  if(!checked.length){showToast('추가할 직원을 선택하세요','error');return;}
+  const all=loadHealths();
+  const yrs=getHealthYears();
+  const today=new Date();today.setHours(0,0,0,0);
+  let added=0;
+  checked.forEach(i=>{
+    const r=missing[i];if(!r)return;
+    // 날짜 형식 정규화 YYYY.MM.DD → YYYY-MM-DD
+    const normDate=d=>(d||'').replace(/\./g,'-');
+    const joinDate=normDate(r.join_date);
+    const probEndDate=normDate(r.prob_end);
+    const probD=probEndDate?new Date(probEndDate):null;
+    if(probD)probD.setHours(0,0,0,0);
+    const hasFutureProb=probD&&probD>today;
+    const entry={
+      id:String(r.sc_id||r.name),
+      name:r.name,
+      project:r.project||'',
+      dept:r.dept||'',
+      team:r.team||'',
+      joinDate,
+      probEndDate,
+      checkPattern:'25만원',
+      eligible:hasFutureProb?false:true,
+      eligibleFrom:hasFutureProb&&probD?String(probD.getFullYear()+1):'',
+    };
+    yrs.forEach(yr=>{entry['y'+yr]='';});
+    all.push(entry);
+    added++;
+  });
+  all.sort((a,b)=>(a.name||'').localeCompare(b.name||'','ko'));
+  LS.set(HEALTH_KEY,all);
+  closeModal('rosterSyncModal');
+  renderHealth();updateStatCards();
+  showToast(added+'명이 건강검진에 추가되었습니다');
 }
 
 function renderHealth(){
