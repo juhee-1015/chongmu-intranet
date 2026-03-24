@@ -5947,32 +5947,50 @@ function loadHealths(){
   return JSON.parse(JSON.stringify(HEALTH_DEFAULT));
 }
 
-// 패턴 기반 올해 수검 예측
+// 패턴 기반 올해 수검 예측 (과거 이력 자동 감지)
 function predictForYear(h, yr, yrs){
-  // eligible 미설정 or 대상자 아닌 경우
+  // 1. 대상자 여부 확인
   if(h.eligible===false){
-    // eligibleFrom 연도 이후에만 대상
     const fromYr=parseInt(h.eligibleFrom||'9999');
     const thisYr=parseInt('20'+yr);
     if(thisYr<fromYr)return'미대상';
   }
-  // 수습중이면 미대상
+  // 2. 수습 중 여부 확인
   if(h.probEndDate){
     const probD=new Date(h.probEndDate);probD.setHours(0,0,0,0);
     const today=new Date();today.setHours(0,0,0,0);
     if(probD>today)return'수습중';
   }
-  const pat=h.checkPattern||'25만원';
-  if(pat==='격년50만원'){
-    // 직전 연도에 50만원 수령했으면 올해는 미대상
-    const sorted=[...yrs].sort();
-    const idx=sorted.indexOf(yr);
-    if(idx>0){
-      const prevV=h['y'+sorted[idx-1]];
-      if(prevV==='50만원')return'미대상';
-    }
-    return'50만원';
+
+  // 3. 과거 실제 데이터로 패턴 자동 감지
+  const sorted=[...yrs].sort();
+  const thisYrNum=parseInt('20'+yr);
+
+  // 예측 대상 연도보다 이전 연도들만 (실제 입력값 있는 것)
+  const prevYrs=sorted.filter(y=>parseInt('20'+y)<thisYrNum);
+  const validPrev=prevYrs.filter(y=>{
+    const v=h['y'+y];
+    return v&&v!==''&&v!=='미대상'&&v!=='수습중';
+  });
+
+  if(validPrev.length===0){
+    // 과거 이력 없음 → checkPattern 기준 사용
+    const pat=h.checkPattern||'25만원';
+    return pat==='격년50만원'?'50만원':'25만원';
   }
+
+  // 4. 50만원 이력 확인 → 격년 패턴 자동 감지
+  const yrs50=validPrev.filter(y=>h['y'+y]==='50만원');
+  if(yrs50.length>0){
+    // 격년 패턴: 가장 최근 50만원 수령 연도 기준으로 사이클 계산
+    const last50=yrs50[yrs50.length-1]; // 최근 50만원 연도 (2자리)
+    const last50Num=parseInt('20'+last50);
+    const gap=thisYrNum-last50Num;
+    // gap 홀수 → 미수검(격년 off), 짝수 → 50만원(격년 on)
+    return(gap%2===0)?'50만원':'미수검';
+  }
+
+  // 5. 모두 25만원 → 매년 패턴
   return'25만원';
 }
 
@@ -6011,8 +6029,13 @@ function renderHealthSummary(){
   const probCount=all.filter(h=>h.probEndDate&&new Date(h.probEndDate)>today).length;
   // 올해 수검 완료
   const doneCount=all.filter(h=>{const v=h['y'+currYr];return v==='25만원'||v==='50만원';}).length;
-  // 올해 미수검
-  const noCount=all.filter(h=>h['y'+currYr]==='미수검').length;
+  // 올해 미수검: 수검 대상(예측 25만원/50만원)이지만 미완료인 인원만 카운트 (격년 off-year 제외)
+  const noCount=all.filter(h=>{
+    const v=h['y'+currYr]||'';
+    if(v==='25만원'||v==='50만원')return false;
+    const pred=predictForYear(h,currYr,yrs);
+    return pred==='25만원'||pred==='50만원';
+  }).length;
   // 예상 총 금액 (올해 완료분)
   const totalAmt=all.reduce((s,h)=>{
     const v=h['y'+currYr]||'';
@@ -6124,7 +6147,15 @@ function renderHealthTable(){
     if(baseV==='50만원')return'<span class="park-badge free" style="font-size:10px;padding:1px 5px;">50만원</span>';
     return`<span style="font-size:10px;">${baseV}</span>`;
   };
-  const patBadge={'25만원':'<span style="font-size:10px;color:#2563eb;">매년25만</span>','격년50만원':'<span style="font-size:10px;color:#7c3aed;">격년50만</span>'};
+  // 패턴 자동 감지: 과거 50만원 이력 있으면 격년, 없으면 매년
+  const detectPattern=(h)=>{
+    const has50=yrs.some(y=>h['y'+y]==='50만원');
+    return has50?'격년50만원':'25만원';
+  };
+  const patBadge={
+    '25만원':(h)=>`<span style="font-size:10px;color:#2563eb;font-weight:700;">매년 25만</span>`,
+    '격년50만원':(h)=>`<span style="font-size:10px;color:#7c3aed;font-weight:700;">격년 50만</span>`
+  };
   const today=new Date();today.setHours(0,0,0,0);
 
   tbody.innerHTML=filtered.map((h,i)=>`<tr>
@@ -6137,7 +6168,7 @@ function renderHealthTable(){
     <td style="text-align:center;"><span class="park-badge ${h.project==='E7'?'paid':h.project==='SSR'?'free':'active'}" style="font-size:10px;">${h.project||'-'}</span></td>
     <td style="font-size:11px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${h.dept||''}">${h.dept||'-'}</td>
     <td style="font-size:11px;color:var(--text2);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${h.team||''}">${h.team||'-'}</td>
-    <td style="text-align:center;">${patBadge[h.checkPattern||'25만원']||''}</td>
+    <td style="text-align:center;">${(patBadge[detectPattern(h)]||patBadge['25만원'])(h)}</td>
     ${yrs.map(yr=>{
       const isNow=(yr===currYr);
       return`<td style="text-align:center;${isNow?'background:#fefce8;':''}">${yCell(h['y'+yr],yr,h,isNow)}</td>`;
@@ -7008,19 +7039,17 @@ function openUncheckModal(){
 function renderUncheckList(){
   const yr=(document.getElementById('uncheckYear')||{}).value||'';
   const all=loadHealths();
+  const yrs=getHealthYears();
   const today=new Date();today.setHours(0,0,0,0);
-  // 미수검자: 해당 연도 값이 '미수검' 또는 빈값이고, 수습중/미대상이 아닌 사람
+  // 미수검자: 예측값이 25만원/50만원(수검 대상)인데 실제 수검 미완료인 사람
   const uncheck=all.filter(h=>{
     const v=h['y'+yr]||'';
-    if(v==='수습중'||v==='미대상'||v==='25만원'||v==='50만원')return false;
-    if(h.probEndDate){
-      const pd=new Date(h.probEndDate);pd.setHours(0,0,0,0);
-      if(pd>today)return false; // 아직 수습중
-    }
-    if(h.eligible===false){
-      const fromYr=parseInt(h.eligibleFrom||'9999');
-      if(parseInt('20'+yr)<fromYr)return false;
-    }
+    // 이미 수검 완료 → 제외
+    if(v==='25만원'||v==='50만원')return false;
+    // 패턴 예측으로 올해 수검 대상인지 확인
+    const pred=predictForYear(h,yr,yrs);
+    // 격년 off-year(미수검 예정), 미대상, 수습중 → 제외
+    if(pred==='미수검'||pred==='미대상'||pred==='수습중')return false;
     return true;
   });
   const cnt=document.getElementById('uncheckCount');
