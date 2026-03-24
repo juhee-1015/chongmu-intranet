@@ -6109,12 +6109,13 @@ function openRosterSyncModal(){
   // 건강검진에 이미 있는 이름/ID 집합
   const healthNames=new Set(health.map(h=>(h.name||'').trim()));
   const healthIds=new Set(health.map(h=>String(h.id||'').trim()));
-  // sc_id 불일치 (HR... 임시ID로 등록된 사람) → 자동 업데이트
+  // 이름 일치하는데 sc_id 다른 경우 전부 수정 (임시ID·잘못된ID 포함)
   let idFixed=0;
   health.forEach(h=>{
-    if(String(h.id||'').startsWith('HR')){
-      const r=roster.find(r=>(r.name||'').trim()===(h.name||'').trim()&&r.sc_id);
-      if(r){h.id=String(r.sc_id);idFixed++;}
+    const r=roster.find(r=>r.sc_id&&(r.name||'').trim()===(h.name||'').trim());
+    if(r&&String(h.id||'')!==String(r.sc_id)){
+      h.id=String(r.sc_id);
+      idFixed++;
     }
   });
   if(idFixed>0){LS.set(HEALTH_KEY,health);showToast(idFixed+'명 사원번호가 직원명부 기준으로 자동 수정되었습니다');}
@@ -6289,13 +6290,17 @@ function renderHealthTable(){
   // 입사일 오름차순 정렬 (오래된 순 → 위)
   // joinDate 없으면 직원명부에서 보완
   const _rMap={};(getRosterData()||[]).forEach(r=>{if(r.name&&r.join_date)_rMap[r.name.trim()]=r.join_date;});
-  filtered.sort((a,b)=>{
+  // 재직자 / 퇴직자 분리
+  const activeList=filtered.filter(h=>!h.retiredAt);
+  const retiredList=filtered.filter(h=>!!h.retiredAt);
+  const sortByJoin=arr=>arr.sort((a,b)=>{
     const _jd=h=>(h.joinDate||(h.name&&_rMap[h.name.trim()])||'9999').replace(/\./g,'-');
-    const da=_jd(a),db=_jd(b);
-    return da<db?-1:da>db?1:0;
+    const da=_jd(a),db=_jd(b);return da<db?-1:da>db?1:0;
   });
+  sortByJoin(activeList);
+  sortByJoin(retiredList);
   const cnt=document.getElementById('healthCount');
-  if(cnt)cnt.textContent=filtered.length+'명';
+  if(cnt)cnt.textContent=activeList.length+'명'+(retiredList.length?` (+퇴직 ${retiredList.length}명)`:'');
   // thead 렌더링
   const thead=document.getElementById('healthThead');
   if(thead){
@@ -6361,12 +6366,14 @@ function renderHealthTable(){
   };
   const today=new Date();today.setHours(0,0,0,0);
 
-  tbody.innerHTML=filtered.map((h,i)=>`<tr>
+  const makeRows=(list,isRetired)=>list.map((h,i)=>`<tr style="${isRetired?'opacity:0.75;background:#fafafa;':''}">
     <td style="text-align:center;padding:6px 4px;"><input type="checkbox" class="health-row-chk" value="${h.id}" onchange="_onRowCheck('health')" style="cursor:pointer;"></td>
     <td style="font-size:11px;color:var(--text3);text-align:center;padding:6px 4px;">${i+1}</td>
     <td style="font-family:monospace;font-size:11px;color:var(--text3);padding:6px 8px;">${h.id}</td>
     <td style="font-weight:600;white-space:nowrap;">
-      <span>${h.name}</span>${_isCurrentlyOnProb(h)?' <span style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 5px;font-weight:600;vertical-align:middle;">수습</span>':''}
+      <span>${h.name}</span>
+      ${isRetired?`<span style="font-size:9px;background:#fee2e2;color:#991b1b;border-radius:4px;padding:1px 5px;font-weight:600;vertical-align:middle;margin-left:3px;">퇴직</span>`:''}
+      ${!isRetired&&_isCurrentlyOnProb(h)?' <span style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 5px;font-weight:600;vertical-align:middle;">수습</span>':''}
     </td>
     <td style="text-align:center;"><span class="park-badge ${h.project==='E7'?'paid':h.project==='SSR'?'free':'active'}" style="font-size:10px;">${h.project||'-'}</span></td>
     <td style="font-size:11px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${h.dept||''}">${h.dept||'-'}</td>
@@ -6380,6 +6387,28 @@ function renderHealthTable(){
       <button class="btn btn-xs btn-ghost" onclick="openEditHealthModal('${h.id||''}','${(h.name||'').replace(/'/g,'')}')">수정</button>
     </td>
   </tr>`).join('');
+
+  let html=makeRows(activeList,false);
+
+  // 퇴직자 아코디언
+  if(retiredList.length){
+    const retOpen=window._healthRetiredOpen||false;
+    html+=`<tr id="healthRetiredToggleRow">
+      <td colspan="${colspan}" style="padding:0;">
+        <div onclick="window._healthRetiredOpen=!window._healthRetiredOpen;renderHealthTable();"
+          style="cursor:pointer;padding:9px 16px;background:#fff1f2;border-top:2px solid #fca5a5;display:flex;align-items:center;gap:8px;user-select:none;">
+          <span style="font-size:13px;color:#991b1b;font-weight:700;">🚪 퇴직자 ${retiredList.length}명</span>
+          <span style="font-size:11px;color:#b91c1c;">${currYr}년 수검 여부 확인 필요</span>
+          <span style="margin-left:auto;font-size:13px;color:#991b1b;">${retOpen?'▲':'▼'}</span>
+        </div>
+      </td>
+    </tr>`;
+    if(retOpen){
+      html+=makeRows(retiredList,true);
+    }
+  }
+
+  tbody.innerHTML=html;
 }
 
 // 임직원 추가 모달 열기
@@ -7381,16 +7410,19 @@ function executeHealthRetire(){
     if(h){
       empName=h.name;
       const currYr=new Date().getFullYear().toString().slice(-2);
+      // 퇴직일 기록 + 미래연도 비대상 처리 (올해 수검은 유지)
+      h.retiredAt=retireDate;
       h.eligible=false;
-      h.eligibleFrom='9999'; // 사실상 영구 비대상
-      // 올해 수검 안했으면 미대상 처리
+      h.eligibleFrom='9999';
+      // 올해 이전 연도만 빈값이면 미대상 처리 (올해는 손대지 않음)
       const yrs=getHealthYears();
       yrs.forEach(yr=>{
+        if(yr===currYr)return; // 올해는 유지
         if(!h['y'+yr]||h['y'+yr]==='')h['y'+yr]='미대상';
         if(h['y'+yr]==='수습중')h['y'+yr]='미대상';
       });
       LS.set(HEALTH_KEY,healths);
-      results.push('✅ 건강검진: 수검 대상 제외 처리 완료');
+      results.push('✅ 건강검진: 퇴직자로 분류 (올해 수검 여부 유지)');
     }else{results.push('⚠️ 건강검진: 해당 임직원 없음');}
   }
 
