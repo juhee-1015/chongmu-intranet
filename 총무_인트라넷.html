@@ -6181,7 +6181,7 @@ function importFromRoster(){
     all.push(entry);
     added++;
   });
-  all.sort((a,b)=>(a.name||'').localeCompare(b.name||'','ko'));
+  all.sort((a,b)=>{const da=(a.joinDate||'9999').replace(/\./g,'-');const db=(b.joinDate||'9999').replace(/\./g,'-');return da<db?-1:da>db?1:0;});
   LS.set(HEALTH_KEY,all);
   closeModal('rosterSyncModal');
   renderHealth();updateStatCards();
@@ -6276,6 +6276,12 @@ function renderHealthTable(){
       if(!(h.name.toLowerCase().includes(lq)||(h.dept||'').toLowerCase().includes(lq)||(h.team||'').toLowerCase().includes(lq)))return false;
     }
     return true;
+  });
+  // 입사일 오름차순 정렬 (없으면 맨 뒤)
+  filtered.sort((a,b)=>{
+    const da=a.joinDate?(a.joinDate).replace(/\./g,'-'):'9999';
+    const db=b.joinDate?(b.joinDate).replace(/\./g,'-'):'9999';
+    return da<db?-1:da>db?1:0;
   });
   const cnt=document.getElementById('healthCount');
   if(cnt)cnt.textContent=filtered.length+'명';
@@ -6486,7 +6492,7 @@ function saveHealthEdit(){
     };
     yrs.forEach(yr=>{const sel=document.getElementById('editHealthY'+yr);if(sel)entry['y'+yr]=sel.value;});
     all.push(entry);
-    all.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+    all.sort((a,b)=>{const da=(a.joinDate||'9999').replace(/\./g,'-');const db=(b.joinDate||'9999').replace(/\./g,'-');return da<db?-1:da>db?1:0;});
   } else {
     const idx=all.findIndex(x=>x.id===id);if(idx<0)return;
     all[idx].joinDate=document.getElementById('editHealthJoinDate').value;
