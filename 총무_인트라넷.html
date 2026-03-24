@@ -6109,7 +6109,16 @@ function openRosterSyncModal(){
   // 건강검진에 이미 있는 이름/ID 집합
   const healthNames=new Set(health.map(h=>(h.name||'').trim()));
   const healthIds=new Set(health.map(h=>String(h.id||'').trim()));
-  // 직원명부에만 있는 직원 (퇴직자 제외, prob_end 기준 아님 - 현재 재직자 기준)
+  // sc_id 불일치 (HR... 임시ID로 등록된 사람) → 자동 업데이트
+  let idFixed=0;
+  health.forEach(h=>{
+    if(String(h.id||'').startsWith('HR')){
+      const r=roster.find(r=>(r.name||'').trim()===(h.name||'').trim()&&r.sc_id);
+      if(r){h.id=String(r.sc_id);idFixed++;}
+    }
+  });
+  if(idFixed>0){LS.set(HEALTH_KEY,health);showToast(idFixed+'명 사원번호가 직원명부 기준으로 자동 수정되었습니다');}
+  // 직원명부에만 있는 직원
   const missing=roster.filter(r=>{
     if(!r.name)return false;
     if(healthNames.has(r.name.trim()))return false;
@@ -6277,10 +6286,12 @@ function renderHealthTable(){
     }
     return true;
   });
-  // 입사일 오름차순 정렬 (없으면 맨 뒤)
+  // 입사일 오름차순 정렬 (오래된 순 → 위)
+  // joinDate 없으면 직원명부에서 보완
+  const _rMap={};(getRosterData()||[]).forEach(r=>{if(r.name&&r.join_date)_rMap[r.name.trim()]=r.join_date;});
   filtered.sort((a,b)=>{
-    const da=a.joinDate?(a.joinDate).replace(/\./g,'-'):'9999';
-    const db=b.joinDate?(b.joinDate).replace(/\./g,'-'):'9999';
+    const _jd=h=>(h.joinDate||(h.name&&_rMap[h.name.trim()])||'9999').replace(/\./g,'-');
+    const da=_jd(a),db=_jd(b);
     return da<db?-1:da>db?1:0;
   });
   const cnt=document.getElementById('healthCount');
@@ -8105,7 +8116,10 @@ function completeNewHire(id){
   // 건강검진 자동 등록
   if(h.addToHealth){
     const healths=loadHealths();
-    const empId='HR'+Date.now();
+    // 직원명부에서 실제 sc_id 조회
+    const _roster=getRosterData()||[];
+    const _rEmp=_roster.find(r=>(r.name||'').trim()===(h.name||'').trim());
+    const empId=_rEmp&&_rEmp.sc_id?String(_rEmp.sc_id):('HR'+Date.now());
     const probD=h.probEnd?new Date(h.probEnd):null;
     const todayD=new Date();todayD.setHours(0,0,0,0);
     const hasFutureProb=probD&&probD>todayD;
