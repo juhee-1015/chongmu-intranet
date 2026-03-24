@@ -5951,6 +5951,34 @@ function loadHealths(){
 function _isReceived(v){return v==='25만원'||v==='50만원'||v==='Y';}
 function _isNotReceived(v){return v==='미수검'||v==='N';}
 
+// ── 직원명부 수습 상태 실시간 참조 ──
+let _rosterProbCache=null;
+function _getRosterProbMap(){
+  if(_rosterProbCache)return _rosterProbCache;
+  const roster=getRosterData()||[];
+  _rosterProbCache={};
+  roster.forEach(r=>{if(r.name)_rosterProbCache[r.name.trim()]=r.prob_end||'';});
+  return _rosterProbCache;
+}
+function _clearRosterProbCache(){_rosterProbCache=null;}
+
+// 수습 중 여부 체크: 건강검진 probEndDate + 직원명부 prob_end 둘 다 확인
+function _isCurrentlyOnProb(h){
+  const today=new Date();today.setHours(0,0,0,0);
+  // 1. 건강검진 자체 수습 종료일
+  if(h.probEndDate){
+    const pd=new Date(h.probEndDate);pd.setHours(0,0,0,0);
+    if(pd>today)return true;
+  }
+  // 2. 직원명부 prob_end 실시간 참조 (YYYY.MM.DD 형식)
+  const rProb=(_getRosterProbMap()[h.name]||'').replace(/\./g,'-');
+  if(rProb){
+    const rd=new Date(rProb);rd.setHours(0,0,0,0);
+    if(!isNaN(rd)&&rd>today)return true;
+  }
+  return false;
+}
+
 // 패턴 기반 올해 수검 예측 (과거 이력 자동 감지)
 function predictForYear(h, yr, yrs){
   // 1. 대상자 여부 확인
@@ -5959,12 +5987,8 @@ function predictForYear(h, yr, yrs){
     const thisYr=parseInt('20'+yr);
     if(thisYr<fromYr)return'미대상';
   }
-  // 2. 수습 중 여부 확인
-  if(h.probEndDate){
-    const probD=new Date(h.probEndDate);probD.setHours(0,0,0,0);
-    const today=new Date();today.setHours(0,0,0,0);
-    if(probD>today)return'수습중';
-  }
+  // 2. 수습 중 여부 확인 (직원명부 실시간 참조)
+  if(_isCurrentlyOnProb(h))return'수습중';
 
   // 3. 과거 실제 데이터로 패턴 자동 감지
   const sorted=[...yrs].sort();
@@ -6097,6 +6121,7 @@ function _filterHealthByCard(filter){
 }
 
 function renderHealthTable(){
+  _clearRosterProbCache();
   const all=loadHealths();
   const yrs=getHealthYears();
   const currYr=new Date().getFullYear().toString().slice(-2);
@@ -6184,7 +6209,7 @@ function renderHealthTable(){
     <td style="font-size:11px;color:var(--text3);text-align:center;padding:6px 4px;">${i+1}</td>
     <td style="font-family:monospace;font-size:11px;color:var(--text3);padding:6px 8px;">${h.id}</td>
     <td style="font-weight:600;white-space:nowrap;">
-      <span>${h.name}</span>${h.probEndDate&&new Date(h.probEndDate)>today?' <span style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 5px;font-weight:600;vertical-align:middle;">수습</span>':''}
+      <span>${h.name}</span>${_isCurrentlyOnProb(h)?' <span style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 5px;font-weight:600;vertical-align:middle;">수습</span>':''}
     </td>
     <td style="text-align:center;"><span class="park-badge ${h.project==='E7'?'paid':h.project==='SSR'?'free':'active'}" style="font-size:10px;">${h.project||'-'}</span></td>
     <td style="font-size:11px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${h.dept||''}">${h.dept||'-'}</td>
@@ -6195,7 +6220,7 @@ function renderHealthTable(){
       return`<td style="text-align:center;${isNow?'background:#fefce8;':''}">${yCell(h['y'+yr],yr,h,isNow)}</td>`;
     }).join('')}
     <td style="text-align:center;white-space:nowrap;min-width:54px;">
-      <button class="btn btn-xs btn-ghost" onclick="openEditHealthModal('${h.id}')">수정</button>
+      <button class="btn btn-xs btn-ghost" onclick="openEditHealthModal('${h.id||''}','${(h.name||'').replace(/'/g,'')}')">수정</button>
     </td>
   </tr>`).join('');
 }
@@ -6227,10 +6252,12 @@ function openAddHealthEmpModal(){
   },0);
 }
 
-function openEditHealthModal(id){
+function openEditHealthModal(id, name){
   const all=loadHealths();
-  const h=all.find(x=>String(x.id)===String(id));if(!h){showToast('데이터를 찾을 수 없습니다 (id:'+id+')','error');return;}
-  document.getElementById('editHealthId').value=id;
+  let h=id?all.find(x=>String(x.id)===String(id)):null;
+  if(!h&&name)h=all.find(x=>x.name===name);
+  if(!h){showToast('데이터를 찾을 수 없습니다','error');return;}
+  document.getElementById('editHealthId').value=h.id;
   document.getElementById('editHealthModalTitle').textContent='✏️ 건강검진 정보 수정';
   document.getElementById('editHealthName').textContent=h.name+' ('+h.project+' / '+h.dept+' '+h.team+')';
   document.getElementById('editHealthBaseInfo').style.display='none';
@@ -7413,13 +7440,7 @@ function printMonthlyReport(){
   setTimeout(()=>w.print(),500);
 }
 
-// 건강검진 퇴직처리 버튼 표시 조건 추가 (editHealthRetireBtn)
-const _origOpenEditHealthModal=openEditHealthModal;
-function openEditHealthModal(id){
-  _origOpenEditHealthModal(id);
-  const retBtn=document.getElementById('editHealthRetireBtn');
-  if(retBtn)retBtn.style.display=''; // 항상 표시
-}
+
 // ============================================================
 // 일괄 선택/삭제 공통 함수
 // ============================================================
