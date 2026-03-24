@@ -23,29 +23,29 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 
 /* ─────── 헤더 ─────── */
 .site-header{
-  background:linear-gradient(135deg,#0f2a5c 0%,#1e4db7 60%,#2563eb 100%);
-  color:#fff;padding:0 24px;height:56px;
+  background:linear-gradient(to right,#162d5e 0%,#1d4ed8 60%,#2563eb 100%);
+  color:#fff;padding:0 32px;height:58px;
   display:flex;align-items:center;justify-content:space-between;
   position:sticky;top:0;z-index:200;
-  box-shadow:0 2px 16px rgba(79,70,229,.25);
+  box-shadow:0 2px 14px rgba(21,45,100,.45);
 }
-.header-left{display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:10px;padding:4px 8px;transition:background .15s;}
-.header-left:hover{background:rgba(255,255,255,.12);}
-.logo-mark{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;backdrop-filter:blur(8px);}
-.logo-text{font-size:15px;font-weight:700;letter-spacing:-.3px;}
-.logo-sub{font-size:11px;opacity:.65;font-weight:400;margin-top:1px;}
-/* header clock removed */
+.header-left{display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:9px;padding:5px 12px 5px 20px;transition:background .15s;}
+.header-left:hover{background:rgba(255,255,255,.1);}
+.logo-brand{display:flex;flex-direction:column;gap:1px;}
+.logo-sc{font-size:15px;font-weight:900;letter-spacing:.5px;color:#ff6b2b;line-height:1.1;}
+.logo-text{font-size:15px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:-.2px;line-height:1.2;}
+.logo-sub{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;margin-top:1px;}
 .header-nav{display:flex;gap:2px;align-items:center;}
 .nav-btn{
   background:transparent;border:none;color:rgba(255,255,255,.75);
-  padding:6px 11px;border-radius:7px;font-size:12px;font-weight:600;
-  cursor:pointer;transition:all .18s;white-space:nowrap;
+  padding:7px 12px;border-radius:7px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
   display:flex;align-items:center;gap:4px;
 }
-.nav-btn:hover{background:rgba(255,255,255,.15);color:#fff;}
-.nav-btn.active{background:rgba(255,255,255,.22);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);}
-.nav-btn.budget{background:rgba(251,191,36,.22);color:#fde68a;border:1px solid rgba(251,191,36,.4);margin-left:10px;border-radius:20px;}
-.nav-btn.budget:hover{background:rgba(251,191,36,.35);}
+.nav-btn:hover{background:rgba(255,255,255,.14);color:#fff;}
+.nav-btn.active{background:rgba(255,255,255,.2);color:#fff;font-weight:700;}
+.nav-btn.budget{background:rgba(251,191,36,.25);color:#fde68a;border:1px solid rgba(251,191,36,.45);margin-left:8px;border-radius:20px;font-weight:700;}
+.nav-btn.budget:hover{background:rgba(251,191,36,.38);}
 .nav-sep{width:1px;background:rgba(255,255,255,.2);height:20px;margin:0 4px;align-self:center;}
 
 /* ─────── 레이아웃 ─────── */
@@ -103,7 +103,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 
 /* ─────── 홈 히어로 배너 ─────── */
 .home-hero{
-  background:linear-gradient(135deg,#0f2a5c 0%,#1e3fa8 55%,#6d28d9 100%);
+  background:linear-gradient(135deg,#162d5e 0%,#1d4ed8 55%,#2563eb 100%);
   border-radius:var(--radius-lg);padding:22px 28px;color:#fff;
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:16px;box-shadow:0 10px 30px rgba(79,70,229,.25);
@@ -111,12 +111,38 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 }
 .home-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:rgba(255,255,255,.05);border-radius:50%;}
 .home-hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:140px;height:140px;background:rgba(255,255,255,.04);border-radius:50%;}
-.hero-greeting h2{font-size:19px;font-weight:800;margin-bottom:3px;letter-spacing:-.3px;}
-.hero-greeting p{font-size:12px;opacity:.7;font-weight:400;}
+.hero-greeting h2{font-size:24px;font-weight:800;margin-bottom:5px;letter-spacing:-.4px;}
+.hero-greeting p{font-size:13px;opacity:.7;font-weight:400;}
 .hero-clock-block{text-align:right;position:relative;z-index:1;}
-.hero-time{font-size:46px;font-weight:900;letter-spacing:1px;font-variant-numeric:tabular-nums;line-height:1;}
-.hero-date{font-size:14px;opacity:.75;margin-top:6px;font-weight:500;}
-.hero-weekday{font-size:11px;opacity:.55;font-weight:400;margin-top:2px;}
+.hero-clock-inner{display:inline-block;text-align:right;}
+.hero-time-row{display:flex;align-items:baseline;gap:7px;justify-content:flex-end;}
+.hero-time{
+  font-size:52px;font-weight:900;letter-spacing:-1px;
+  font-variant-numeric:tabular-nums;line-height:1;
+  text-shadow:0 0 40px rgba(255,255,255,.25),0 2px 4px rgba(0,0,0,.3);
+  color:#fff;
+}
+.hero-ampm{
+  font-size:13px;font-weight:800;
+  color:rgba(255,255,255,.65);
+  letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:4px;
+}
+.hero-date-row{
+  display:flex;align-items:center;gap:8px;justify-content:flex-end;
+  margin-top:7px;
+}
+.hero-date{
+  font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.75);
+  letter-spacing:.2px;
+}
+.hero-weekday{
+  font-size:11px;color:rgba(255,255,255,.45);
+  font-weight:500;
+  background:rgba(255,255,255,.12);
+  padding:1px 7px;border-radius:10px;
+}
 
 /* ─────── 빠른 바로가기 ─────── */
 .quick-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
@@ -608,10 +634,9 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 <!-- ===== 헤더 ===== -->
 <header class="site-header">
   <div class="header-left" onclick="showPage('home')" title="홈으로">
-    <div class="logo-mark">📚</div>
-    <div>
+    <div class="logo-brand">
+      <div class="logo-sc">SUPER CREATIVE</div>
       <div class="logo-text">총무 대백과</div>
-      <div class="logo-sub">Super Creative</div>
     </div>
   </div>
   <nav class="header-nav">
@@ -646,8 +671,8 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
       </div>
     </div>
     <div class="nav-sep"></div>
-    <button class="nav-btn budget" onclick="window.location.href='총무팀_예산관리_2026.html'">💰 예산관리 →</button>
     <button class="nav-btn" onclick="openQuickSearch()" title="전역 검색 (Ctrl+K)" style="font-size:13px;">🔍</button>
+    <button class="nav-btn budget" onclick="window.location.href='총무팀_예산관리_2026.html'">💰 예산관리 →</button>
     <button class="nav-btn cloud-btn" id="cloudNavBtn" onclick="openCloudModal()">☁️ 클라우드</button>
   </nav>
 </header>
@@ -666,9 +691,16 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
       <p id="heroSub">오늘도 즐거운 업무 시간 되세요!</p>
     </div>
     <div class="hero-clock-block">
-      <div class="hero-time" id="heroTime">--:--:--</div>
-      <div class="hero-date" id="heroDate">-</div>
-      <div class="hero-weekday" id="heroWeekday">-</div>
+      <div class="hero-clock-inner">
+        <div class="hero-time-row">
+          <div class="hero-time" id="heroTime">--:--:--</div>
+          <div class="hero-ampm" id="heroAmpm">AM</div>
+        </div>
+        <div class="hero-date-row">
+          <div class="hero-date" id="heroDate">-</div>
+          <div class="hero-weekday" id="heroWeekday">-</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -742,10 +774,10 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
   </div>
 
   <!-- 2×2 그리드: 좌우 행 높이 자동 일치 -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px;margin-top:16px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px;">
 
     <!-- [1행 좌] 이번달 총무팀 주요 업무 -->
-    <div class="card" style="display:flex;flex-direction:column;">
+    <div class="card" style="display:flex;flex-direction:column;margin-bottom:0;">
       <div class="card-header" style="border-bottom:1px solid var(--border);">
         <div class="card-title"><span class="icon icon-blue">📋</span> 이번달 총무팀 주요 업무</div>
         <div style="display:flex;gap:6px;align-items:center;">
@@ -757,12 +789,12 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     </div>
 
     <!-- [1행 우] 이체일 / 사택 / 건강검진 컴팩트 카드 -->
-    <div class="card" style="overflow:hidden;display:flex;flex-direction:column;">
+    <div class="card" style="overflow:hidden;display:flex;flex-direction:column;margin-bottom:0;">
       <div id="homeInfoCard" style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;flex:1;"></div>
     </div>
 
     <!-- [2행 좌] 다가오는 일정 -->
-    <div class="card" style="display:flex;flex-direction:column;">
+    <div class="card" style="display:flex;flex-direction:column;margin-bottom:0;">
       <div class="card-header" style="border-bottom:1px solid var(--border);">
         <div class="card-title"><span class="icon icon-blue">📆</span> 다가오는 일정 <span style="font-size:11px;font-weight:400;color:var(--text3);">30일 이내</span></div>
         <button class="btn btn-ghost btn-sm" onclick="showPage('calendar')">캘린더</button>
@@ -771,7 +803,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     </div>
 
     <!-- [2행 우] D-day 현황 -->
-    <div class="card" style="display:flex;flex-direction:column;">
+    <div class="card" style="display:flex;flex-direction:column;margin-bottom:0;">
       <div class="card-header" style="border-bottom:1px solid var(--border);">
         <div class="card-title"><span class="icon" style="background:#fee2e2;">⏰</span> D-day 현황</div>
         <button class="btn btn-ghost btn-sm" onclick="showPage('hr')">인사일정</button>
@@ -791,8 +823,9 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     <div class="card-header">
       <div class="card-title"><span class="icon icon-blue">📅</span> 업무 캘린더</div>
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-        <select id="calYear" onchange="renderCalendar()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;font-weight:600;background:var(--surface);color:var(--text);" id="calYearSel"></select>
-        <button class="btn btn-success btn-sm" onclick="openAddYearModal()">＋ 연도 추가</button>
+        <select id="calYear" onchange="renderCalendar()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;font-weight:600;background:var(--surface);color:var(--text);"></select>
+        <button class="btn btn-success btn-sm" onclick="openAddYearModal()">＋ 연도 추가/복사</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCalYear()" title="현재 연도 캘린더 삭제">🗑 연도 삭제</button>
         <button class="btn btn-primary btn-sm" onclick="openCalAddModal()">＋ 업무 추가</button>
         <button class="btn btn-ghost btn-sm" onclick="exportCalCSV()">📊 내보내기</button>
       </div>
@@ -2241,11 +2274,17 @@ function closeModal(id){document.getElementById(id).classList.remove('open');}
 // ============================================================
 function updateClock(){
   const n=new Date();
-  const timeStr=n.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const h=n.getHours();
+  const ampm=h<12?'AM':'PM';
+  const h12=h%12||12;
+  const mm=String(n.getMinutes()).padStart(2,'0');
+  const ss=String(n.getSeconds()).padStart(2,'0');
+  const timeStr=`${String(h12).padStart(2,'0')}:${mm}:${ss}`;
   const dateStr=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
   const wd=WEEK_DAYS[n.getDay()]+'요일';
   // 히어로 시계
   const gt=document.getElementById('heroTime');if(gt)gt.textContent=timeStr;
+  const ga=document.getElementById('heroAmpm');if(ga)ga.textContent=ampm;
   const gd=document.getElementById('heroDate');if(gd)gd.textContent=dateStr;
   const gw=document.getElementById('heroWeekday');if(gw)gw.textContent=wd;
   // 이번달 업무 (1초마다 재계산 불필요하지만 초기화 보장)
@@ -2260,8 +2299,7 @@ function updateClock(){
       ?'<div style="color:var(--text3);font-size:12px;padding:8px;">이번달 등록된 총무 업무가 없습니다.</div>'
       :tasks.map(d=>`<div class="task-item"><span class="task-week">${d.week}</span><span class="task-text">${d.months[m]}</span></div>`).join('');
   }
-  // 인사말
-  const h=n.getHours();
+  // 인사말 (h는 함수 상단에서 이미 선언됨)
   const greet=h<9?'좋은 아침이에요 ☀️':h<12?'오전 업무 파이팅! 💪':h<14?'점심 시간이에요 🍱':h<18?'오후도 화이팅! ✨':'수고하셨습니다 🌙';
   const hg=document.getElementById('heroGreet');if(hg)hg.textContent=greet;
 }
@@ -2379,13 +2417,34 @@ function applyAddYear(){
   const newY=parseInt(document.getElementById('newYearInput').value);
   if(!newY||newY<2020||newY>2040){alert('올바른 연도를 입력하세요 (2020~2040)');return;}
   const years=getCalYears();
-  if(years.includes(newY)){alert(newY+'년은 이미 존재합니다');return;}
   const copyFrom=document.getElementById('copyFromYear').value;
+  if(years.includes(newY)){
+    if(!copyFrom){alert(newY+'년 캘린더가 이미 존재합니다.\n복사할 연도를 선택하면 데이터를 덮어쓸 수 있습니다.');return;}
+    if(!confirm(newY+'년 캘린더가 이미 존재합니다.\n'+copyFrom+'년 데이터로 덮어쓸까요?\n기존 '+newY+'년 데이터는 모두 삭제됩니다.'))return;
+    const src=loadCalData(parseInt(copyFrom));
+    saveCalData(newY,JSON.parse(JSON.stringify(src)));
+    saveCalYears(years);buildCalYearSelect();
+    document.getElementById('calYear').value=newY;
+    closeModal('addYearModal');renderCalendar();showToast(copyFrom+'년 → '+newY+'년 복사 완료!');
+    return;
+  }
   if(copyFrom){const src=loadCalData(parseInt(copyFrom));saveCalData(newY,JSON.parse(JSON.stringify(src)));}
   years.push(newY);years.sort((a,b)=>a-b);
   saveCalYears(years);buildCalYearSelect();
   document.getElementById('calYear').value=newY;
   closeModal('addYearModal');renderCalendar();showToast(newY+'년 캘린더 추가 완료!');
+}
+function deleteCalYear(){
+  const yr=parseInt(document.getElementById('calYear').value);
+  const years=getCalYears();
+  if(years.length<=1){showToast('마지막 연도는 삭제할 수 없습니다','error');return;}
+  if(!confirm(yr+'년 캘린더를 삭제할까요?\n모든 업무 데이터가 삭제됩니다.'))return;
+  LS.set('intra_cal_'+yr,null);
+  const newYears=years.filter(y=>y!==yr);
+  saveCalYears(newYears);
+  buildCalYearSelect();
+  renderCalendar();
+  showToast(yr+'년 캘린더 삭제 완료');
 }
 function exportCalCSV(){
   const year=parseInt(document.getElementById('calYear').value);
@@ -2566,11 +2625,11 @@ function renderUpcomingEvents(){
         lastGroup=grpKey;
         const badge=diffDays<=0?'<span style="background:#dcfce7;color:#166534;border-radius:8px;padding:1px 6px;font-size:10px;">이번주</span>'
           :`<span style="font-size:10px;color:var(--text3);">${mn} ${t.week}</span>`;
-        header=`<div style="padding:4px 0 2px;font-size:11px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border2);margin-bottom:3px;display:flex;gap:6px;align-items:center;">${badge}</div>`;
+        header=`<div style="padding:8px 0 4px;font-size:11px;font-weight:700;color:var(--text2);border-bottom:1px solid var(--border2);margin-bottom:4px;display:flex;gap:6px;align-items:center;">${badge}</div>`;
       }
-      return header+`<div style="display:flex;align-items:flex-start;gap:6px;padding:3px 0;font-size:11px;color:var(--text);">
+      return header+`<div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:var(--text);">
         <span style="width:6px;height:6px;border-radius:50%;background:#6366f1;margin-top:5px;flex-shrink:0;"></span>
-        <span style="flex:1;line-height:1.4;">${t.title}</span>
+        <span style="flex:1;line-height:1.5;">${t.title}</span>
       </div>`;
     }).join('');
   }catch(e){box.innerHTML='<div style="font-size:11px;color:var(--text3);padding:8px;">불러오기 실패</div>';}
@@ -3400,7 +3459,7 @@ function renderHomeDdaySummary(){
       if(diff>=-3&&diff<=60){
         items.push({
           type:'hr',
-          icon:h.type==='new'?'🆕':h.type==='out'?'👋':h.type==='leave'?'🚫':h.type==='remote'?'🏠':'✅',
+          icon:h.type==='new'?'👤':h.type==='out'?'👋':h.type==='leave'?'🚫':h.type==='remote'?'🏠':'✅',
           label:h.name+' '+(h.type==='new'?'입사':h.type==='out'?'퇴직':h.type==='leave'?'휴직':h.type==='remote'?'재택':'복직'),
           diff,
           color:diff<=0?'#dc2626':diff<=7?'#f59e0b':'#6366f1',
@@ -3443,7 +3502,7 @@ function renderHomeDdaySummary(){
     const isUrgent=it.diff<=0;
     const isSoon=it.diff>0&&it.diff<=3;
     return`<div style="display:flex;align-items:center;gap:10px;padding:8px 4px 8px 12px;border-bottom:1px solid var(--border);border-left:3px solid ${it.color};margin-bottom:2px;border-radius:0 6px 6px 0;cursor:pointer;transition:background .12s;background:${isUrgent?'rgba(239,68,68,.04)':isSoon?'rgba(245,158,11,.03)':'transparent'};" onclick="showPage('${it.linkPage||'home'}')" onmouseenter="this.style.background='var(--bg)'" onmouseleave="this.style.background='${isUrgent?'rgba(239,68,68,.04)':isSoon?'rgba(245,158,11,.03)':'transparent'}'">
-      <span style="font-size:15px;flex-shrink:0;">${it.icon}</span>
+      <span style="font-size:15px;flex-shrink:0;width:22px;text-align:center;line-height:1;">${it.icon}</span>
       <span style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.label}</span>
       <span style="font-size:11px;font-weight:800;color:${it.color};background:${it.bg};border-radius:6px;padding:3px 10px;white-space:nowrap;flex-shrink:0;letter-spacing:.2px;">${dstr}</span>
     </div>`;
@@ -3481,7 +3540,8 @@ function renderHomeInfoCard(){
   let sateakActive=0,sateakTotal=0,sateakWarn=0;
   try{
     const s=loadSateaks();
-    sateakTotal=s.length;sateakActive=s.filter(x=>x.status==='입주중').length;
+    const validSateaks=s.filter(x=>x.status!=='퇴거'&&x.status!=='계약종료');
+    sateakTotal=validSateaks.length;sateakActive=s.filter(x=>x.status==='입주중').length;
     s.filter(x=>x.status==='입주중').forEach(x=>{
       const endStr=x.endDate||(x.contract||'').split('~')[1]?.trim()||'';
       const endD=parseSateakDate(endStr.trim());
@@ -3508,7 +3568,7 @@ function renderHomeInfoCard(){
   const dstr=nxt.isToday?'오늘!':nxt.isPast?'이달완료':`D-${nxt.diff}`;
 
   const paySection=`
-  <div style="padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;" onclick="showPage('checklist')" title="업무 체크리스트">
+  <div style="padding:16px 16px 14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;flex:1;" onclick="showPage('checklist')" title="업무 체크리스트">
     <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;">💸 이체일 현황 <span style="font-weight:400;opacity:.7;">(주말→전영업일)</span></div>
     <div style="display:flex;align-items:baseline;gap:5px;">
       <span style="font-size:22px;font-weight:900;color:var(--text);">${mo}/${nxt.actualDay||'-'}</span>
@@ -3529,36 +3589,48 @@ function renderHomeInfoCard(){
 
   // ── 사택 섹션 HTML
   const sateakPct=sateakTotal>0?Math.round(sateakActive/sateakTotal*100):0;
+  const sateakVacant=sateakTotal-sateakActive;
   const sateakSection=`
-  <div style="padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;" onclick="showPage('sateak')">
-    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;">🏠 사택 현황</div>
-    <div style="display:flex;align-items:baseline;gap:4px;">
+  <div style="padding:14px 16px 14px;cursor:pointer;display:flex;flex-direction:column;gap:0;" onclick="showPage('sateak')">
+    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;margin-bottom:6px;">🏠 사택 현황</div>
+    <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:8px;">
       <span style="font-size:22px;font-weight:900;color:var(--text);">${sateakActive}</span>
       <span style="font-size:12px;color:var(--text2);">/ ${sateakTotal}세대</span>
     </div>
-    <div style="background:#ede9fe;height:5px;border-radius:4px;overflow:hidden;">
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;">
+      <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:#ede9fe;color:#7c3aed;font-weight:700;">입주중 ${sateakActive}</span>
+      <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:#f3f4f6;color:#6b7280;font-weight:700;">공실 ${sateakVacant}</span>
+      ${sateakWarn>0?`<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:#fff7ed;color:#c2410c;font-weight:700;">만료임박 ${sateakWarn}건 ⚠</span>`:''}
+    </div>
+    <div style="background:#ede9fe;height:5px;border-radius:4px;overflow:hidden;margin-bottom:5px;">
       <div style="width:${sateakPct}%;height:100%;background:#8b5cf6;border-radius:4px;transition:width .5s;"></div>
     </div>
-    <div style="font-size:10px;color:var(--text3);">
-      입주중 ${sateakActive}세대${sateakWarn>0?` &nbsp;·&nbsp; <span style="color:#f97316;font-weight:700;">만료임박 ${sateakWarn}건 ⚠</span>`:''}
-    </div>
+    <div style="font-size:10px;color:var(--text3);">입주율 <span style="font-weight:700;color:#7c3aed;">${sateakPct}%</span></div>
   </div>`;
 
   // ── 건강검진 섹션 HTML
   const healthPct=healthTarget>0?Math.round(healthDone/healthTarget*100):0;
   const hColor=healthPct>=100?'#16a34a':healthPct>=60?'#2563eb':'#f59e0b';
   const hBarBg=healthPct>=100?'#dcfce7':healthPct>=60?'#dbeafe':'#fef3c7';
+  const healthRemaining=healthTarget-healthDone;
   const healthSection=`
-  <div style="padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;" onclick="showPage('health')">
-    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;">🏥 건강검진 현황</div>
-    <div style="display:flex;align-items:baseline;gap:4px;">
+  <div style="padding:14px 16px 14px;cursor:pointer;display:flex;flex-direction:column;gap:0;" onclick="showPage('health')">
+    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;margin-bottom:6px;">🏥 건강검진 현황</div>
+    <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:8px;">
       <span style="font-size:22px;font-weight:900;color:var(--text);">${healthDone}</span>
       <span style="font-size:12px;color:var(--text2);">/ ${healthTarget}명</span>
     </div>
-    <div style="background:${hBarBg};height:5px;border-radius:4px;overflow:hidden;">
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;">
+      <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:${hBarBg};color:${hColor};font-weight:700;">완료 ${healthDone}명</span>
+      ${healthRemaining>0
+        ?`<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:#fef3c7;color:#b45309;font-weight:700;">미수검 ${healthRemaining}명</span>`
+        :`<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:#dcfce7;color:#15803d;font-weight:700;">전원 완료 ✓</span>`
+      }
+    </div>
+    <div style="background:${hBarBg};height:5px;border-radius:4px;overflow:hidden;margin-bottom:5px;">
       <div style="width:${healthPct}%;height:100%;background:${hColor};border-radius:4px;transition:width .5s;"></div>
     </div>
-    <div style="font-size:10px;color:var(--text3);">${yr}년 · 완료 <span style="font-weight:700;color:${hColor};">${healthPct}%</span></div>
+    <div style="font-size:10px;color:var(--text3);">${yr}년 · 완료율 <span style="font-weight:700;color:${hColor};">${healthPct}%</span></div>
   </div>`;
 
   const sep=`<div style="background:var(--border);"></div>`;
@@ -3607,19 +3679,27 @@ function renderHomeDdayBanner(){
 function updateStatCards(){
   const today=new Date();today.setHours(0,0,0,0);
 
-  // 재직자 현황 (건강검진 명단 기준 eligible=true)
+  // 재직자 현황 (직원명부 기준 - 실제 재직자 수/수습 인원)
   try{
-    const healths=loadHealths();
-    const activeEmps=healths.filter(h=>h.eligible!==false).length;
-    const probEmps=healths.filter(h=>{
-      if(!h.probEndDate)return false;
-      const pd=new Date(h.probEndDate);pd.setHours(0,0,0,0);
+    const roster=getRosterData()||[];
+    const activeEmps=roster.length;
+    const probEmps=roster.filter(r=>{
+      const pe=r.prob_end||r.probEndDate||'';
+      if(!pe)return false;
+      // 날짜 파싱 (YYYY.MM.DD 또는 YYYY-MM-DD)
+      const pd=new Date(pe.replace(/\./g,'-'));
+      if(isNaN(pd))return false;
+      pd.setHours(0,0,0,0);
       return pd>today;
     }).length;
     const el=document.getElementById('statEmpTotal');
     if(el)el.textContent=activeEmps;
     const sub=document.getElementById('statEmpSub');
-    if(sub)sub.textContent=probEmps>0?'수습중 '+probEmps+'명 포함':'전원 정규 근무중';
+    if(sub){
+      const regularEmps=activeEmps-probEmps;
+      sub.textContent=probEmps>0?`정규 ${regularEmps}명 · 수습 ${probEmps}명`:`정규 ${activeEmps}명`;
+      sub.style.color=probEmps>0?'#f59e0b':'var(--text3)';
+    }
   }catch(e){}
 
   // 주차 현황 스탯 + 미니 바
@@ -3790,6 +3870,67 @@ function importVendorCSV(input){
 // ============================================================
 // 전체 백업/복원 (JSON)
 // ============================================================
+function exportAllExcel(){
+  if(typeof XLSX==='undefined'){showToast('XLSX 라이브러리 로딩 실패. 인터넷 연결 확인','error');return;}
+  const wb=XLSX.utils.book_new();
+  const today=new Date().toLocaleDateString('ko-KR');
+  // ── 1. 재직자 현황 ──
+  try{
+    const hr=loadHrEntries()||[];
+    const active=hr.filter(e=>e.status==='재직');
+    const hrRows=[['사번','이름','부서','직급','입사일','상태'],...active.map(e=>[e.id||'',e.name||'',e.dept||'',e.rank||'',e.joinDate||'',e.status||''])];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(hrRows),'재직자현황');
+  }catch(e){}
+  // ── 2. 인사 일정 ──
+  try{
+    const hr=loadHrEntries()||[];
+    const hrSched=[['날짜','이름','유형','메모'],...hr.filter(e=>e.eventDate).map(e=>[e.eventDate||'',e.name||'',e.type||'',e.memo||''])];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(hrSched),'인사일정');
+  }catch(e){}
+  // ── 3. 계약 현황 ──
+  try{
+    const contracts=loadContracts()||[];
+    const now=new Date();
+    const cRows=[['업체명','계약명','시작일','만료일','금액','D-day','상태'],...contracts.map(c=>{
+      const d=c.endDate?Math.ceil((new Date(c.endDate)-now)/86400000):null;
+      const status=d===null?'-':d<0?'만료':d<=30?'만료임박':'정상';
+      return[c.company||'',c.name||'',c.startDate||'',c.endDate||'',c.amount||'',d===null?'-':(d<0?`D+${-d}`:`D-${d}`),status];
+    })];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(cRows),'계약현황');
+  }catch(e){}
+  // ── 4. 사택 현황 ──
+  try{
+    const sateaks=loadSateaks()||[];
+    const sRows=[['사택명','입주자','입주일','퇴실일','상태'],...sateaks.map(s=>[s.name||'',s.tenant||'',s.moveIn||'',s.moveOut||'',s.status||''])];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(sRows),'사택현황');
+  }catch(e){}
+  // ── 5. 건강검진 현황 ──
+  try{
+    const healths=loadHealths()||[];
+    const hRows=[['이름','부서','대상여부','검진일','결과','비고'],...healths.map(h=>[h.name||'',h.dept||'',h.target||'',h.date||'',h.result||'',h.memo||''])];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(hRows),'건강검진현황');
+  }catch(e){}
+  // ── 6. 주차 현황 ──
+  try{
+    const emps=loadParkingEmps()||[];
+    const lots=loadParkingLots()||[];
+    const pRows=[['이름','부서','차량번호','주차구역','등록일'],...emps.map(p=>{
+      const lot=lots.find(l=>l.id===p.lotId);
+      return[p.name||'',p.dept||'',p.carNum||'',lot?lot.name:'미배정',p.regDate||''];
+    })];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(pRows),'주차현황');
+  }catch(e){}
+  // ── 7. 이번달 주요 업무 ──
+  try{
+    const yr=new Date().getFullYear();const mo=new Date().getMonth();
+    const calData=loadCalData(yr)||[];
+    const taskRows=[['주차','카테고리','업무내용'],...calData.filter(d=>d.months[mo]&&d.months[mo].trim()).map(d=>[d.week||'',d.category||'',d.months[mo]||''])];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(taskRows),'이번달업무');
+  }catch(e){}
+  if(wb.SheetNames.length===0){showToast('내보낼 데이터가 없습니다','error');return;}
+  XLSX.writeFile(wb,`총무대백과_종합현황_${today.replace(/\./g,'').replace(/ /g,'')}.xlsx`);
+  showToast(`📊 종합 엑셀 내보내기 완료! (${wb.SheetNames.length}개 시트)`);
+}
 function exportAllJSON(){
   const data={
     _version:1,_date:new Date().toISOString(),_app:'총무대백과',
