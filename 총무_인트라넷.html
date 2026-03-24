@@ -84,55 +84,58 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 .btn-xs{padding:3px 7px;font-size:10px;border-radius:4px;}
 
 /* ─────── 홈 대시보드 ─────── */
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;}
 .stat-card{
-  background:var(--surface);border-radius:var(--radius-lg);padding:18px 20px;
+  background:var(--surface);border-radius:var(--radius-lg);padding:16px 18px 18px;
   border:1px solid var(--border);box-shadow:var(--shadow-sm);
-  display:flex;align-items:center;gap:16px;
-  cursor:pointer;transition:box-shadow .15s,transform .12s,border-color .15s;
-  text-decoration:none;color:inherit;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:box-shadow .2s,transform .15s,border-color .2s;
+  text-decoration:none;color:inherit;overflow:hidden;
 }
-.stat-card:hover{box-shadow:0 4px 16px rgba(79,70,229,.13);border-color:var(--primary-light);transform:translateY(-1px);}
-.stat-icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.stat-card:hover{box-shadow:0 6px 20px rgba(79,70,229,.14);border-color:var(--primary-light);transform:translateY(-2px);}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
 .stat-info{flex:1;min-width:0;}
-.stat-label{font-size:13px;color:var(--text3);font-weight:600;margin-bottom:3px;}
+.stat-label{font-size:11px;color:var(--text3);font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
 .stat-value-row{display:flex;align-items:baseline;gap:4px;}
-.stat-value{font-size:24px;font-weight:800;color:var(--text);line-height:1.1;}
+.stat-value{font-size:26px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-1px;}
 .stat-unit{font-size:12px;font-weight:600;color:var(--text2);}
-.stat-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.stat-sub{font-size:10.5px;color:var(--text3);margin-top:3px;}
 
-/* ─────── 홈 시계 (인라인 + 예쁜 스타일) ─────── */
+/* ─────── 홈 히어로 배너 ─────── */
 .home-hero{
-  background:linear-gradient(135deg,var(--primary-dark),var(--purple));
-  border-radius:var(--radius-lg);padding:20px 24px;color:#fff;
+  background:linear-gradient(135deg,#0f2a5c 0%,#1e3fa8 55%,#6d28d9 100%);
+  border-radius:var(--radius-lg);padding:22px 28px;color:#fff;
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:16px;box-shadow:0 8px 24px rgba(79,70,229,.2);
+  margin-bottom:16px;box-shadow:0 10px 30px rgba(79,70,229,.25);
+  position:relative;overflow:hidden;
 }
-.hero-greeting h2{font-size:18px;font-weight:700;margin-bottom:2px;}
-.hero-greeting p{font-size:12px;opacity:.75;}
-.hero-clock-block{text-align:right;}
-.hero-time{font-size:42px;font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;line-height:1;}
-.hero-date{font-size:14px;opacity:.75;margin-top:5px;}
-.hero-weekday{font-size:11px;opacity:.6;}
+.home-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:rgba(255,255,255,.05);border-radius:50%;}
+.home-hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:140px;height:140px;background:rgba(255,255,255,.04);border-radius:50%;}
+.hero-greeting h2{font-size:19px;font-weight:800;margin-bottom:3px;letter-spacing:-.3px;}
+.hero-greeting p{font-size:12px;opacity:.7;font-weight:400;}
+.hero-clock-block{text-align:right;position:relative;z-index:1;}
+.hero-time{font-size:46px;font-weight:900;letter-spacing:1px;font-variant-numeric:tabular-nums;line-height:1;}
+.hero-date{font-size:14px;opacity:.75;margin-top:6px;font-weight:500;}
+.hero-weekday{font-size:11px;opacity:.55;font-weight:400;margin-top:2px;}
 
 /* ─────── 빠른 바로가기 ─────── */
 .quick-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
 .quick-btn{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  padding:14px 8px;border-radius:var(--radius);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:16px 8px 14px;border-radius:var(--radius);
   background:var(--surface);border:1px solid var(--border);
   cursor:pointer;transition:all .2s;text-decoration:none;color:inherit;
 }
-.quick-btn:hover{border-color:var(--primary-light);box-shadow:0 4px 12px rgba(79,70,229,.12);transform:translateY(-2px);}
+.quick-btn:hover{border-color:var(--primary-light);box-shadow:0 4px 14px rgba(79,70,229,.13);transform:translateY(-2px);}
 .quick-btn .qicon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;}
-.quick-btn .qlabel{font-size:11px;font-weight:600;color:var(--text2);text-align:center;line-height:1.3;margin-top:4px;}
+.quick-btn .qlabel{font-size:11px;font-weight:600;color:var(--text2);text-align:center;line-height:1.35;}
 
 /* ─────── 이번달 업무 ─────── */
 .task-item{
-  display:flex;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);
-  background:var(--bg);margin-bottom:5px;border-left:3px solid var(--primary-light);
+  display:flex;gap:8px;padding:9px 12px;border-radius:var(--radius-sm);
+  background:var(--bg);margin-bottom:5px;border-left:3px solid var(--primary);
 }
-.task-week{font-size:10px;font-weight:700;color:var(--primary);white-space:nowrap;padding-top:1px;}
+.task-week{font-size:10px;font-weight:800;color:var(--primary);white-space:nowrap;padding-top:1px;}
 .task-text{font-size:11px;line-height:1.6;color:var(--text2);}
 
 /* ─────── 주차관리 ─────── */
@@ -671,45 +674,51 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
 
   <!-- 스탯 카드 -->
   <div class="stat-grid">
-    <div class="stat-card" onclick="showPage('hr')" title="재직자 현황 바로가기">
-      <div class="stat-icon" style="background:#dbeafe;">👥</div>
+    <!-- 재직자 현황 -->
+    <div class="stat-card" onclick="showPage('hr')" style="border-top:3px solid #3b82f6;padding-top:15px;">
+      <div class="stat-icon" style="background:#dbeafe;font-size:22px;">👥</div>
       <div class="stat-info">
         <div class="stat-label">재직자 현황</div>
         <div class="stat-value-row"><span class="stat-value" id="statEmpTotal">-</span><span class="stat-unit">명</span></div>
         <div class="stat-sub" id="statEmpSub" style="font-size:10px;color:var(--text3);margin-top:2px;"></div>
       </div>
     </div>
-    <div class="stat-card" onclick="showPage('sateak')" title="사택 현황 바로가기">
-      <div class="stat-icon" style="background:#ede9fe;">🏠</div>
+    <!-- 주차 관리 -->
+    <div class="stat-card" onclick="showPage('parking')" style="border-top:3px solid #0ea5e9;padding-top:15px;">
+      <div class="stat-icon" style="background:#e0f2fe;font-size:22px;">🚗</div>
       <div class="stat-info">
-        <div class="stat-label">사택 현황</div>
-        <div class="stat-value-row"><span class="stat-value" id="statSateak">-</span><span class="stat-unit">개 운영중</span></div>
-      </div>
-    </div>
-    <div class="stat-card" onclick="showPage('health')" title="건강검진 현황 바로가기">
-      <div class="stat-icon" style="background:#dcfce7;">🏥</div>
-      <div class="stat-info">
-        <div class="stat-label">건강검진 현황</div>
-        <div class="stat-value-row"><span class="stat-value" id="statHealth">-</span><span class="stat-unit">명 대상</span></div>
-      </div>
-    </div>
-
-    <div class="stat-card" onclick="showPage('parking')" title="주차 관리 바로가기">
-      <div class="stat-icon" style="background:#e0f2fe;">🚗</div>
-      <div class="stat-info">
-        <div class="stat-label">주차 관리 <span id="statParkingSub" style="font-size:11px;font-weight:400;color:var(--text3);"></span></div>
+        <div class="stat-label">주차 관리</div>
         <div class="stat-value-row"><span class="stat-value" id="statParking">-</span><span class="stat-unit">대 등록</span></div>
+        <div class="stat-sub" id="statParkingSub" style="font-size:10px;color:var(--text3);margin-top:2px;"></div>
+      </div>
+    </div>
+    <!-- 인사 예정 -->
+    <div class="stat-card" onclick="showPage('hr')" style="border-top:3px solid #f59e0b;padding-top:15px;" id="statHrSoonCard">
+      <div class="stat-icon" style="background:#fef3c7;font-size:22px;" id="statHrSoonIcon">📋</div>
+      <div class="stat-info">
+        <div class="stat-label">인사 예정 <span style="font-size:10px;font-weight:400;color:var(--text3);">7일 이내</span></div>
+        <div class="stat-value-row"><span class="stat-value" id="statHrSoon">-</span><span class="stat-unit">건</span></div>
+        <div class="stat-sub" id="statHrSoonSub" style="font-size:10px;color:var(--text3);margin-top:2px;"></div>
+      </div>
+    </div>
+    <!-- 계약 만료임박 -->
+    <div class="stat-card" onclick="showPage('contract')" style="border-top:3px solid #ef4444;padding-top:15px;" id="statContractCard">
+      <div class="stat-icon" style="background:#fee2e2;font-size:22px;" id="statContractIcon">📝</div>
+      <div class="stat-info">
+        <div class="stat-label">계약 만료임박 <span style="font-size:10px;font-weight:400;color:var(--text3);">30일 이내</span></div>
+        <div class="stat-value-row"><span class="stat-value" id="statContract">-</span><span class="stat-unit">건</span></div>
+        <div class="stat-sub" id="statContractSub" style="font-size:10px;color:var(--text3);margin-top:2px;"></div>
       </div>
     </div>
   </div>
 
   <!-- 빠른 바로가기 -->
   <div class="card">
-    <div class="card-header">
+    <div class="card-header" style="border-bottom:1px solid var(--border);">
       <div class="card-title"><span class="icon icon-blue">⚡</span> 빠른 바로가기</div>
     </div>
     <div class="card-body">
-      <div class="quick-grid" style="grid-template-columns:repeat(6,1fr);gap:8px;">
+      <div class="quick-grid" style="grid-template-columns:repeat(6,1fr);gap:10px;">
         <a class="quick-btn" href="#" onclick="window.open('https://office-map-bay.vercel.app/','_blank');return false;">
           <div class="qicon" style="background:#dbeafe;">🗺️</div><div class="qlabel">좌석배치도</div>
         </a>
@@ -732,56 +741,44 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     </div>
   </div>
 
-  <!-- 이체일 현황 바 -->
-  <div id="paymentBar" style="background:white;border-radius:10px;border:1px solid var(--border);padding:12px 18px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:var(--shadow-sm);"></div>
+  <!-- 2×2 그리드: 좌우 행 높이 자동 일치 -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px;margin-top:16px;">
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch;">
-    <!-- 왼쪽: 이번달 업무 + 다가오는 일정 -->
-    <div style="display:flex;flex-direction:column;gap:16px;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><span class="icon icon-blue">📋</span> 이번달 총무팀 주요 업무</div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span id="thisMonthLabel" style="font-size:11px;color:var(--text3);"></span>
-            <button class="btn btn-ghost btn-sm" onclick="openMonthlyReport()" title="월별 보고서 생성">📊 보고서</button>
-          </div>
+    <!-- [1행 좌] 이번달 총무팀 주요 업무 -->
+    <div class="card" style="display:flex;flex-direction:column;">
+      <div class="card-header" style="border-bottom:1px solid var(--border);">
+        <div class="card-title"><span class="icon icon-blue">📋</span> 이번달 총무팀 주요 업무</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span id="thisMonthLabel" style="font-size:11px;color:var(--text3);"></span>
+          <button class="btn btn-ghost btn-sm" onclick="openMonthlyReport()" title="월별 보고서 생성">📊 보고서</button>
         </div>
-        <div class="card-body" id="thisMonthTasks" style="max-height:200px;overflow-y:auto;"></div>
       </div>
-      <div class="card" style="flex:1;">
-        <div class="card-header">
-          <div class="card-title"><span class="icon icon-blue">📆</span> 다가오는 일정 (30일 이내)</div>
-          <button class="btn btn-ghost btn-sm" onclick="showPage('calendar')">캘린더</button>
-        </div>
-        <div class="card-body" id="upcomingEvents" style="min-height:80px;max-height:360px;overflow-y:auto;"></div>
-      </div>
+      <div class="card-body" id="thisMonthTasks" style="flex:1;overflow-y:auto;"></div>
     </div>
 
-    <!-- 오른쪽: D-day 현황 + 최근 상품권 + 최근 공지/메모 -->
-    <div style="display:flex;flex-direction:column;gap:16px;height:100%;">
-      <!-- D-day 현황 요약 위젯 -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><span class="icon" style="background:#fee2e2;">⏰</span> D-day 현황</div>
-          <button class="btn btn-ghost btn-sm" onclick="renderHomeDdaySummary()">새로고침</button>
-        </div>
-        <div class="card-body" id="homeDdaySummary" style="min-height:60px;max-height:320px;overflow-y:auto;padding:12px 16px;"></div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><span class="icon icon-yellow">🎁</span> 최근 상품권 지급</div>
-          <button class="btn btn-ghost btn-sm" onclick="showPage('voucher')">전체보기</button>
-        </div>
-        <div class="card-body" id="voucherPreview" style="min-height:80px;"></div>
-      </div>
-      <div class="card" style="flex:1;display:flex;flex-direction:column;">
-        <div class="card-header">
-          <div class="card-title"><span class="icon icon-yellow">📌</span> 최근 공지 / 메모</div>
-          <button class="btn btn-ghost btn-sm" onclick="showPage('notice')">전체보기</button>
-        </div>
-        <div class="card-body" id="noticePreview" style="flex:1;overflow-y:auto;min-height:80px;"></div>
-      </div>
+    <!-- [1행 우] 이체일 / 사택 / 건강검진 컴팩트 카드 -->
+    <div class="card" style="overflow:hidden;display:flex;flex-direction:column;">
+      <div id="homeInfoCard" style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;flex:1;"></div>
     </div>
+
+    <!-- [2행 좌] 다가오는 일정 -->
+    <div class="card" style="display:flex;flex-direction:column;">
+      <div class="card-header" style="border-bottom:1px solid var(--border);">
+        <div class="card-title"><span class="icon icon-blue">📆</span> 다가오는 일정 <span style="font-size:11px;font-weight:400;color:var(--text3);">30일 이내</span></div>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('calendar')">캘린더</button>
+      </div>
+      <div class="card-body" id="upcomingEvents" style="flex:1;overflow-y:auto;max-height:400px;"></div>
+    </div>
+
+    <!-- [2행 우] D-day 현황 -->
+    <div class="card" style="display:flex;flex-direction:column;">
+      <div class="card-header" style="border-bottom:1px solid var(--border);">
+        <div class="card-title"><span class="icon" style="background:#fee2e2;">⏰</span> D-day 현황</div>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('hr')">인사일정</button>
+      </div>
+      <div class="card-body" id="homeDdaySummary" style="flex:1;overflow-y:auto;max-height:400px;padding:8px 16px;"></div>
+    </div>
+
   </div>
 
 </div>
@@ -2213,7 +2210,7 @@ function showPage(name){
   if(history.state?.page!==name){
     history.pushState({page:name},'',window.location.pathname+'#'+name);
   }
-  if(name==='home'){refreshVoucherPreview();renderUpcomingEvents();renderHomeDdaySummary();renderPaymentBar();}
+  if(name==='home'){renderUpcomingEvents();renderHomeDdaySummary();renderHomeInfoCard();}
   if(name==='calendar') renderCalendar();
   if(name==='sateak') renderSateak();
   if(name==='health') renderHealth();
@@ -3443,22 +3440,22 @@ function renderHomeDdaySummary(){
   items.sort((a,b)=>a.diff-b.diff);
   el.innerHTML=items.map(it=>{
     const dstr=it.diff<0?`D+${Math.abs(it.diff)}`:it.diff===0?'D-day':`D-${it.diff}`;
-    return`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2);cursor:pointer;line-height:1.4;" onclick="showPage('${it.linkPage||'home'}')">
-      <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;font-size:14px;flex-shrink:0;">${it.icon}</span>
-      <span style="flex:1;font-size:12px;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.label}</span>
-      <span style="font-size:11px;font-weight:700;background:${it.bg};color:${it.color};border-radius:8px;padding:2px 8px;white-space:nowrap;flex-shrink:0;">${dstr}</span>
+    const isUrgent=it.diff<=0;
+    const isSoon=it.diff>0&&it.diff<=3;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 4px 8px 12px;border-bottom:1px solid var(--border);border-left:3px solid ${it.color};margin-bottom:2px;border-radius:0 6px 6px 0;cursor:pointer;transition:background .12s;background:${isUrgent?'rgba(239,68,68,.04)':isSoon?'rgba(245,158,11,.03)':'transparent'};" onclick="showPage('${it.linkPage||'home'}')" onmouseenter="this.style.background='var(--bg)'" onmouseleave="this.style.background='${isUrgent?'rgba(239,68,68,.04)':isSoon?'rgba(245,158,11,.03)':'transparent'}'">
+      <span style="font-size:15px;flex-shrink:0;">${it.icon}</span>
+      <span style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.label}</span>
+      <span style="font-size:11px;font-weight:800;color:${it.color};background:${it.bg};border-radius:6px;padding:3px 10px;white-space:nowrap;flex-shrink:0;letter-spacing:.2px;">${dstr}</span>
     </div>`;
   }).join('');
 }
 
-// ── 이체일 현황 바 (오늘 요약 바)
-function renderPaymentBar(){
-  const el=document.getElementById('paymentBar');if(!el)return;
+// ── 컴팩트 정보 카드: 이체일 / 사택 / 건강검진
+function renderHomeInfoCard(){
+  const el=document.getElementById('homeInfoCard');if(!el)return;
   const today=new Date();today.setHours(0,0,0,0);
   const yr=today.getFullYear(),mo=today.getMonth()+1;
   const WEEKDAY=['일','월','화','수','목','금','토'];
-  const todayDow=WEEKDAY[today.getDay()];
-  const todayStr=`${mo}월 ${today.getDate()}일 (${todayDow})`;
 
   // ── 이체일 계산
   function getPayDate(year,month,targetDay){
@@ -3476,35 +3473,17 @@ function renderPaymentBar(){
     const diff=Math.round((d-today)/(1000*60*60*24));
     const actualDay=d.getDate();
     const origDay=p.d===-1?new Date(yr,mo,0).getDate():p.d;
-    return{label:p.label,actualDay,diff,isToday:diff===0,isPast:diff<0,shifted:actualDay!==origDay};
+    return{label:p.label,actualDay,dow:WEEKDAY[d.getDay()],diff,isToday:diff===0,isPast:diff<0,shifted:actualDay!==origDay};
   });
-  // 다음 이체일 (첫 번째 미완료)
-  const nextPay=payItems.find(it=>!it.isPast);
+  const nextPay=payItems.find(it=>!it.isPast)||payItems[payItems.length-1];
 
-  // ── 체크리스트 이번달 진행률
-  let clDone=0,clTotal=0;
+  // ── 사택 현황
+  let sateakActive=0,sateakTotal=0,sateakWarn=0;
   try{
-    const tasks=loadTasks();
-    const completions=loadCompletions();
-    const monthVal=yr+'-'+(mo<10?'0':'')+mo;
-    tasks.forEach(t=>{
-      const due=getTaskDueDate(t,yr,mo);
-      if(!due)return;
-      clTotal++;
-      const ck=`${t.id}_${monthVal}`;
-      if(completions[ck])clDone++;
-    });
-  }catch(e){}
-  const clPct=clTotal>0?Math.round(clDone/clTotal*100):0;
-  const clColor=clPct>=100?'#16a34a':clPct>=70?'#2563eb':clPct>=40?'#d97706':'#6b7280';
-  const clBg=clPct>=100?'#dcfce7':clPct>=70?'#dbeafe':clPct>=40?'#fef9c3':'#f3f4f6';
-
-  // ── 이번달 남은 사택 만료
-  let sateakWarn=0;
-  try{
-    const sateaks=loadSateaks();
-    sateaks.filter(s=>s.status==='입주중').forEach(s=>{
-      const endStr=s.endDate||(s.contract||'').split('~')[1]?.trim()||'';
+    const s=loadSateaks();
+    sateakTotal=s.length;sateakActive=s.filter(x=>x.status==='입주중').length;
+    s.filter(x=>x.status==='입주중').forEach(x=>{
+      const endStr=x.endDate||(x.contract||'').split('~')[1]?.trim()||'';
       const endD=parseSateakDate(endStr.trim());
       if(!endD)return;
       const diff=Math.floor((endD-today)/(1000*60*60*24));
@@ -3512,100 +3491,78 @@ function renderPaymentBar(){
     });
   }catch(e){}
 
-  // ── HR 7일 이내
-  let hrSoon=0;
+  // ── 건강검진 현황
+  let healthTarget=0,healthDone=0;
   try{
-    const hrAll=loadHrEntries();
-    hrAll.filter(h=>h.status==='예정').forEach(h=>{
-      const d=new Date(h.date);d.setHours(0,0,0,0);
-      const diff=Math.round((d-today)/(1000*60*60*24));
-      if(diff>=0&&diff<=7)hrSoon++;
-    });
+    const h=loadHealths();
+    const yrStr=yr.toString().slice(-2);
+    const targets=h.filter(x=>{const v=x['y'+yrStr]||'';return v!==''&&v!=='미대상'&&v!=='수습중';});
+    healthTarget=targets.length;
+    healthDone=h.filter(x=>x['y'+yrStr]==='25만원'||x['y'+yrStr]==='50만원').length;
   }catch(e){}
 
-  // ── 계약서 만료 30일 이내
-  let contractWarn=0;
-  try{
-    const contracts=loadContracts();
-    contracts.filter(c=>c.endDate&&c.status!=='만료').forEach(c=>{
-      const endD=new Date(c.endDate);endD.setHours(0,0,0,0);
-      const diff=Math.floor((endD-today)/(1000*60*60*24));
-      if(diff>=0&&diff<=30)contractWarn++;
-    });
-  }catch(e){}
+  // ── 이체일 섹션 HTML
+  const nxt=nextPay||{};
+  const dColor=nxt.isToday?'#dc2626':nxt.diff<=3?'#c2410c':nxt.diff<=7?'#d97706':'var(--primary)';
+  const dBadgeBg=nxt.isToday?'#fee2e2':nxt.diff<=3?'#fff7ed':nxt.diff<=7?'#fef9c3':'#eef2ff';
+  const dstr=nxt.isToday?'오늘!':nxt.isPast?'이달완료':`D-${nxt.diff}`;
 
-  // ── 사택/주차 현황
-  let sateakTotal=0,sateakActive=0;
-  try{const s=loadSateaks();sateakTotal=s.length;sateakActive=s.filter(x=>x.status==='입주중').length;}catch(e){}
-  let parkTotal=0;
-  try{const p=loadParkingLots();parkTotal=p.filter(x=>x.status!=='퇴직'&&x.status!=='반납').length;}catch(e){}
-
-  const sep=`<div style="width:1px;background:#e2e8f0;align-self:stretch;flex-shrink:0;"></div>`;
-
-  el.innerHTML=`
-    ${/* 오늘 날짜 */''}
-    <div style="display:flex;flex-direction:column;justify-content:center;padding:0 4px;flex-shrink:0;">
-      <div style="font-size:16px;font-weight:900;color:var(--primary);line-height:1.1;">${today.getDate()}</div>
-      <div style="font-size:10px;font-weight:700;color:var(--text2);">${mo}월 (${todayDow})</div>
+  const paySection=`
+  <div style="padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;" onclick="showPage('checklist')" title="업무 체크리스트">
+    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;">💸 이체일 현황 <span style="font-weight:400;opacity:.7;">(주말→전영업일)</span></div>
+    <div style="display:flex;align-items:baseline;gap:5px;">
+      <span style="font-size:22px;font-weight:900;color:var(--text);">${mo}/${nxt.actualDay||'-'}</span>
+      <span style="font-size:12px;color:var(--text2);">(${nxt.dow||''})</span>
     </div>
-    ${sep}
-
-    ${/* 이체일 섹션 */''}
-    <div style="display:flex;flex-direction:column;gap:2px;">
-      <div style="font-size:9px;font-weight:700;color:var(--text3);text-align:center;letter-spacing:.5px;">💸 이체일 <span style="font-weight:400;opacity:.7;">(주말→전영업일)</span></div>
-      <div style="display:flex;gap:5px;">
-    ${payItems.map(it=>{
-      let bg='#f8fafc',color='#94a3b8',border='1px solid #e2e8f0';
-      if(it.isToday){bg='#fee2e2';color='#dc2626';border='2px solid #f87171';}
-      else if(!it.isPast&&it.diff<=3){bg='#fff7ed';color='#c2410c';border='1px solid #fdba74';}
-      else if(!it.isPast&&it.diff<=7){bg='#fef9c3';color='#92400e';border='1px solid #fcd34d';}
-      else if(it.isPast){bg='#f8fafc';color='#cbd5e1';border='1px dashed #e2e8f0';}
-      const isNext=nextPay&&!it.isPast&&it.label===nextPay.label;
-      const dstr=it.isToday?'오늘':it.isPast?'✓':`D-${it.diff}`;
-      return`<div style="display:flex;flex-direction:column;align-items:center;padding:4px 10px;border-radius:8px;background:${bg};border:${border};gap:1px;${isNext?'box-shadow:0 2px 8px rgba(79,70,229,.15);':''}" title="${it.shifted?'주말로 인해 날짜 조정됨':''}">
-        <span style="font-size:9px;font-weight:700;color:${color};">${it.label}</span>
-        <span style="font-size:13px;font-weight:900;color:${color};line-height:1.1;">${it.actualDay}${it.shifted?'<sup style="font-size:8px;">*</sup>':''}</span>
-        <span style="font-size:9px;color:${color};font-weight:700;">${dstr}</span>
-      </div>`;
-    }).join('')}
-      </div>
+    <div style="display:flex;gap:4px;align-items:center;">
+      <span style="background:${dColor};color:#fff;border-radius:5px;padding:2px 9px;font-size:11px;font-weight:800;">${dstr}</span>
+      <span style="background:var(--bg2);color:var(--text2);border-radius:5px;padding:2px 8px;font-size:11px;">${nxt.label||''}</span>
     </div>
-    ${sep}
-
-    ${/* 체크리스트 진행률 */''}
-    <div style="display:flex;flex-direction:column;gap:4px;justify-content:center;min-width:100px;cursor:pointer;" onclick="showPage('checklist')" title="업무 체크리스트로 이동">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:10px;font-weight:700;color:var(--text2);">✅ 이번달 업무</span>
-        <span style="font-size:11px;font-weight:800;color:${clColor};">${clDone}/${clTotal}</span>
-      </div>
-      <div style="background:#e5e7eb;border-radius:4px;height:6px;overflow:hidden;">
-        <div style="width:${clPct}%;height:100%;background:${clColor};border-radius:4px;transition:width .4s;"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;">
-        <span style="font-size:9px;color:var(--text3);">${clTotal>0?clPct+'% 완료':'등록 없음'}</span>
-        ${clTotal>0&&clDone<clTotal?`<span style="font-size:9px;color:#d97706;">${clTotal-clDone}개 남음</span>`:''}
-      </div>
+    <div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:2px;">
+      ${payItems.map(it=>{
+        const c=it.isPast?'#9ca3af':it.isToday?'#dc2626':'var(--primary)';
+        const bg=it.isPast?'#f3f4f6':it.isToday?'#fee2e2':'#eef2ff';
+        return`<span style="font-size:9px;padding:2px 6px;border-radius:4px;background:${bg};color:${c};font-weight:700;">${it.label}${it.isPast?' ✓':''}</span>`;
+      }).join('')}
     </div>
-    ${sep}
+  </div>`;
 
-    ${/* 알림 영역 */''}
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      ${sateakWarn>0?`<div style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;cursor:pointer;" onclick="showPage('sateak')">
-        <span style="font-size:12px;">🏠</span>
-        <div><div style="font-size:10px;font-weight:700;color:#c2410c;">만료임박</div><div style="font-size:11px;font-weight:800;color:#c2410c;">${sateakWarn}건</div></div>
-      </div>`:''}
-      ${hrSoon>0?`<div style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#fef9c3;border:1px solid #fcd34d;border-radius:7px;cursor:pointer;" onclick="showPage('hr')">
-        <span style="font-size:12px;">👤</span>
-        <div><div style="font-size:10px;font-weight:700;color:#92400e;">인사예정</div><div style="font-size:11px;font-weight:800;color:#92400e;">${hrSoon}건</div></div>
-      </div>`:''}
-      ${contractWarn>0?`<div style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#fef9c3;border:1px solid #fcd34d;border-radius:7px;cursor:pointer;" onclick="showPage('contract')">
-        <span style="font-size:12px;">📝</span>
-        <div><div style="font-size:10px;font-weight:700;color:#92400e;">계약만료임박</div><div style="font-size:11px;font-weight:800;color:#92400e;">${contractWarn}건</div></div>
-      </div>`:''}
-      ${sateakWarn===0&&hrSoon===0&&contractWarn===0?`<span style="font-size:11px;color:var(--text3);">⚡ 임박 알림 없음</span>`:''}
+  // ── 사택 섹션 HTML
+  const sateakPct=sateakTotal>0?Math.round(sateakActive/sateakTotal*100):0;
+  const sateakSection=`
+  <div style="padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;" onclick="showPage('sateak')">
+    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;">🏠 사택 현황</div>
+    <div style="display:flex;align-items:baseline;gap:4px;">
+      <span style="font-size:22px;font-weight:900;color:var(--text);">${sateakActive}</span>
+      <span style="font-size:12px;color:var(--text2);">/ ${sateakTotal}세대</span>
     </div>
+    <div style="background:#ede9fe;height:5px;border-radius:4px;overflow:hidden;">
+      <div style="width:${sateakPct}%;height:100%;background:#8b5cf6;border-radius:4px;transition:width .5s;"></div>
+    </div>
+    <div style="font-size:10px;color:var(--text3);">
+      입주중 ${sateakActive}세대${sateakWarn>0?` &nbsp;·&nbsp; <span style="color:#f97316;font-weight:700;">만료임박 ${sateakWarn}건 ⚠</span>`:''}
+    </div>
+  </div>`;
 
-  `;
+  // ── 건강검진 섹션 HTML
+  const healthPct=healthTarget>0?Math.round(healthDone/healthTarget*100):0;
+  const hColor=healthPct>=100?'#16a34a':healthPct>=60?'#2563eb':'#f59e0b';
+  const hBarBg=healthPct>=100?'#dcfce7':healthPct>=60?'#dbeafe':'#fef3c7';
+  const healthSection=`
+  <div style="padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;" onclick="showPage('health')">
+    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;">🏥 건강검진 현황</div>
+    <div style="display:flex;align-items:baseline;gap:4px;">
+      <span style="font-size:22px;font-weight:900;color:var(--text);">${healthDone}</span>
+      <span style="font-size:12px;color:var(--text2);">/ ${healthTarget}명</span>
+    </div>
+    <div style="background:${hBarBg};height:5px;border-radius:4px;overflow:hidden;">
+      <div style="width:${healthPct}%;height:100%;background:${hColor};border-radius:4px;transition:width .5s;"></div>
+    </div>
+    <div style="font-size:10px;color:var(--text3);">${yr}년 · 완료 <span style="font-weight:700;color:${hColor};">${healthPct}%</span></div>
+  </div>`;
+
+  const sep=`<div style="background:var(--border);"></div>`;
+  el.innerHTML=paySection+sep+sateakSection+sep+healthSection;
 }
 
 function renderHomeDdayBanner(){
@@ -3626,47 +3583,30 @@ function renderHomeDdayBanner(){
   });
   if(!urgent.length){el.innerHTML='';return;}
   urgent.sort((a,b)=>a.diff-b.diff);
-  let html=`<div style="background:linear-gradient(90deg,#fff7ed,#fef3c7);border:1px solid #fbbf24;border-radius:var(--radius);padding:11px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span style="font-size:15px;">🔔</span>
-    <span style="font-size:12px;font-weight:700;color:#92400e;">마감 임박 업무 ${urgent.length}건</span>`;
-  urgent.forEach(({task,diff})=>{
-    const cls=diff<=0?'dp-red':diff<=1?'dp-red':'dp-orange';
-    const label=diff<0?'D+'+ Math.abs(diff):diff===0?'D-day':'D-'+diff;
-    html+=`<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;background:#fff;border:1px solid #fca5a5;border-radius:20px;padding:3px 10px;color:#991b1b;cursor:pointer;" onclick="showPage('checklist')">
-      <strong>${label}</strong> ${task.title}
+  const pills=urgent.map(({task,diff})=>{
+    const isRed=diff<=1;
+    const label=diff<0?'D+'+Math.abs(diff):diff===0?'D-day':'D-'+diff;
+    const bg=isRed?'#fee2e2':'#fff7ed';
+    const border=isRed?'#fca5a5':'#fcd34d';
+    const col=isRed?'#b91c1c':'#92400e';
+    return`<span style="display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-size:11px;background:${bg};border:1px solid ${border};border-radius:20px;padding:3px 11px;color:${col};cursor:pointer;flex-shrink:0;" onclick="showPage('checklist')">
+      <span style="font-weight:800;">${label}</span><span style="font-weight:500;">${task.title}</span>
     </span>`;
-  });
-  html+=`<button class="btn btn-xs btn-warning" style="margin-left:auto;" onclick="showPage('checklist')">전체 보기 →</button></div>`;
-  el.innerHTML=html;
+  }).join('');
+  el.innerHTML=`<div style="background:#fffbeb;border:1px solid #fbbf24;border-radius:var(--radius);padding:9px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;overflow:hidden;">
+    <span style="font-size:14px;flex-shrink:0;">🔔</span>
+    <span style="font-size:11px;font-weight:800;color:#92400e;white-space:nowrap;flex-shrink:0;">마감 임박 ${urgent.length}건</span>
+    <div style="display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none;padding:1px 0;">${pills}</div>
+    <button class="btn btn-xs" style="flex-shrink:0;background:#f59e0b;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;" onclick="showPage('checklist')">체크리스트 →</button>
+  </div>`;
 }
 
 // ============================================================
 // 스탯 카드 갱신
 // ============================================================
 function updateStatCards(){
-  // 사택 현황 스탯
-  try{
-    const sateaks=loadSateaks();
-    const activeSateak=sateaks.filter(s=>s.status==='입주중').length;
-    const ss=document.getElementById('statSateak');if(ss)ss.textContent=activeSateak;
-  }catch(e){}
+  const today=new Date();today.setHours(0,0,0,0);
 
-  // 건강검진 스탯
-  try{
-    const healths=loadHealths();
-    const _currYrH=new Date().getFullYear().toString().slice(-2);const healthTarget=healths.filter(h=>{const v=h['y'+_currYrH]||'';return v!==''&&v!=='미대상'&&v!=='수습중';}).length;
-    const sh=document.getElementById('statHealth');if(sh)sh.textContent=healthTarget;
-  }catch(e){}
-
-  // 주차 현황 스탯
-  try{
-    const parkEmps=loadParkingEmps();
-    const parkLots=loadParkingLots();
-    const activeParked=parkEmps.filter(e=>e.status==='재직'&&e.lot!=='차량 해지').length;
-    const sp=document.getElementById('statParking');if(sp)sp.textContent=activeParked;
-    const spSub=document.getElementById('statParkingSub');
-    if(spSub)spSub.textContent='(주차장 '+parkLots.length+'곳 운영)';
-  }catch(e){}
   // 재직자 현황 (건강검진 명단 기준 eligible=true)
   try{
     const healths=loadHealths();
@@ -3674,13 +3614,65 @@ function updateStatCards(){
     const probEmps=healths.filter(h=>{
       if(!h.probEndDate)return false;
       const pd=new Date(h.probEndDate);pd.setHours(0,0,0,0);
-      const td=new Date();td.setHours(0,0,0,0);
-      return pd>td;
+      return pd>today;
     }).length;
     const el=document.getElementById('statEmpTotal');
     if(el)el.textContent=activeEmps;
     const sub=document.getElementById('statEmpSub');
     if(sub)sub.textContent=probEmps>0?'수습중 '+probEmps+'명 포함':'전원 정규 근무중';
+  }catch(e){}
+
+  // 주차 현황 스탯 + 미니 바
+  try{
+    const parkEmps=loadParkingEmps();
+    const parkLots=loadParkingLots();
+    const activeParked=parkEmps.filter(e=>e.status==='재직'&&e.lot!=='차량 해지').length;
+    const totalSlots=parkLots.reduce((s,l)=>s+(parseInt(l.capacity)||0),0);
+    const sp=document.getElementById('statParking');if(sp)sp.textContent=activeParked;
+    const spSub=document.getElementById('statParkingSub');
+    if(spSub)spSub.textContent='주차장 '+parkLots.length+'곳 운영';
+  }catch(e){}
+
+  // 인사 예정 (7일 이내)
+  try{
+    const hrAll=loadHrEntries();
+    const hrSoon=hrAll.filter(h=>{
+      if(h.status!=='예정')return false;
+      const d=new Date(h.date);d.setHours(0,0,0,0);
+      const diff=Math.round((d-today)/(1000*60*60*24));
+      return diff>=0&&diff<=7;
+    });
+    const cnt=hrSoon.length;
+    const el=document.getElementById('statHrSoon');
+    if(el)el.textContent=cnt;
+    const sub=document.getElementById('statHrSoonSub');
+    if(sub)sub.textContent=cnt>0?'이번주 처리 필요':'이번주 인사 없음';
+    // 값 있으면 카드 강조
+    const card=document.getElementById('statHrSoonCard');
+    if(card)card.style.borderTopColor=cnt>0?'#ef4444':'#f59e0b';
+    const icon=document.getElementById('statHrSoonIcon');
+    if(icon){icon.textContent=cnt>0?'🔔':'📋';icon.style.background=cnt>0?'#fee2e2':'#fef3c7';}
+  }catch(e){}
+
+  // 계약 만료임박 (30일 이내)
+  try{
+    const contracts=loadContracts();
+    const soon=contracts.filter(c=>{
+      if(!c.endDate||c.status==='만료')return false;
+      const endD=new Date(c.endDate);endD.setHours(0,0,0,0);
+      const diff=Math.floor((endD-today)/(1000*60*60*24));
+      return diff>=0&&diff<=30;
+    });
+    const cnt=soon.length;
+    const el=document.getElementById('statContract');
+    if(el)el.textContent=cnt;
+    const sub=document.getElementById('statContractSub');
+    if(sub)sub.textContent=cnt>0?'갱신 검토 필요':'만료 예정 없음';
+    // 값 있으면 카드 강조
+    const card=document.getElementById('statContractCard');
+    if(card)card.style.borderTopColor=cnt>0?'#dc2626':'#ef4444';
+    const icon=document.getElementById('statContractIcon');
+    if(icon){icon.textContent=cnt>0?'⚠️':'📝';icon.style.background=cnt>0?'#fef3c7':'#fee2e2';}
   }catch(e){}
 }
 
@@ -5146,10 +5138,9 @@ function init(){
   updateClock();setInterval(updateClock,1000);
   buildCalYearSelect();
   renderNotices(true);
-  refreshVoucherPreview();
   renderUpcomingEvents();
   renderHomeDdaySummary();
-  renderPaymentBar();
+  renderHomeInfoCard();
   updateStatCards();
   const today=new Date().toISOString().slice(0,10);
   if(document.getElementById('vDate')) document.getElementById('vDate').value=today;
@@ -7529,11 +7520,11 @@ function renderHrTable(){
   else if(_hrTab==='out') filtered=all.filter(h=>h.type==='out'&&h.status==='예정');
   else if(_hrTab==='leave') filtered=all.filter(h=>(h.type==='leave'||h.type==='return')&&(h.status==='예정'||h.status==='진행중'));
   else if(_hrTab==='remote') filtered=all.filter(h=>h.type==='remote'&&(h.status==='예정'||h.status==='진행중'));
-  else if(isDoneTab) filtered=all.filter(h=>h.status==='완료'||h.status==='취소');
+  else if(isDoneTab) filtered=all.filter(h=>h.status==='완료');
 
   // active / done 분리
   const activeItems=isDoneTab?[...filtered]:filtered.filter(h=>h.status==='예정'||h.status==='진행중');
-  const doneItems=isDoneTab?[]:filtered.filter(h=>h.status==='완료'||h.status==='취소');
+  const doneItems=isDoneTab?[]:filtered.filter(h=>h.status==='완료');
 
   // D-day 오름차순 정렬 (진행중=종료일, 예정=시작일)
   activeItems.sort((a,b)=>_hrGetDday(a,today)-_hrGetDday(b,today));
@@ -7550,8 +7541,8 @@ function renderHrTable(){
     const ddayStr=diff===0?'<span style="color:#dc2626;font-weight:700;">D-day</span>':diff>0?'<span style="color:#2563eb;">D-'+diff+'</span>':'<span style="color:#6b7280;">D+'+Math.abs(diff)+'</span>';
     const _bs='border-radius:6px;padding:2px 8px;font-size:11px;white-space:nowrap;display:inline-block;';
     const typeBadge=h.type==='new'?`<span style="${_bs}background:#dcfce7;color:#15803d;">🆕 입사</span>`:h.type==='out'?`<span style="${_bs}background:#fee2e2;color:#b91c1c;">👋 퇴직</span>`:(h.type==='leave'||h.type==='return')?`<span style="${_bs}background:#fef9c3;color:#92400e;">🚫 휴직</span>`:h.type==='remote'?`<span style="${_bs}background:#ede9fe;color:#7c3aed;">🏠 재택</span>`:`<span style="${_bs}background:#f3f4f6;color:#374151;">${h.type}</span>`;
-    const statColor=h.status==='완료'?'#15803d':h.status==='취소'?'#6b7280':h.status==='진행중'?'#0369a1':'#92400e';
-    const statBg=h.status==='완료'?'#dcfce7':h.status==='취소'?'#f3f4f6':h.status==='진행중'?'#e0f2fe':'#fef9c3';
+    const statColor=h.status==='완료'?'#15803d':h.status==='진행중'?'#0369a1':'#92400e';
+    const statBg=h.status==='완료'?'#dcfce7':h.status==='진행중'?'#e0f2fe':'#fef9c3';
     const dateStr=h.date?h.date.replace(/-/g,'.').slice(2):'';
     const completeBtn=(h.type==='new'&&h.status==='예정')
       ?`<button class="btn btn-xs btn-success" onclick="completeNewHire('${h.id}')" style="font-size:10px;">입사완료</button>`
@@ -7579,7 +7570,7 @@ function renderHrTable(){
       return'-';
     })();
     const rowBg=isDone?'background:#fafafa;':'';
-    return`<tr style="${h.status==='취소'?'opacity:0.45;':''}${rowBg}">
+    return`<tr style="${rowBg}">
       <td style="text-align:center;overflow:hidden;">${typeBadge}</td>
       <td style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.name}</td>
       <td style="text-align:center;font-size:11px;overflow:hidden;white-space:nowrap;">${h.project||'-'}</td>
@@ -7605,14 +7596,14 @@ function renderHrTable(){
       ? activeItems.map(h=>renderRow(h,false)).join('')
       :`<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text3);">등록된 일정이 없습니다</td></tr>`;
 
-    // 완료·취소 항목 아코디언
+    // 완료 항목 아코디언
     if(doneItems.length){
       html+=`<tr>
         <td colspan="9" style="padding:0;">
           <button onclick="toggleHrDone()" style="width:100%;padding:8px 16px;border:none;border-top:2px dashed var(--border2);background:var(--bg2);cursor:pointer;font-size:12px;color:var(--text3);font-weight:600;text-align:left;display:flex;align-items:center;gap:6px;">
             ${_hrDoneCollapsed
-              ? `<span style="color:#15803d;">▼</span> 완료·취소 ${doneItems.length}건 보기`
-              : `<span style="color:#6b7280;">▲</span> 완료·취소 접기`}
+              ? `<span style="color:#15803d;">▼</span> 완료 ${doneItems.length}건 보기`
+              : `<span style="color:#6b7280;">▲</span> 완료 접기`}
           </button>
         </td>
       </tr>`;
@@ -8893,7 +8884,6 @@ function uploadRosterExcel(){
             <option value="예정">예정</option>
             <option value="진행중">진행중</option>
             <option value="완료">완료</option>
-            <option value="취소">취소</option>
           </select>
         </div>
       </div>
