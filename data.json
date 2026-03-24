@@ -1,6 +1,6 @@
 {
   "_version": 1,
-  "_date": "2026-03-24T03:00:18.910Z",
+  "_date": "2026-03-24T03:03:59.935Z",
   "_app": "총무대백과",
   "vouchers": [],
   "vendors": [
@@ -585,15 +585,17 @@
   "tasks": [
     {
       "id": "td01",
-      "title": "지출품의서 작성 (1분기)",
+      "title": "지출품의서 작성 (2분기)",
       "category": "재무관리",
+      "recurrence": "annual",
       "assignees": [
         "서주희"
       ],
-      "recurrence": "annual",
-      "annualMonth": 3,
+      "memo": "4월~6월 지출품의서 기안",
+      "dueDate": "",
       "dueDay": 20,
-      "memo": "1월~3월 지출품의서 기안"
+      "annualMonth": 3,
+      "quarterMonths": []
     },
     {
       "id": "td02",
@@ -739,18 +741,20 @@
       "id": "td14",
       "title": "다과 리뉴얼",
       "category": "복리후생",
+      "recurrence": "annual",
       "assignees": [
         "서주희"
       ],
-      "recurrence": "quarterly",
+      "memo": "분기별 다과 품목 리뉴얼",
+      "dueDate": "",
+      "dueDay": 5,
+      "annualMonth": 4,
       "quarterMonths": [
         3,
         6,
         9,
         12
-      ],
-      "dueDay": 15,
-      "memo": "분기별 다과 품목 리뉴얼"
+      ]
     },
     {
       "id": "td15",
@@ -830,7 +834,18 @@
       "quarterMonths": []
     }
   ],
-  "taskCompletions": {},
+  "taskCompletions": {
+    "td13_2026-03": {
+      "doneBy": "함은비",
+      "note": "",
+      "doneAt": "2026-03-24T03:02:36.947Z"
+    },
+    "td01_2026-03": {
+      "doneBy": "서주희",
+      "note": "",
+      "doneAt": "2026-03-24T03:03:01.626Z"
+    }
+  },
   "manuals": [],
   "regulations": [],
   "parkingLots": [
