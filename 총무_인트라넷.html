@@ -6217,13 +6217,24 @@ function _isCurrentlyOnProb(h){
 // 패턴 기반 올해 수검 예측 (과거 이력 자동 감지)
 function predictForYear(h, yr, yrs){
   const thisYr=parseInt('20'+yr);
-  // 0. 입사 전 → 대상아님 (joinDate가 해당 연도보다 이후이거나, 올해이면서 아직 미입사)
-  if(h.joinDate){
-    const joinYrNum=parseInt(h.joinDate.slice(0,4));
+  // 0. 입사 전 → 대상아님 (joinDate 없으면 직원명부 fallback)
+  const _rosterPM=_getRosterProbMap();
+  const _rosterJoinDate=(()=>{
+    if(h.joinDate)return h.joinDate.replace(/\./g,'-');
+    // 직원명부에서 join_date 조회
+    const _roster=getRosterData()||[];
+    const _re=_roster.find(r=>
+      (h.id&&String(r.sc_id||'').trim()===String(h.id||'').trim())||
+      ((r.name||'').trim()===(h.name||'').trim())
+    );
+    return (_re&&_re.join_date)?_re.join_date.replace(/\./g,'-'):'';
+  })();
+  if(_rosterJoinDate){
+    const joinYrNum=parseInt(_rosterJoinDate.slice(0,4));
     if(thisYr<joinYrNum)return'대상아님';
     if(thisYr===joinYrNum){
       const today=new Date();today.setHours(0,0,0,0);
-      const jd=new Date(h.joinDate);jd.setHours(0,0,0,0);
+      const jd=new Date(_rosterJoinDate);jd.setHours(0,0,0,0);
       if(jd>today)return'대상아님';
     }
   }
@@ -6544,8 +6555,10 @@ function renderHealthTable(){
       return`<span style="color:${predColor};font-size:10px;opacity:0.75;white-space:nowrap;">${pred}<span style="font-size:9px;opacity:0.8;">(예정)</span></span>`;
     }
     // ── 과거 연도: 입사 전 연도는 대상아님으로 표시
-    if(h.joinDate){
-      const joinYrNum=parseInt(h.joinDate.slice(0,4));
+    // joinDate가 없으면 직원명부 _rMap에서 fallback
+    const _effJoin=(h.joinDate||(_rMap&&h.name&&_rMap[h.name.trim()])||'').replace(/\./g,'-');
+    if(_effJoin){
+      const joinYrNum=parseInt(_effJoin.slice(0,4));
       if(parseInt('20'+yr)<joinYrNum)return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">대상아님</span>';
     }
     if(!baseV)return'<span style="color:#94a3b8;">-</span>';
@@ -6883,30 +6896,37 @@ function importHealthExcel(input){
 
       const currYr=new Date().getFullYear().toString().slice(-2);
       const all=loadHealths();
-      // 사번 → 인덱스 맵
+      // 사번 → 인덱스 맵 (사번 정규화: 숫자형 → 문자열)
       const idxById={};
       const idxByName={};
       all.forEach((h,i)=>{
-        if(h.id)idxById[String(h.id).trim()]=i;
+        if(h.id){
+          const sid=String(h.id).trim().replace(/\.0$/,'');
+          idxById[sid]=i;
+        }
         if(h.name)idxByName[h.name.trim()]=i;
       });
 
       let matched=0,updated=0,notFound=[];
+      const matchLog=[]; // 디버그용
       const dataRows=rows.slice(headerRowIdx+1);
       dataRows.forEach(row=>{
         const saNo=String(row[colSaNo]||'').trim().replace(/\.0$/,'');
         const name=String(row[colName]||'').trim();
+        // 직원명 컬럼(9번)도 이름 매칭에 활용
+        const empName=String(row[9]||'').trim();
         const status=String(row[colStatus]||'').trim();
-        if(!saNo&&!name)return;
-        if(!status||status==='nan'||status==='NaN'||status==='')return;
+        if(!saNo&&!name&&!empName)return;
+        if(!status||status==='')return; // NaN/undefined/빈값 스킵
 
-        // 매칭: 사번 우선, 없으면 이름
+        // 매칭: 사번 → 성명 → 직원명 순
         let idx=-1;
         if(saNo&&idxById[saNo]!==undefined)idx=idxById[saNo];
-        else if(name&&idxByName[name]!==undefined)idx=idxByName[name];
+        if(idx<0&&name&&idxByName[name]!==undefined)idx=idxByName[name];
+        if(idx<0&&empName&&empName!==name&&idxByName[empName]!==undefined)idx=idxByName[empName];
 
         if(idx<0){
-          if(name)notFound.push(name);
+          if(name||empName)notFound.push(name||empName);
           return;
         }
         matched++;
@@ -6915,27 +6935,26 @@ function importHealthExcel(input){
         const center=String(row[colCenter]||'').trim();
 
         if(status==='검진실시'){
-          // 수검 완료 → 패턴에 따라 금액 확정
           const pat=h.checkPattern||'25만원';
           const amt=(pat==='50만원')?'50만원':'25만원';
           h['y'+currYr]=amt;
           h['y'+currYr+'_confirmed']=true;
           if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
           if(center)h['y'+currYr+'_center']=center;
+          matchLog.push(h.name+' → 검진실시('+amt+')');
           updated++;
         } else if(status==='예약확정'){
-          // 예약 확정 → 수검금액은 비워두되 예약일/센터 메모만 저장
-          // 이미 confirmed(수동 입력)인 경우 덮어쓰지 않음
           if(!h['y'+currYr+'_confirmed']){
             h['y'+currYr+'_reserved']=true;
           }
           if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
           if(center)h['y'+currYr+'_center']=center;
+          matchLog.push(h.name+' → 예약확정');
           updated++;
         } else if(status==='예약취소'){
-          // 예약 취소 → 예약 메모 제거, 수검금액은 유지
           delete h['y'+currYr+'_reserved'];
           if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
+          matchLog.push(h.name+' → 예약취소');
           updated++;
         }
       });
@@ -6943,9 +6962,17 @@ function importHealthExcel(input){
       LS.set(HEALTH_KEY,all);
       input.value='';
       renderHealth();updateStatCards();
-      let msg=`매칭 ${matched}명, 상태 업데이트 ${updated}명`;
-      if(notFound.length>0)msg+=`\n미매칭 ${notFound.length}명: `+notFound.slice(0,5).join(', ')+(notFound.length>5?'…':'');
-      showToast(msg,notFound.length>0?'warning':'success');
+
+      // 상세 결과 메시지
+      if(matched===0&&notFound.length>0){
+        // 완전 미매칭: 건강검진 명부에 없는 경우
+        alert(`⚠️ 엑셀 업로드 결과\n\n매칭된 직원이 없습니다.\n\n미매칭 ${notFound.length}명 (상태값 있는 행):\n`+notFound.slice(0,10).join(', ')+(notFound.length>10?'…':'')+'\n\n💡 건강검진 명부에 직원이 없거나 사번/이름이 다를 수 있습니다.\n명부 동기화 버튼으로 직원을 먼저 추가해주세요.');
+      } else {
+        let msg=`✅ 엑셀 업로드 완료\n\n매칭 ${matched}명 / 업데이트 ${updated}명`;
+        if(matchLog.length>0)msg+='\n\n변경 내역:\n'+matchLog.slice(0,10).join('\n')+(matchLog.length>10?'\n…':'');
+        if(notFound.length>0)msg+=`\n\n미매칭 ${notFound.length}명: `+notFound.slice(0,5).join(', ')+(notFound.length>5?'…':'');
+        alert(msg);
+      }
     }catch(err){showToast('파일 오류: '+err.message,'error');input.value='';}
   };
   reader.readAsArrayBuffer(file);
