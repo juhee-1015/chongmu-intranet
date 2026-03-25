@@ -6929,9 +6929,10 @@ function importHealthExcel(input){
           const vn=v.replace(/\s+/g,''); // 공백 제거 정규화
           if(vn==='사번'||vn==='사원번호')colSaNo=ci;
           if(vn==='성명'||vn==='이름')colName=ci;
-          if(vn==='종합건강검진진행상태'||vn==='진행상태'||vn.includes('진행상태'))colStatus=ci;
-          if(vn==='종합건강검진일정'||vn==='검진일정'||(vn.includes('건강검진')&&vn.includes('일정')&&!vn.includes('진행')))colDate=ci;
-          if(vn==='종합건강검진검진센터'||vn==='검진센터'||(vn.includes('건강검진')&&vn.includes('센터')))colCenter=ci;
+          // 종합건강검진 컬럼 우선 — 첫 매칭 고정 (특수건강검진 컬럼이 뒤에 있어 덮어쓰기 방지)
+          if(colStatus<0&&(vn==='종합건강검진진행상태'||vn==='진행상태'||vn.includes('진행상태')))colStatus=ci;
+          if(colDate<0&&(vn==='종합건강검진일정'||vn==='검진일정'||(vn.includes('건강검진')&&vn.includes('일정')&&!vn.includes('진행'))))colDate=ci;
+          if(colCenter<0&&(vn==='종합건강검진검진센터'||vn==='검진센터'||(vn.includes('건강검진')&&vn.includes('센터'))))colCenter=ci;
         }
         if(colSaNo>=0&&colStatus>=0){headerRowIdx=ri;break;}
       }
