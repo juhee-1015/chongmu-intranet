@@ -8639,12 +8639,16 @@ function openRetireModal(id){
   const healths=loadHealths();
   const parkEmps=loadParkingEmps();
   const sateaks=loadSateaks();
+  const roster=getRosterData()||[];
+  const hasRoster=roster.some(x=>(x.name||'').trim()===h.name.trim()||(x.sc_id&&String(x.sc_id).trim()===String(h.empId||'').trim()));
   const hasHealth=healths.some(x=>x.name===h.name);
   const hasPark=parkEmps.some(x=>x.name===h.name&&x.status==='재직');
   const hasSatak=sateaks.some(x=>x.tenant===h.name&&x.status==='입주중');
+  const rEl=document.getElementById('retireCheckRoster');
   const hEl=document.getElementById('retireCheckHealth');
   const pEl=document.getElementById('retireCheckPark');
   const sEl=document.getElementById('retireCheckSatak');
+  if(rEl){rEl.checked=hasRoster;rEl.disabled=!hasRoster;rEl.closest('label').style.opacity=hasRoster?'1':'0.4';}
   if(hEl){hEl.checked=hasHealth;hEl.disabled=!hasHealth;hEl.closest('label').style.opacity=hasHealth?'1':'0.4';}
   if(pEl){pEl.checked=hasPark;pEl.disabled=!hasPark;pEl.closest('label').style.opacity=hasPark?'1':'0.4';}
   if(sEl){sEl.checked=hasSatak;sEl.disabled=!hasSatak;sEl.closest('label').style.opacity=hasSatak?'1':'0.4';}
@@ -8659,32 +8663,71 @@ function executeRetire(){
   h.status='완료';
   saveHrEntries(all);
   const retireDate=new Date().toISOString().slice(0,10);
-  // 건강검진 퇴직처리
+  const currYr=new Date().getFullYear().toString().slice(-2);
+  const results=[];
+
+  // 0) 직원명부 처리 — 재직자 → 퇴직자로 이동
+  if(document.getElementById('retireCheckRoster')?.checked){
+    const active=getRosterData()||[];
+    const idx=active.findIndex(x=>(x.name||'').trim()===h.name.trim());
+    if(idx>=0){
+      const emp=active.splice(idx,1)[0];
+      emp.resign_date=retireDate;
+      const resigned=getRosterResigned()||[];
+      resigned.unshift(emp);
+      localStorage.setItem('roster_active',JSON.stringify(active));
+      localStorage.setItem('roster_resigned',JSON.stringify(resigned));
+      // 캐시 초기화
+      _rosterActiveData=null;_rosterResignedData=null;
+      _clearRosterProbCache();
+      results.push(`✅ 직원명부: ${h.name} 퇴직자로 이동 완료`);
+    }else{results.push('⚠️ 직원명부: 재직자 명단에서 찾을 수 없음');}
+  }
+
+  // 1) 건강검진 퇴직처리
   if(document.getElementById('retireCheckHealth')?.checked){
     const healths=loadHealths();
     const idx=healths.findIndex(x=>x.name===h.name);
     if(idx>=0){
       const yrs=getHealthYears();
-      yrs.forEach(yr=>{if(!healths[idx]['y'+yr]||healths[idx]['y'+yr]==='')healths[idx]['y'+yr]='미대상';});
+      // 올해(currYr)는 건드리지 않음 — 퇴직 전 수검 가능
+      yrs.forEach(yr=>{
+        if(yr===currYr)return;
+        if(!healths[idx]['y'+yr]||healths[idx]['y'+yr]==='')healths[idx]['y'+yr]='미대상';
+        if(healths[idx]['y'+yr]==='수습중')healths[idx]['y'+yr]='미대상';
+      });
+      healths[idx].retiredAt=retireDate; // 퇴직일 기록 → 퇴직자 섹션으로 이동
       healths[idx].eligible=false;healths[idx].eligibleFrom='9999';
       LS.set(HEALTH_KEY,healths);
-    }
+      results.push(`✅ 건강검진: 퇴직자로 분류 (올해 ${currYr}년 수검 이력 유지)`);
+    }else{results.push('⚠️ 건강검진: 해당 임직원 없음');}
   }
-  // 주차 퇴직처리
+
+  // 2) 주차 퇴직처리
   if(document.getElementById('retireCheckPark')?.checked){
     const parkEmps=loadParkingEmps();
-    parkEmps.filter(x=>x.name===h.name&&x.status==='재직').forEach(x=>{x.status='퇴직';x.endDate=retireDate;});
+    const matched=parkEmps.filter(x=>x.name===h.name&&x.status==='재직');
+    matched.forEach(x=>{x.status='퇴직';x.endDate=retireDate;});
     saveParkingEmps(parkEmps);
+    if(matched.length>0)results.push(`✅ 주차장: ${matched.length}건 퇴직 처리`);
+    else results.push('⚠️ 주차장: 재직 등록 내역 없음');
   }
-  // 사택 퇴거처리
+
+  // 3) 사택 퇴거처리
   if(document.getElementById('retireCheckSatak')?.checked){
     const sateaks=loadSateaks();
-    sateaks.filter(x=>x.tenant===h.name&&x.status==='입주중').forEach(x=>{x.status='퇴거';x.moveOutDate=retireDate;});
+    const matched=sateaks.filter(x=>x.tenant===h.name&&x.status==='입주중');
+    matched.forEach(x=>{x.status='퇴거';x.moveOutDate=retireDate;});
     saveSateaks(sateaks);
+    if(matched.length>0)results.push(`✅ 사택: ${matched.length}건 퇴거 처리`);
+    else results.push('⚠️ 사택: 입주중 내역 없음');
   }
+
   closeModal('hrRetireModal');
   showToast(`✅ ${h.name} 퇴직 처리 완료`);
-  renderHr();renderHealth();renderSateak();renderParkingTable();updateStatCards();
+  // 콘솔에 결과 기록
+  console.log('[퇴직처리 결과]', results);
+  renderHr();renderHealth();renderSateak();renderParkingTable();renderRoster();updateStatCards();
 }
 
 // ============================================================
@@ -9575,7 +9618,10 @@ function uploadRosterExcel(){
       <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;">연관 데이터 처리 선택</div>
       <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
         <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px 12px;border-radius:7px;border:1px solid var(--border);">
-          <input type="checkbox" id="retireCheckHealth"> <span>🏥 건강검진 — 수검 대상에서 제외 처리</span>
+          <input type="checkbox" id="retireCheckRoster"> <span>👥 직원명부 — 재직자 → 퇴직자로 이동</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px 12px;border-radius:7px;border:1px solid var(--border);">
+          <input type="checkbox" id="retireCheckHealth"> <span>🏥 건강검진 — 퇴직자로 분류 및 대상 제외</span>
         </label>
         <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px 12px;border-radius:7px;border:1px solid var(--border);">
           <input type="checkbox" id="retireCheckPark"> <span>🚗 주차장 — 등록 상태 '퇴직' 변경</span>
