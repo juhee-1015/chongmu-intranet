@@ -6569,13 +6569,12 @@ function renderHealthTable(){
     // ── 현재 연도: 예측값 먼저 계산 후, 저장값과 예측값이 일치할 때만 확정 뱃지
     if(isNow){
       const pred=predictForYear(h,yr,yrs);
-      // 수습중/미대상은 항상 해당 뱃지
+      // 수습중·대상아님은 실제 수검 불가 → 즉시 반환
       if(pred==='수습중')return'<span style="font-size:10px;color:#6b7280;background:#f3f4f6;border-radius:8px;padding:1px 6px;">수습중</span>';
       if(pred==='대상아님')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">대상아님</span>';
-      if(pred==='미대상')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">미대상</span>';
       // 날짜 짧게 표시하는 헬퍼 (2026-03-20 오전 → 3/20 오전)
       const _fmtDate=d=>{if(!d)return'';const m=d.match(/(\d{4})-(\d{2})-(\d{2})(.*)?/);return m?`${parseInt(m[2])}/${parseInt(m[3])}${m[4]?m[4].trim().slice(0,2):''}`:d;};
-      // 수동 확인(confirmed) 플래그 있을 때만 확정 ✓ 뱃지
+      // ★ 확정/예약 확인을 미대상보다 먼저 — 퇴직자도 수검했으면 표시
       if((baseV==='25만원'||baseV==='Y')&&h['y'+yr+'_confirmed']){
         const cd=h['y'+yr+'_checkDate'];const ctr=h['y'+yr+'_center']||'';
         const tip=` title="실시일: ${cd||'미입력'}${ctr?' / '+ctr:''}"`;
@@ -6592,7 +6591,8 @@ function renderHealthTable(){
         const tip=` title="예약일: ${rd||'미입력'}${ctr?' / '+ctr:''}"`;
         return`<span style="font-size:10px;background:#d1fae5;color:#065f46;border-radius:8px;padding:1px 6px;font-weight:600;white-space:nowrap;"${tip}>📅 예약확정${rd?`<span style="font-size:9px;font-weight:400;opacity:0.8;"> ${_fmtDate(rd)}</span>`:''}</span>`;
       }
-      // 저장값이 예측과 다르거나 미입력 → 예측 표시
+      // 실제 수검 데이터 없으면 미대상 또는 예측 표시
+      if(pred==='미대상')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">미대상</span>';
       const predColor=pred==='미수검'?'#9ca3af':pred==='50만원'?'#7c3aed':'#2563eb';
       return`<span style="color:${predColor};font-size:10px;opacity:0.75;white-space:nowrap;">${pred}<span style="font-size:9px;opacity:0.8;">(예정)</span></span>`;
     }
@@ -7430,35 +7430,39 @@ function renderParkingTable(){
   const lotF=(document.getElementById('parkingLotFilter')||{}).value||'';
   const feeF=(document.getElementById('parkingFeeFilter')||{}).value||'';
   const statF=(document.getElementById('parkingStatusFilter')||{}).value||'';
-  
+
+  // 차량 해지 분리: lot='차량 해지' 또는 feeType='차량해지'
+  const isRetired=e=>e.lot==='차량 해지'||e.feeType==='차량해지';
+
   let filtered=emps.filter(e=>{
-    if(statF&&e.status!==statF) return false;
-    if(lotF&&e.lot!==lotF) return false;
-    if(feeF&&e.feeType!==feeF) return false;
+    if(isRetired(e))return false; // 해지된 차량은 메인 테이블에서 제외
+    if(statF&&e.status!==statF)return false;
+    if(lotF&&e.lot!==lotF)return false;
+    if(feeF&&e.feeType!==feeF)return false;
     if(q){
       const lq=q.toLowerCase();
-      if(!(e.name.toLowerCase().includes(lq)||e.carNum.toLowerCase().includes(lq)||(e.dept||'').toLowerCase().includes(lq))) return false;
+      if(!(e.name.toLowerCase().includes(lq)||e.carNum.toLowerCase().includes(lq)||(e.dept||'').toLowerCase().includes(lq)))return false;
     }
     return true;
   });
+
+  const retiredList=emps.filter(isRetired);
 
   const cnt=document.getElementById('parkingCount');
   if(cnt)cnt.textContent=filtered.length+'명';
 
   const tbody=document.getElementById('parkingTbody');
   if(!tbody)return;
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text3);">조회된 직원이 없습니다</td></tr>';return;}
 
   const feeClass={'무료주차':'free','유료주차':'paid','차량해지':'cancel'};
   const statClass={'재직':'active','퇴직':'retire'};
-  
-  const fmtParkDate=(s)=>{
+  const fmtParkDate=s=>{
     if(!s)return'-';
     try{const d=new Date(s);return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');}catch(e){return s;}
   };
-  tbody.innerHTML=filtered.map((e,i)=>{
+  const makeRow=(e,i)=>{
     const histCount=(e.carHistory||[]).length;
-    return`<tr>
+    return`<tr style="${isRetired(e)?'opacity:0.65;background:#f8fafc;':''}">
     <td style="text-align:center;"><input type="checkbox" class="parking-row-chk" value="${e.id}" onchange="_onRowCheck('parking')" style="cursor:pointer;"></td>
     <td style="font-size:11px;color:var(--text3);text-align:center;">${i+1}</td>
     <td style="font-size:12px;">${e.lot||'-'}</td>
@@ -7476,7 +7480,34 @@ function renderParkingTable(){
       <button class="btn btn-xs btn-danger" onclick="deleteEmp('${e.id}')">삭제</button>
     </td>
   </tr>`;
-  }).join('');
+  };
+
+  let html='';
+  if(!filtered.length){
+    html='<tr><td colspan="12" style="text-align:center;padding:32px;color:var(--text3);">조회된 직원이 없습니다</td></tr>';
+  }else{
+    html=filtered.map((e,i)=>makeRow(e,i)).join('');
+  }
+
+  // 차량 해지 아코디언
+  if(retiredList.length){
+    const retOpen=window._parkRetiredOpen||false;
+    html+=`<tr id="parkRetiredToggleRow">
+      <td colspan="12" style="padding:0;">
+        <div onclick="window._parkRetiredOpen=!window._parkRetiredOpen;renderParkingTable();"
+          style="cursor:pointer;padding:10px 16px;background:#f8fafc;border-top:2px solid #cbd5e1;display:flex;align-items:center;gap:10px;user-select:none;">
+          <span style="font-size:13px;color:#475569;font-weight:700;">🚫 차량 해지 ${retiredList.length}명</span>
+          <span style="font-size:11px;color:#64748b;background:#e2e8f0;border-radius:4px;padding:2px 7px;">이력 보관용</span>
+          <span style="margin-left:auto;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#cbd5e1;border-radius:50%;color:#475569;font-size:12px;font-weight:700;">${retOpen?'▲':'▼'}</span>
+        </div>
+      </td>
+    </tr>`;
+    if(retOpen){
+      html+=retiredList.map((e,i)=>makeRow(e,i)).join('');
+    }
+  }
+
+  tbody.innerHTML=html;
 }
 
 // ─ 주차장 CRUD ─
