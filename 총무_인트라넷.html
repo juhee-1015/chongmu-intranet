@@ -6564,19 +6564,19 @@ function renderHealthTable(){
       // 수동 확인(confirmed) 플래그 있을 때만 확정 ✓ 뱃지
       if((baseV==='25만원'||baseV==='Y')&&h['y'+yr+'_confirmed']){
         const cd=h['y'+yr+'_checkDate'];const ctr=h['y'+yr+'_center']||'';
-        const tip=cd?` title="실시일: ${cd}${ctr?' / '+ctr:''}"`:''
-        return`<div style="display:flex;flex-direction:column;align-items:center;gap:1px;"><span class="park-badge paid" style="font-size:10px;padding:1px 5px;"${tip}>25만원 ✓</span>${cd?`<span style="font-size:9px;color:#6b7280;">${_fmtDate(cd)}</span>`:''}</div>`;
+        const tip=` title="실시일: ${cd||'미입력'}${ctr?' / '+ctr:''}"`;
+        return`<span class="park-badge paid" style="font-size:10px;padding:1px 5px;"${tip}>25만원 ✓${cd?`<span style="font-size:9px;font-weight:400;opacity:0.8;"> ${_fmtDate(cd)}</span>`:''}</span>`;
       }
       if(baseV==='50만원'&&h['y'+yr+'_confirmed']){
         const cd=h['y'+yr+'_checkDate'];const ctr=h['y'+yr+'_center']||'';
-        const tip=cd?` title="실시일: ${cd}${ctr?' / '+ctr:''}"`:''
-        return`<div style="display:flex;flex-direction:column;align-items:center;gap:1px;"><span class="park-badge free" style="font-size:10px;padding:1px 5px;"${tip}>50만원 ✓</span>${cd?`<span style="font-size:9px;color:#6b7280;">${_fmtDate(cd)}</span>`:''}</div>`;
+        const tip=` title="실시일: ${cd||'미입력'}${ctr?' / '+ctr:''}"`;
+        return`<span class="park-badge free" style="font-size:10px;padding:1px 5px;"${tip}>50만원 ✓${cd?`<span style="font-size:9px;font-weight:400;opacity:0.8;"> ${_fmtDate(cd)}</span>`:''}</span>`;
       }
       // 예약확정 뱃지
       if(h['y'+yr+'_reserved']){
         const rd=h['y'+yr+'_reserveDate'];const ctr=h['y'+yr+'_center']||'';
-        const tip=rd?` title="예약일: ${rd}${ctr?' / '+ctr:''}"`:''
-        return`<div style="display:flex;flex-direction:column;align-items:center;gap:1px;"><span style="font-size:10px;background:#d1fae5;color:#065f46;border-radius:8px;padding:1px 6px;font-weight:600;white-space:nowrap;"${tip}>📅 예약확정</span>${rd?`<span style="font-size:9px;color:#059669;">${_fmtDate(rd)}</span>`:''}</div>`;
+        const tip=` title="예약일: ${rd||'미입력'}${ctr?' / '+ctr:''}"`;
+        return`<span style="font-size:10px;background:#d1fae5;color:#065f46;border-radius:8px;padding:1px 6px;font-weight:600;white-space:nowrap;"${tip}>📅 예약확정${rd?`<span style="font-size:9px;font-weight:400;opacity:0.8;"> ${_fmtDate(rd)}</span>`:''}</span>`;
       }
       // 저장값이 예측과 다르거나 미입력 → 예측 표시
       const predColor=pred==='미수검'?'#9ca3af':pred==='50만원'?'#7c3aed':'#2563eb';
