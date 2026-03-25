@@ -1011,6 +1011,24 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;line-height:n
     </div>
     <!-- 연도별 수검 현황 (동적) -->
     <div id="editHealthYearFields" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
+    <!-- 올해 날짜 정보 -->
+    <div id="editHealthDateSection" style="background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px;">📅 올해 검진 날짜</div>
+      <div class="form-row" style="margin-bottom:6px;">
+        <div class="form-group">
+          <label style="font-size:11px;">예약일</label>
+          <input type="text" id="editHealthReserveDate" placeholder="예: 2026-05-04 오전" style="font-size:12px;">
+        </div>
+        <div class="form-group">
+          <label style="font-size:11px;">실시일 (수검일)</label>
+          <input type="text" id="editHealthCheckDate" placeholder="예: 2026-03-20 오전" style="font-size:12px;">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label style="font-size:11px;">검진 센터</label>
+        <input type="text" id="editHealthCenter" placeholder="예: 필립메디컬센터(분당)" style="font-size:12px;">
+      </div>
+    </div>
     <div class="modal-actions" style="justify-content:space-between;">
       <div style="display:flex;gap:6px;">
         <button class="btn btn-danger btn-sm" id="editHealthDeleteBtn" style="display:none;" onclick="deleteHealthEmp(document.getElementById('editHealthId').value)">삭제</button>
@@ -6541,14 +6559,24 @@ function renderHealthTable(){
       if(pred==='수습중')return'<span style="font-size:10px;color:#6b7280;background:#f3f4f6;border-radius:8px;padding:1px 6px;">수습중</span>';
       if(pred==='대상아님')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">대상아님</span>';
       if(pred==='미대상')return'<span class="park-badge cancel" style="font-size:10px;padding:1px 5px;background:#e2e8f0;color:#64748b;">미대상</span>';
+      // 날짜 짧게 표시하는 헬퍼 (2026-03-20 오전 → 3/20 오전)
+      const _fmtDate=d=>{if(!d)return'';const m=d.match(/(\d{4})-(\d{2})-(\d{2})(.*)?/);return m?`${parseInt(m[2])}/${parseInt(m[3])}${m[4]?m[4].trim().slice(0,2):''}`:d;};
       // 수동 확인(confirmed) 플래그 있을 때만 확정 ✓ 뱃지
-      const chkDateTip=h['y'+yr+'_checkDate']?` title="${h['y'+yr+'_checkDate']}${h['y'+yr+'_center']?' / '+h['y'+yr+'_center']:''}"`:''
-      if((baseV==='25만원'||baseV==='Y')&&h['y'+yr+'_confirmed'])return`<span class="park-badge paid" style="font-size:10px;padding:1px 5px;"${chkDateTip}>25만원 ✓</span>`;
-      if(baseV==='50만원'&&h['y'+yr+'_confirmed'])return`<span class="park-badge free" style="font-size:10px;padding:1px 5px;"${chkDateTip}>50만원 ✓</span>`;
-      // 예약확정 뱃지 (confirmed 없는 경우)
+      if((baseV==='25만원'||baseV==='Y')&&h['y'+yr+'_confirmed']){
+        const cd=h['y'+yr+'_checkDate'];const ctr=h['y'+yr+'_center']||'';
+        const tip=cd?` title="실시일: ${cd}${ctr?' / '+ctr:''}"`:''
+        return`<div style="display:flex;flex-direction:column;align-items:center;gap:1px;"><span class="park-badge paid" style="font-size:10px;padding:1px 5px;"${tip}>25만원 ✓</span>${cd?`<span style="font-size:9px;color:#6b7280;">${_fmtDate(cd)}</span>`:''}</div>`;
+      }
+      if(baseV==='50만원'&&h['y'+yr+'_confirmed']){
+        const cd=h['y'+yr+'_checkDate'];const ctr=h['y'+yr+'_center']||'';
+        const tip=cd?` title="실시일: ${cd}${ctr?' / '+ctr:''}"`:''
+        return`<div style="display:flex;flex-direction:column;align-items:center;gap:1px;"><span class="park-badge free" style="font-size:10px;padding:1px 5px;"${tip}>50만원 ✓</span>${cd?`<span style="font-size:9px;color:#6b7280;">${_fmtDate(cd)}</span>`:''}</div>`;
+      }
+      // 예약확정 뱃지
       if(h['y'+yr+'_reserved']){
-        const rTip=h['y'+yr+'_checkDate']?` title="예약일: ${h['y'+yr+'_checkDate']}${h['y'+yr+'_center']?' / '+h['y'+yr+'_center']:''}"`:''
-        return`<span style="font-size:10px;background:#d1fae5;color:#065f46;border-radius:8px;padding:1px 6px;font-weight:600;white-space:nowrap;"${rTip}>📅 예약확정</span>`;
+        const rd=h['y'+yr+'_reserveDate'];const ctr=h['y'+yr+'_center']||'';
+        const tip=rd?` title="예약일: ${rd}${ctr?' / '+ctr:''}"`:''
+        return`<div style="display:flex;flex-direction:column;align-items:center;gap:1px;"><span style="font-size:10px;background:#d1fae5;color:#065f46;border-radius:8px;padding:1px 6px;font-weight:600;white-space:nowrap;"${tip}>📅 예약확정</span>${rd?`<span style="font-size:9px;color:#059669;">${_fmtDate(rd)}</span>`:''}</div>`;
       }
       // 저장값이 예측과 다르거나 미입력 → 예측 표시
       const predColor=pred==='미수검'?'#9ca3af':pred==='50만원'?'#7c3aed':'#2563eb';
@@ -6641,6 +6669,9 @@ function openAddHealthEmpModal(){
   document.getElementById('editHealthPattern').value='25만원';
   document.getElementById('editHealthDeleteBtn').style.display='none';
   const _ab=document.getElementById('editHealthActivateBtn');if(_ab)_ab.style.display='none';
+  const _rdEl=document.getElementById('editHealthReserveDate');if(_rdEl)_rdEl.value='';
+  const _cdEl=document.getElementById('editHealthCheckDate');if(_cdEl)_cdEl.value='';
+  const _ctrEl=document.getElementById('editHealthCenter');if(_ctrEl)_ctrEl.value='';
   _renderEditHealthYearFields(null);
   openModal('editHealthModal');
   setTimeout(()=>{
@@ -6679,6 +6710,14 @@ function openEditHealthModal(id, name){
     activBtn.style.display=(notEligible&&probPast)?'':'none';
   }
   _renderEditHealthYearFields(h);
+  // 올해 날짜 정보 채우기
+  const _cyr2=new Date().getFullYear().toString().slice(-2);
+  const rdEl=document.getElementById('editHealthReserveDate');
+  const cdEl=document.getElementById('editHealthCheckDate');
+  const ctrEl=document.getElementById('editHealthCenter');
+  if(rdEl)rdEl.value=h['y'+_cyr2+'_reserveDate']||'';
+  if(cdEl)cdEl.value=h['y'+_cyr2+'_checkDate']||'';
+  if(ctrEl)ctrEl.value=h['y'+_cyr2+'_center']||'';
   openModal('editHealthModal');
 }
 
@@ -6767,6 +6806,16 @@ function saveHealthEdit(){
         }
       }
     });
+    // 올해 날짜 정보 저장
+    const _rdEl=document.getElementById('editHealthReserveDate');
+    const _cdEl=document.getElementById('editHealthCheckDate');
+    const _ctrEl=document.getElementById('editHealthCenter');
+    const _rdV=(_rdEl&&_rdEl.value.trim())||'';
+    const _cdV=(_cdEl&&_cdEl.value.trim())||'';
+    const _ctrV=(_ctrEl&&_ctrEl.value.trim())||'';
+    if(_rdV)all[idx]['y'+_cyr+'_reserveDate']=_rdV;else delete all[idx]['y'+_cyr+'_reserveDate'];
+    if(_cdV)all[idx]['y'+_cyr+'_checkDate']=_cdV;else delete all[idx]['y'+_cyr+'_checkDate'];
+    if(_ctrV)all[idx]['y'+_cyr+'_center']=_ctrV;else delete all[idx]['y'+_cyr+'_center'];
   }
   LS.set(HEALTH_KEY,all);
   closeModal('editHealthModal');
@@ -6934,26 +6983,27 @@ function importHealthExcel(input){
         const checkDate=String(row[colDate]||'').trim();
         const center=String(row[colCenter]||'').trim();
 
+        // 날짜 정규화: "2026-03-20 오전" → "2026-03-20 오전" 그대로 유지
         if(status==='검진실시'){
           const pat=h.checkPattern||'25만원';
           const amt=(pat==='50만원')?'50만원':'25만원';
           h['y'+currYr]=amt;
           h['y'+currYr+'_confirmed']=true;
-          if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
+          if(checkDate)h['y'+currYr+'_checkDate']=checkDate; // 실제 검진일
           if(center)h['y'+currYr+'_center']=center;
-          matchLog.push(h.name+' → 검진실시('+amt+')');
+          matchLog.push(h.name+' → 검진실시('+amt+') '+(checkDate||''));
           updated++;
         } else if(status==='예약확정'){
           if(!h['y'+currYr+'_confirmed']){
             h['y'+currYr+'_reserved']=true;
           }
-          if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
+          if(checkDate)h['y'+currYr+'_reserveDate']=checkDate; // 예약일
           if(center)h['y'+currYr+'_center']=center;
-          matchLog.push(h.name+' → 예약확정');
+          matchLog.push(h.name+' → 예약확정 '+(checkDate||''));
           updated++;
         } else if(status==='예약취소'){
           delete h['y'+currYr+'_reserved'];
-          if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
+          delete h['y'+currYr+'_reserveDate'];
           matchLog.push(h.name+' → 예약취소');
           updated++;
         }
