@@ -6970,6 +6970,13 @@ function importHealthExcel(input){
       const matchLog=[];
       const dataRows=rows.slice(headerRowIdx+1);
 
+      // 🔍 디버그
+      console.log('[검진 Import] 헤더행idx:',headerRowIdx,'colSaNo:',colSaNo,'colName:',colName,'colStatus:',colStatus,'colDate:',colDate);
+      console.log('[검진 Import] 건강검진명부 idxByName keys(앞10):', Object.keys(idxByName).slice(0,10));
+      console.log('[검진 Import] 건강검진명부 idxById keys(앞10):', Object.keys(idxById).slice(0,10));
+      console.log('[검진 Import] 직원명부 rosterByName keys(앞10):', Object.keys(rosterByName).slice(0,10));
+      let _statusRows=0;
+
       dataRows.forEach(row=>{
         const saNo=String(row[colSaNo]||'').trim().replace(/\.0$/,'');
         const name=String(row[colName]||'').trim();
@@ -6977,16 +6984,23 @@ function importHealthExcel(input){
         const status=String(row[colStatus]||'').trim();
         if(!saNo&&!name&&!empName)return;
         if(!status||status==='')return;
+        _statusRows++;
 
         // ① 건강검진 명부에서 매칭
         let idx=-1;
         if(saNo&&idxById[saNo]!==undefined)idx=idxById[saNo];
         if(idx<0&&name&&idxByName[name]!==undefined)idx=idxByName[name];
         if(idx<0&&empName&&empName!==name&&idxByName[empName]!==undefined)idx=idxByName[empName];
+        // 🔍 디버그 (상태 있는 행만)
+        console.log('[검진 Import] 상태행:', saNo, name, '상태:'+status, '→ idx:'+idx,
+          'idxById['+saNo+']:'+idxById[saNo], 'idxByName['+name+']:'+idxByName[name]);
 
         // ② 매칭 안 되면 직원명부에서 찾아 자동 추가
         if(idx<0){
-          const r=saNo?rosterById[saNo]:null||(name?rosterByName[name]:null)||(empName?rosterByName[empName]:null);
+          let r=null;
+          if(saNo)r=rosterById[saNo];
+          if(!r&&name)r=rosterByName[name];
+          if(!r&&empName&&empName!==name)r=rosterByName[empName];
           if(r){
             const normDate=d=>(d||'').replace(/\./g,'-');
             const jd=normDate(r.join_date);
@@ -7046,8 +7060,11 @@ function importHealthExcel(input){
       input.value='';
       renderHealth();updateStatCards();
 
+      // 🔍 디버그 요약
+      console.log('[검진 Import] 결과: 상태있는행='+_statusRows+', 매칭='+matched+', 업데이트='+updated+', 신규추가='+autoAdded);
+
       // 결과 토스트
-      let msg=`✅ 엑셀 반영 완료 — 총 ${updated}명 업데이트`;
+      let msg=`✅ 엑셀 반영 완료 — 총 ${updated}명 업데이트 (상태행 ${_statusRows}개 처리)`;
       if(autoAdded>0)msg+=` (건강검진 명부 신규등록 ${autoAdded}명 포함)`;
       showToast(msg);
       // 상세 내역 콘솔
