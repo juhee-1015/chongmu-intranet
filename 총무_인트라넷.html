@@ -6945,61 +6945,94 @@ function importHealthExcel(input){
 
       const currYr=new Date().getFullYear().toString().slice(-2);
       const all=loadHealths();
-      // 사번 → 인덱스 맵 (사번 정규화: 숫자형 → 문자열)
-      const idxById={};
-      const idxByName={};
-      all.forEach((h,i)=>{
-        if(h.id){
-          const sid=String(h.id).trim().replace(/\.0$/,'');
-          idxById[sid]=i;
-        }
-        if(h.name)idxByName[h.name.trim()]=i;
+      const roster=getRosterData()||[];
+      const today=new Date();today.setHours(0,0,0,0);
+
+      // 사번 → 인덱스 맵
+      const rebuildIdx=()=>{
+        const _id={};const _nm={};
+        all.forEach((h,i)=>{
+          if(h.id){_id[String(h.id).trim().replace(/\.0$/,'')]=i;}
+          if(h.name){_nm[h.name.trim()]=i;}
+        });
+        return{_id,_nm};
+      };
+      let {_id:idxById,_nm:idxByName}=rebuildIdx();
+
+      // 직원명부: 사번 → 레코드 맵
+      const rosterById={};const rosterByName={};
+      roster.forEach(r=>{
+        if(r.sc_id)rosterById[String(r.sc_id).trim()]=r;
+        if(r.name)rosterByName[r.name.trim()]=r;
       });
 
-      let matched=0,updated=0,notFound=[];
-      const matchLog=[]; // 디버그용
+      let matched=0,updated=0,autoAdded=0;
+      const matchLog=[];
       const dataRows=rows.slice(headerRowIdx+1);
+
       dataRows.forEach(row=>{
         const saNo=String(row[colSaNo]||'').trim().replace(/\.0$/,'');
         const name=String(row[colName]||'').trim();
-        // 직원명 컬럼(9번)도 이름 매칭에 활용
-        const empName=String(row[9]||'').trim();
+        const empName=String(row[9]||'').trim(); // 직원명 컬럼
         const status=String(row[colStatus]||'').trim();
         if(!saNo&&!name&&!empName)return;
-        if(!status||status==='')return; // NaN/undefined/빈값 스킵
+        if(!status||status==='')return;
 
-        // 매칭: 사번 → 성명 → 직원명 순
+        // ① 건강검진 명부에서 매칭
         let idx=-1;
         if(saNo&&idxById[saNo]!==undefined)idx=idxById[saNo];
         if(idx<0&&name&&idxByName[name]!==undefined)idx=idxByName[name];
         if(idx<0&&empName&&empName!==name&&idxByName[empName]!==undefined)idx=idxByName[empName];
 
+        // ② 매칭 안 되면 직원명부에서 찾아 자동 추가
         if(idx<0){
-          if(name||empName)notFound.push(name||empName);
-          return;
+          const r=saNo?rosterById[saNo]:null||(name?rosterByName[name]:null)||(empName?rosterByName[empName]:null);
+          if(r){
+            const normDate=d=>(d||'').replace(/\./g,'-');
+            const jd=normDate(r.join_date);
+            const pd=normDate(r.prob_end);
+            const probD=pd?new Date(pd):null;if(probD)probD.setHours(0,0,0,0);
+            const hasFutureProb=probD&&probD>today;
+            const newH={
+              id:String(r.sc_id||'HR'+Date.now()),
+              name:r.name||name,
+              project:r.project||'',dept:r.dept||'',team:r.team||'',
+              joinDate:jd,probEndDate:pd,
+              checkPattern:'25만원',
+              eligible:hasFutureProb?false:true,
+              eligibleFrom:hasFutureProb&&probD?String(probD.getFullYear()+1):'',
+            };
+            all.push(newH);
+            const ni=all.length-1;
+            // 인덱스 갱신
+            if(newH.id)idxById[String(newH.id).trim()]=ni;
+            if(newH.name)idxByName[newH.name.trim()]=ni;
+            idx=ni;
+            autoAdded++;
+          }
         }
+
+        if(idx<0)return; // 명부에도 없으면 스킵
+
         matched++;
         const h=all[idx];
         const checkDate=String(row[colDate]||'').trim();
         const center=String(row[colCenter]||'').trim();
 
-        // 날짜 정규화: "2026-03-20 오전" → "2026-03-20 오전" 그대로 유지
         if(status==='검진실시'){
           const pat=h.checkPattern||'25만원';
           const amt=(pat==='50만원')?'50만원':'25만원';
           h['y'+currYr]=amt;
           h['y'+currYr+'_confirmed']=true;
-          if(checkDate)h['y'+currYr+'_checkDate']=checkDate; // 실제 검진일
+          if(checkDate)h['y'+currYr+'_checkDate']=checkDate;
           if(center)h['y'+currYr+'_center']=center;
-          matchLog.push(h.name+' → 검진실시('+amt+') '+(checkDate||''));
+          matchLog.push((autoAdded&&idx===all.length-1?'[신규]':'')+h.name+' → 검진완료('+amt+')'+( checkDate?' '+checkDate:''));
           updated++;
         } else if(status==='예약확정'){
-          if(!h['y'+currYr+'_confirmed']){
-            h['y'+currYr+'_reserved']=true;
-          }
-          if(checkDate)h['y'+currYr+'_reserveDate']=checkDate; // 예약일
+          if(!h['y'+currYr+'_confirmed'])h['y'+currYr+'_reserved']=true;
+          if(checkDate)h['y'+currYr+'_reserveDate']=checkDate;
           if(center)h['y'+currYr+'_center']=center;
-          matchLog.push(h.name+' → 예약확정 '+(checkDate||''));
+          matchLog.push(h.name+' → 예약확정'+(checkDate?' '+checkDate:''));
           updated++;
         } else if(status==='예약취소'){
           delete h['y'+currYr+'_reserved'];
@@ -7013,16 +7046,12 @@ function importHealthExcel(input){
       input.value='';
       renderHealth();updateStatCards();
 
-      // 상세 결과 메시지
-      if(matched===0&&notFound.length>0){
-        // 완전 미매칭: 건강검진 명부에 없는 경우
-        alert(`⚠️ 엑셀 업로드 결과\n\n매칭된 직원이 없습니다.\n\n미매칭 ${notFound.length}명 (상태값 있는 행):\n`+notFound.slice(0,10).join(', ')+(notFound.length>10?'…':'')+'\n\n💡 건강검진 명부에 직원이 없거나 사번/이름이 다를 수 있습니다.\n명부 동기화 버튼으로 직원을 먼저 추가해주세요.');
-      } else {
-        let msg=`✅ 엑셀 업로드 완료\n\n매칭 ${matched}명 / 업데이트 ${updated}명`;
-        if(matchLog.length>0)msg+='\n\n변경 내역:\n'+matchLog.slice(0,10).join('\n')+(matchLog.length>10?'\n…':'');
-        if(notFound.length>0)msg+=`\n\n미매칭 ${notFound.length}명: `+notFound.slice(0,5).join(', ')+(notFound.length>5?'…':'');
-        alert(msg);
-      }
+      // 결과 토스트
+      let msg=`✅ 엑셀 반영 완료 — 총 ${updated}명 업데이트`;
+      if(autoAdded>0)msg+=` (건강검진 명부 신규등록 ${autoAdded}명 포함)`;
+      showToast(msg);
+      // 상세 내역 콘솔
+      if(matchLog.length>0)console.log('[검진현황 엑셀 import]',matchLog);
     }catch(err){showToast('파일 오류: '+err.message,'error');input.value='';}
   };
   reader.readAsArrayBuffer(file);
